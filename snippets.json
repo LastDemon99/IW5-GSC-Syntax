@@ -1,0 +1,121 @@
+{
+  "include_utility": {
+    "prefix": "#include utility",
+    "body": [
+      "#include common_scripts\\utility;"
+    ],
+    "description": "include common_scripts\\utility.gsc"
+  },
+  "utility_pointer": {
+    "prefix": "utility::",
+    "body": [
+      "common_scripts\\utility::"
+    ],
+    "description": "common_scripts\\utility.gsc pointer"
+  },
+
+  "include__utility": {
+    "prefix": "#include _utility",
+    "body": [
+      "#include maps\\mp\\_utility;"
+    ],
+    "description": "include maps\\mp\\_utility.gsc"
+  },
+  "_utility_pointer": {
+    "prefix": "_utility::",
+    "body": [
+      "maps\\mp\\_utility::"
+    ],
+    "description": "maps\\mp\\_utility.gsc pointer"
+  },
+
+  "include__hud_util": {
+    "prefix": "#include _hud_util",
+    "body": [
+      "#include maps\\mp\\gametypes\\_hud_util;"
+    ],
+    "description": "include maps\\mp\\gametypes\\_hud_util.gsc"
+  },
+  "_hud_util_pointer": {
+    "prefix": "_hud_util::",
+    "body": [
+      "maps\\mp\\gametypes\\_hud_util::"
+    ],
+    "description": "maps\\mp\\gametypes\\_hud_util.gsc pointer"
+  },
+
+	"scriptInit": {
+		"prefix": "init",
+		"body": [
+            "init()",
+            "{",
+            "   level thread onPlayerConnect();",
+            "}",
+            "",
+            "onPlayerConnect()",
+            "{",
+            "   level endon(\"game_ended\");",
+            "",
+            "   for (;;)",
+            "   {",
+            "       level waittill(\"connected\", player);",
+            "       ",
+            "       player thread onPlayerSpawn();",
+            "   }",
+            "}",
+            "",
+            "onPlayerSpawn()",
+            "{",
+            "   self endon(\"disconnect\");",
+            "   ",
+            "   for(;;)",
+            "   {",
+            "       self waittill(\"spawned_player\");",
+            "       ",
+            "   }",
+            "}"
+          ],
+		"description": "Script init template"
+	},
+
+  "onPlayerKilled": {
+    "prefix": "onPlayerDamage",
+    "body": [
+      "onPlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, psOffsetTime, deathAnimDuration, killId)",
+      "{",
+      " ",
+      "}"
+    ],
+    "description": "onPlayerKilled function template"
+  },
+  "onPlayerDamage": {
+    "prefix": "onPlayerDamage",
+    "body": [
+      "onPlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, timeOffset)",
+      "{",
+      " ",
+      "}"
+    ],
+    "description": "onPlayerDamage function template"
+  },
+  "onPlayerLastStand": {
+    "prefix": "onPlayerDamage",
+    "body": [
+      "onPlayerLastStand(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration)",
+      "{",
+      " ",
+      "}"
+    ],
+    "description": "onPlayerLastStand function template"
+  },
+  "playersForeach": {
+    "prefix": "players",
+    "body": [
+      "foreach(player in level.players)",
+      "{",
+      " ",
+      "}"
+    ],
+    "description": "players foreach"
+  }
+}
