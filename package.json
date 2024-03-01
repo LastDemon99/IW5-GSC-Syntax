@@ -1,50 +1,31 @@
 {
-    "name": "cod-sense",
-    "displayName": "CoD-Sense",
-    "description": "Syntax highlighting for Call of Duty scripts",
-    "version": "1.0.2",
-    "publisher": "se2dev",
-    "icon": "images/cod-sense_logo_128x128.png",
-    "homepage": "https://github.com/SE2Dev/CoD-Sense/blob/development/README.md",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/SE2Dev/CoD-Sense"
-    },
-    "bugs": {
-        "url": "https://github.com/SE2Dev/CoD-Sense/issues"
-    },
+    "name": "lb-iw5-gsc",
+    "displayName": "IW5-GSC-Syntax",
+    "description": "GSC scripting syntax and autocomplete used for IW5.",
+    "version": "0.0.1",
+    "publisher": "LethalBeats",
+    "icon": "images/iw5_gsc_syntax_logo_128x128.png",
+    "repository": "https://github.com/LastDemon99/IW5-GSC-Syntax",
+    "forked_repository": "https://github.com/SE2Dev/CoD-Sense",
     "engines": {
-        "vscode": "^1.23.0"
+        "vscode": "^1.87.0"
     },
     "categories": [
         "Programming Languages"
     ],
-    "activationEvents": [
-        "onLanguage:gsc"
-    ],
     "main": "./out/extension",
     "contributes": {
-        "languages": [
-            {
-                "id": "gsc",
-                "aliases": [
-                    "GSC",
-                    "gsc"
-                ],
-                "extensions": [
-                    ".gsc",
-                    ".csc"
-                ],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "gsc",
-                "scopeName": "source.gsc",
-                "path": "./syntaxes/gsc.tmLanguage"
-            }
-        ],
+        "languages": [{
+          "id": "gsc",
+          "aliases": ["Game Script Code", "gsc", "GSC"],
+          "extensions": [".gsc"],
+          "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "gsc",
+            "scopeName": "source.gsc",
+            "path": "./syntaxes/gsc.tmLanguage.json"
+        }],
         "configuration": {
             "type": "object",
             "title": "CoD-Sense Configuration",
