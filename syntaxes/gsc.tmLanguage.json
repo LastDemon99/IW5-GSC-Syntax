@@ -165,7 +165,7 @@
 		},
 		"function_pointer": {
 			"name": "support.function.gsc",
-			"match": "::(_?[a-zA-Z0-9_]\\w*)(?=\\s*\\(.*\\)|;)"
+			"match": "::(_?[a-zA-Z0-9_]\\w*)"
 		},
 		"function_variable": {
 			"name": "support.function.gsc",
