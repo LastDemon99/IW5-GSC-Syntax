@@ -6,3 +6,5 @@
   <br><br>
   <img src="https://github.com/LastDemon99/IW5-GSC-Syntax/blob/master/images/screenshots/iw5-gsc-syntax-preview.png"> 
 </p>
+
+[GSC Documentation](https://github.com/LastDemon99/IW5-GSC-Syntax/tree/master/gsc-doc)
