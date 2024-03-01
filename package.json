@@ -13,6 +13,7 @@
     "categories": [
         "Programming Languages"
     ],
+    "main": "./out/extension",
     "contributes": {
         "languages": [{
           "id": "gsc",
