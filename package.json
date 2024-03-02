@@ -31,18 +31,7 @@
 				"language": "gsc",
 				"path": "./snippets.json"
 			}
-		],
-        "configuration": {
-            "type": "object",
-            "title": "CoD-Sense Configuration",
-            "properties": {
-                "cod-sense.use_builtin_completionItems": {
-                    "type": "boolean",
-                    "description": "Enables built-in engine functions in the completion provider",
-                    "default": true
-                }
-            }
-        }
+		]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
