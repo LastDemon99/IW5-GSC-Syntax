@@ -1,12 +1,18 @@
 import * as vscode from 'vscode';
-import * as completion from './features/completionItemProvider'
+import { completionItemProvider } from  './features/completionItemProvider'
+import { semanticTokensProvider, legend } from  './features/semanticTokenProvider'
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log("IW5-GSC-Syntax: Init");
 
-	// Register the built-in function definitions
+	// Completion provider
 	vscode.languages.registerCompletionItemProvider("gsc",
-		new completion.functionProvider(context.extensionPath));
+		new completionItemProvider(context.extensionPath));
+
+	// Semantic provider
+	context.subscriptions.push(
+		vscode.languages.registerDocumentSemanticTokensProvider("gsc",
+		new semanticTokensProvider(), legend));
 }
 
 export function deactivate() {

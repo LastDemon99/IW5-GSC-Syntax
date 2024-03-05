@@ -25,9 +25,6 @@
 		},
 		{
 			"include": "#structure_variable"
-		},		
-		{
-			"include": "#variable"
 		},
 		{
 			"include": "#entity"
@@ -123,13 +120,6 @@
 				}
 			},
 			"end": "\\s"
-		},
-		"variable": {
-			"begin": "\\b[a-zA-Z_]\\w*\\b(?=\\s*([-+*/%])?=)",
-			"captures": {
-				"0": { "name": "variable.parameter.gsc" }
-			},
-			"end": "(?=(\\s*([-+*/%])?=\\s*([^;]|$)))"
 		},		
 		"entity": {
 			"name": "keyword.control.gsc",

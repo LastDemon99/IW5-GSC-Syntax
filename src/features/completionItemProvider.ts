@@ -3,7 +3,7 @@ import { game_defs } from '../defs/defs';
 import { common_scripts_utility_defs } from '../defs/common_scripts_utility';
 
 // Provides function completion
-export class functionProvider {
+export class completionItemProvider {
 	functions: vscode.CompletionItem[];
 
 	// Generate completion items for the hardcoded functions
