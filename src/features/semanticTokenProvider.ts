@@ -14,42 +14,40 @@ export const legend = new vscode.SemanticTokensLegend(tokenTypesLegend, tokenMod
 export class semanticTokensProvider implements vscode.DocumentSemanticTokensProvider {
     provideDocumentSemanticTokens(document: vscode.TextDocument): vscode.ProviderResult<vscode.SemanticTokens> {
         const builder = new vscode.SemanticTokensBuilder(legend);
+        const lines = document.getText().split("\n");
 
+        const find_var = /\b([a-zA-Z_]\w*)\b(?=\s*([-+*/%])?=)/g;
         let inFunction = false;
-        var variables = new Array<string>();
+        let variables = new Array<RegExp>();
 
-        for (let i = 0; i < document.lineCount; i++) {
-            const line = document.lineAt(i);
-            const text = line.text;
-
-            if (text.startsWith("{"))  inFunction = true;
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            if (line.startsWith("{"))  inFunction = true;
             if (inFunction) 
             {
-                if (text.startsWith("}")) 
+                if (line.startsWith("}")) 
                 {
-                    variables = new Array<string>();
+                    variables = new Array<RegExp>();
                     inFunction = false;
                 }
-                else this.processFunctionBlock(builder, text, i, variables);
+                else this.processFunctionBlock(builder, line, i, variables, find_var);
             }
         }
         
         return builder.build();
     }
 
-    private processFunctionBlock(builder: vscode.SemanticTokensBuilder, line: string, lineIndex: number, variables: Array<string>) {        
+    private processFunctionBlock(builder: vscode.SemanticTokensBuilder, line: string, lineIndex: number, variables: Array<RegExp>, regex: RegExp) {        
         let match;
         
-        variables.forEach((var_declaration) => {
-            const regex = new RegExp(`(?<!")\\b(${var_declaration})\\b(?!")`, 'g');
-            if ((match = regex.exec(line)) !== null)
+        variables.forEach((regex_var) => {
+            if ((match = regex_var.exec(line)) !== null)
                 builder.push(lineIndex, match.index, (match[1]).length, this.getTokenTypeIndex('variable'), this.getTokenModifiers(['usage']));
         });
-
-        let regex = /\b([a-zA-Z_]\w*)\b(?=\s*([-+*/%])?=)/g;
+        
         while ((match = regex.exec(line)) !== null) {
             const variableName = match[1];
-            variables.push(variableName);
+            variables.push(new RegExp(`(?<!")\\b(${variableName})\\b(?!")`, 'g'));
             builder.push(lineIndex, match.index, variableName.length, this.getTokenTypeIndex('variable'), this.getTokenModifiers(['declaration']));
         }
     }
