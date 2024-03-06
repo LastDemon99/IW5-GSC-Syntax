@@ -6,46 +6,7 @@
 			"include": "#comment"
 		},
 		{
-			"include": "#string"
-		},
-		{
-			"include": "#number"
-		},
-		{
-			"include": "#keyword_variables"
-		},
-		{
-			"include": "#statement"
-		},
-		{
-			"include": "#operators"
-		},
-		{
-			"include": "#thread"
-		},
-		{
-			"include": "#structure_variable"
-		},
-		{
-			"include": "#entity"
-		},
-		{
-			"include": "#refer_entity_function"
-		},
-		{
-			"include": "#refer_entity_function_pointer"
-		},
-		{
-			"include": "#refer_entity_function_variable"
-		},
-		{
-			"include": "#function"
-		},
-		{
-			"include": "#function_pointer"
-		},
-		{
-			"include": "#function_variable"
+			"include": "#function_declaration"
 		},
 		{
 			"include": "#using_animtree"
@@ -149,6 +110,10 @@
 			"3": { "name": "keyword.gsc" }
 		}
 		},
+		"function_declaration": {
+			"name": "support.function.gsc",
+			"match": "^(_?[a-zA-Z0-9_]\\w*)(?=\\()"
+		},
 		"function": {
 			"name": "support.function.gsc",
 			"match": "(_?[a-zA-Z0-9_]\\w*)(?=\\s*\\()"
@@ -163,10 +128,10 @@
 		},
 		"using_animtree": {
 			"name": "support.function.gsc",
-			"match": "^\\s*#using_animtree(?=\\()"
+			"match": "^#using_animtree(?=\\()"
 		},	
 		"include": {
-			"begin": "^\\s*(#include\\b)\\s*([^;]*);?",
+			"begin": "^(#include\\b)\\s*([^;]*);?",
 			"beginCaptures": {
 				"1": {
 				"name": "invalid.gsc"
@@ -178,7 +143,7 @@
 			"end": "\\s"
 		},
 		"define": {
-			"begin": "^\\s*(#define\\b)\\s*([^\\s]+)\\s+(.+)$",
+			"begin": "^(#define\\b)\\s*([^\\s]+)\\s+(.+)$",
 			"beginCaptures": {
 				"1": {
 				"name": "invalid.gsc"
@@ -205,8 +170,8 @@
 				"name": "meta.block.gsc",
 				"begin": "\\{",
 				"beginCaptures": {
-				"0": {
-					"name": "punctuation.section.block.begin.gsc"
+				"1": {
+					"name": "punctuation.section.function.gsc"
 				}
 				},
 				"end": "\\}",
@@ -227,19 +192,52 @@
 			]
 		},
 		"block_innards": {
-			"patterns": [
-			  {
-				"include": "#function_call"
-			  },
-			  {
-				"include": "#function_pointer"
-			  },
-			  {
-				"include": "#function_variable"
-			  },
-			  {
-				"include": "#block"
-			  }
+			"patterns": [				
+				{
+					"include": "#string"
+				},
+				{
+					"include": "#number"
+				},
+				{
+					"include": "#keyword_variables"
+				},
+				{
+					"include": "#statement"
+				},
+				{
+					"include": "#operators"
+				},
+				{
+					"include": "#thread"
+				},
+				{
+					"include": "#structure_variable"
+				},
+				{
+					"include": "#entity"
+				},
+				{
+					"include": "#refer_entity_function"
+				},
+				{
+					"include": "#refer_entity_function_pointer"
+				},
+				{
+					"include": "#refer_entity_function_variable"
+				},
+				{
+					"include": "#function"
+				},				
+				{
+					"include": "#function_pointer"
+				},
+				{
+					"include": "#function_variable"
+				},
+				{
+					"include": "#block"
+				}
 			]
 		}
 	},
