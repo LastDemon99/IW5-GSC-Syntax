@@ -16,7 +16,7 @@ export class semanticTokensProvider implements vscode.DocumentSemanticTokensProv
         const builder = new vscode.SemanticTokensBuilder(legend);
         const lines = document.getText().split("\n");
 
-        const find_var = /\b([a-zA-Z_]\w*)\b(?=\s*([-+*/%])?=)/g;
+        const find_var = /\b([a-zA-Z0-9_]\w*)\b(?=\s*([-+*/%])?=)/g;
         let inFunction = false;
         let variables = new Array<RegExp>();
 
@@ -48,7 +48,6 @@ export class semanticTokensProvider implements vscode.DocumentSemanticTokensProv
         while ((match = regex.exec(line)) !== null) {
             const variableName = match[1];
             variables.push(new RegExp(`(?<!")\\b(${variableName})\\b(?!")`, 'g'));
-            builder.push(lineIndex, match.index, variableName.length, this.getTokenTypeIndex('variable'), this.getTokenModifiers(['declaration']));
         }
     }
 

@@ -1,24 +1,21 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Game Script Code",
-	"patterns": [
-		{
-			"include": "#comment"
-		},
-		{
-			"include": "#function_declaration"
-		},
-		{
-			"include": "#using_animtree"
-		},
+	"patterns": [				
 		{
 			"include": "#include"
 		},
 		{
 			"include": "#define"
+		},
+		{
+			"include": "#using_animtree"
 		},		
 		{
 			"include": "#block"
+		},
+		{
+			"include": "#comment"
 		}
 	],
 	"repository": {
@@ -55,9 +52,17 @@
 			"match": "(?<!\\w)-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?(?!\\w)"
 		},
 		"keyword_variables": {
-			"name": "constant.language.gsc",
-			"match": "\\b(?:true|false|undefined)\\b(?!\\.)"
-		},							
+			"patterns": [
+				{
+					"name": "keyword.variables.gsc",
+					"match": "\\b(?:true|false|undefined)\\b(?!\\.)"
+				},
+				{
+					"name": "keyword.thread.gsc",
+					"match": "\\bthread\\s"
+				}
+			]
+		},					
 		"statement": {
 			"name": "keyword.control.gsc",
 			"match": "\\b(if|else|switch|case|while|for|foreach|return|break|continue|assert|assertex)\\b"
@@ -66,72 +71,76 @@
 			"name": "keyword.operator.gsc",
 			"match": "\\?|:|-|--|-=|\\+|\\+\\+|\\+=|\\*|\\*\\*|\\/|%|=|==|!=|!|<|>|<=|>=|&&|\\|\\|"
 		},
-		"thread": {
-			"name": "keyword.gsc",
-			"match": "\\bthread\\s"
-		},
-		"structure_variable": {
-			"begin": "\\b([^\\s.]+)\\.(\\w+)\\b",
-			"beginCaptures": {
-				"1": {
-				"name": "keyword.control.gsc"
-				},
-				"2": {
-				"name": "variable.parameter.gsc"
-				}
-			},
-			"end": "\\s"
-		},		
 		"entity": {
 			"name": "keyword.control.gsc",
 			"match": "\\b(self|level)\\.?\\b"
 		},
-		"refer_entity_function": {
-			"name": "keyword.control.gsc",
-			"match": "\\b(([^\\s]+)(?:\\s+(thread))?)\\s+(?=_?[a-zA-Z0-9_]\\w*\\()",
-			"captures": {
-			"1": { "name": "keyword.control.gsc" },
-			"3": { "name": "keyword.gsc" }
-		}
+		"ref_variable": {
+			"begin": "\\b([^\\s.]+)\\.(\\w+)\\b",
+			"beginCaptures": {
+				"1": {
+				"name": "keyword.control.refvariable.gsc"
+				},
+				"2": {
+				"name": "variable.parameter.refvariable.gsc"
+				}
+			},
+			"end": "\\s"
 		},
-		"refer_entity_function_pointer": {
-			"name": "keyword.control.gsc",
-			"match": "\\b(([^\\s]+)(?:\\s+(thread))?)\\s+(?=(?:_?[a-zA-Z0-9_]\\w*\\()|(?:[^\\s:]+::[^\\s:]+\\(.*?\\)))",
-			"captures": {
-			"1": { "name": "keyword.control.gsc" },
-			"3": { "name": "keyword.gsc" }
-		}
-		},
-		"refer_entity_function_variable": {
-			"name": "keyword.control.gsc",
-			"match": "\\b(([^\\s]+)(?:\\s+(thread))?)\\s+(?=(?:_?[a-zA-Z0-9_]\\w*\\()|\\[\\[([^\\]]+)\\]\\]\\(.*?\\))",
-			"captures": {
-			"1": { "name": "keyword.control.gsc" },
-			"3": { "name": "keyword.gsc" }
-		}
-		},
-		"function_declaration": {
-			"name": "support.function.gsc",
-			"match": "^(_?[a-zA-Z0-9_]\\w*)(?=\\()"
-		},
+		"ref_function": {
+			"patterns": [
+				{
+						"name": "keyword.control.reffunc.gsc",
+						"match": "\\b(([^\\s]+)(?:\\s+(thread))?)\\s+(?=[a-zA-Z0-9_]\\w*\\()",
+						"captures": {
+						"1": { "name": "keyword.control.gsc" },
+						"3": { "name": "keyword.gsc" }
+					}
+				},
+				{
+					"name": "keyword.control.reffunc.pointer.gsc",
+					"match": "\\b(([^\\s]+)(?:\\s+(thread))?)\\s+(?=(?:[a-zA-Z0-9_]\\w*\\()|(?:[^\\s:]+::[^\\s:]+\\(.*?\\)))",
+					"captures": {
+						"1": { "name": "keyword.control.gsc" },
+						"3": { "name": "keyword.gsc" }
+					}
+				},
+				{
+						"name": "keyword.control.reffunc.variable.gsc",
+						"match": "\\b(([^\\s]+)(?:\\s+(thread))?)\\s+(?=(?:[a-zA-Z0-9_]\\w*\\()|\\[\\[([^\\]]+)\\]\\]\\(.*?\\))",
+						"captures": {
+						"1": { "name": "keyword.control.gsc" },
+						"3": { "name": "keyword.gsc" }
+					}
+				}			
+			]
+		},	
 		"function": {
-			"name": "support.function.gsc",
-			"match": "(_?[a-zA-Z0-9_]\\w*)(?=\\s*\\()"
+			"patterns": [
+				{
+					"name": "support.function.gsc",
+					"match": "([a-zA-Z0-9_]\\w*)(?=\\(.*?\\)\\;)"
+				},
+				{
+					"name": "support.function.pointer.gsc",
+					"match": "\\:\\:([a-zA-Z0-9_]\\w*)(?=\\(.*?\\)\\;)"
+				},
+				{
+					"name": "support.function.variable.gsc",
+					"match": "\\[\\[([a-zA-Z0-9_]\\w*)\\]\\](?=\\(.*?\\)\\;)"
+				}
+			]
 		},
-		"function_pointer": {
-			"name": "support.function.gsc",
-			"match": "::(_?[a-zA-Z0-9_]\\w*)"
+		"variable_declaration": {
+			"name": "support.variable.gsc",
+			"match": "\\b([a-zA-Z0-9_]\\w*)\\b(?=\\s*([-\\+\\*\\/%])?=)"
 		},
-		"function_variable": {
-			"name": "support.function.gsc",
-			"match": "\\[\\[(_?[a-zA-Z0-9_]\\w*)\\]\\](?=\\s*\\(.*\\))"
-		},
-		"using_animtree": {
-			"name": "support.function.gsc",
-			"match": "^#using_animtree(?=\\()"
+		"argument": {
+			"name": "keyword.operator.argument.gsc",
+			"match": "([a-zA-Z0-9_]\\w*)"
 		},	
 		"include": {
-			"begin": "^(#include\\b)\\s*([^;]*);?",
+			"begin": "^(#include\\b)\\s*([^;]*);?$",
 			"beginCaptures": {
 				"1": {
 				"name": "invalid.gsc"
@@ -163,80 +172,68 @@
 				}
 			},
 			"end": "\\s"
-		},						
+		},
+		"using_animtree": {
+			"name": "support.function.gsc",
+			"match": "^#using_animtree(?=\\()$"
+		},
 		"block": {
 			"patterns": [
-			  {
-				"name": "meta.block.gsc",
-				"begin": "\\{",
-				"beginCaptures": {
-				"1": {
-					"name": "punctuation.section.function.gsc"
-				}
-				},
-				"end": "\\}",
-				"endCaptures": {
-				"0": {
-					"name": "punctuation.section.block.end.gsc"
-				}
-				},
-				"patterns": [
-				  {
-					"include": "#block_innards"
-				  },
-				  {
-					"include": "$base"
-				  }
-				]
-			  }
-			]
-		},
-		"block_innards": {
-			"patterns": [				
 				{
-					"include": "#string"
-				},
-				{
-					"include": "#number"
-				},
-				{
-					"include": "#keyword_variables"
-				},
-				{
-					"include": "#statement"
-				},
-				{
-					"include": "#operators"
-				},
-				{
-					"include": "#thread"
-				},
-				{
-					"include": "#structure_variable"
-				},
-				{
-					"include": "#entity"
-				},
-				{
-					"include": "#refer_entity_function"
-				},
-				{
-					"include": "#refer_entity_function_pointer"
-				},
-				{
-					"include": "#refer_entity_function_variable"
-				},
-				{
-					"include": "#function"
-				},				
-				{
-					"include": "#function_pointer"
-				},
-				{
-					"include": "#function_variable"
-				},
-				{
-					"include": "#block"
+					"name": "meta.block.gsc",
+					"begin": "^([a-zA-Z0-9_]\\w*)(?=\\(.*?\\)\\s*(?://.*?$)?)",
+					"beginCaptures": {
+						"1": {
+							"name": "support.function.gsc"
+						}
+					},
+					"end": "\\}",
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.section.block.end.gsc"
+						}
+					},
+					"patterns": [
+						{
+							"include": "#comment"
+						},		
+						{
+							"include": "#string"
+						},
+						{
+							"include": "#number"
+						},
+						{
+							"include": "#keyword_variables"
+						},
+						{
+							"include": "#statement"
+						},
+						{
+							"include": "#operators"
+						},
+						{
+							"include": "#thread"
+						},
+						{
+							"include": "#ref_variable"
+						},
+						{
+							"include": "#entity"
+						},
+						{
+							"include": "#ref_function"
+						},
+						{
+							"include": "#function"
+						},
+						{
+							"include": "#variable_declaration"
+						},
+						{
+							"include": "$base"
+						}
+					]
 				}
 			]
 		}
