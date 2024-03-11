@@ -1,7 +1,7 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 	"name": "Game Script Code",
-	"patterns": [				
+	"patterns": [
 		{
 			"include": "#include"
 		},
@@ -10,15 +10,42 @@
 		},
 		{
 			"include": "#using_animtree"
-		},		
-		{
-			"include": "#block"
 		},
 		{
 			"include": "#comment"
+		},
+		{
+			"include": "#block"
 		}
 	],
 	"repository": {
+		"include": {
+			"begin": "^(#include\\b)\\s*([^;]*);?$",
+			"beginCaptures": {
+				"1": { "name": "invalid.gsc" },
+				"2": { "name": "constant.gsc" }
+			},
+			"end": "\\s"
+		},
+		"define": {
+			"begin": "^(#define\\b)\\s*([^\\s]+)\\s+(.+)$",
+			"beginCaptures": {
+				"1": { "name": "invalid.gsc" },
+				"2": { "name": "constant.gsc" },
+				"3": {
+					"patterns": [
+					  {
+						"include": "#data_types"
+					  }
+					]
+				}
+			},
+			"end": "\\s"
+		},
+		"using_animtree": {
+			"name": "support.function.gsc",
+			"match": "^#using_animtree(?=\\()$"
+		},
 		"comment": {
 			"patterns": [
 				{
@@ -49,191 +76,200 @@
 		},
 		"number": {
 			"name": "constant.character.escape.gsc",
-			"match": "(?<!\\w)-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?(?!\\w)"
+			"match": "(?<!\\w)(?:-?(?:0|[1-9]\\d*)(?:\\.\\d+)?|\\.\\d+)(?:[eE][+-]?\\d+)?(?!\\w)"
 		},
-		"keyword_variables": {
-			"patterns": [
-				{
-					"name": "keyword.variables.gsc",
-					"match": "\\b(?:true|false|undefined)\\b(?!\\.)"
-				},
-				{
-					"name": "keyword.thread.gsc",
-					"match": "\\bthread\\s"
-				}
-			]
-		},					
-		"statement": {
-			"name": "keyword.control.gsc",
-			"match": "\\b(if|else|switch|case|while|for|foreach|return|break|continue|assert|assertex)\\b"
+		"boolean": {
+			"name": "keyword.variables.gsc",
+			"match": "(?<!\\.)(?<!\\w)(true|false)(?!\\w)(?!\\.)"
 		},
-		"operators": {
-			"name": "keyword.operator.gsc",
-			"match": "\\?|:|-|--|-=|\\+|\\+\\+|\\+=|\\*|\\*\\*|\\/|%|=|==|!=|!|<|>|<=|>=|&&|\\|\\|"
+		"undefined": {
+			"name": "keyword.variables.gsc",
+			"match": "(?<!\\.)(?<!\\w)(undefined)(?!\\w)(?!\\.)"
 		},
 		"entity": {
 			"name": "keyword.control.gsc",
 			"match": "\\b(self|level)\\.?\\b"
 		},
-		"ref_variable": {
-			"begin": "\\b([^\\s.]+)\\.(\\w+)\\b",
-			"beginCaptures": {
-				"1": {
-				"name": "keyword.control.refvariable.gsc"
+		"data_types": {
+			"patterns": [	
+				{
+					"include": "#string"
 				},
-				"2": {
-				"name": "variable.parameter.refvariable.gsc"
+				{
+					"include": "#number"
+				},
+				{
+					"include": "#boolean"
+				},
+				{
+					"include": "#undefined"
+				},
+				{
+					"include": "#entity"
+				},
+				{
+					"include": "#array"
+				},
+				{
+					"include": "#vector"
 				}
-			},
-			"end": "\\s"
-		},
-		"ref_function": {
-			"patterns": [
-				{
-						"name": "keyword.control.reffunc.gsc",
-						"match": "\\b(([^\\s]+)(?:\\s+(thread))?)\\s+(?=[a-zA-Z0-9_]\\w*\\()",
-						"captures": {
-						"1": { "name": "keyword.control.gsc" },
-						"3": { "name": "keyword.gsc" }
-					}
-				},
-				{
-					"name": "keyword.control.reffunc.pointer.gsc",
-					"match": "\\b(([^\\s]+)(?:\\s+(thread))?)\\s+(?=(?:[a-zA-Z0-9_]\\w*\\()|(?:[^\\s:]+::[^\\s:]+\\(.*?\\)))",
-					"captures": {
-						"1": { "name": "keyword.control.gsc" },
-						"3": { "name": "keyword.gsc" }
-					}
-				},
-				{
-						"name": "keyword.control.reffunc.variable.gsc",
-						"match": "\\b(([^\\s]+)(?:\\s+(thread))?)\\s+(?=(?:[a-zA-Z0-9_]\\w*\\()|\\[\\[([^\\]]+)\\]\\]\\(.*?\\))",
-						"captures": {
-						"1": { "name": "keyword.control.gsc" },
-						"3": { "name": "keyword.gsc" }
-					}
-				}			
 			]
-		},	
-		"function": {
+		},
+		"array": {
 			"patterns": [
 				{
-					"name": "support.function.gsc",
-					"match": "([a-zA-Z0-9_]\\w*)(?=\\(.*?\\)\\;)"
-				},
+					"name": "meta.array.gsc",
+					"begin": "\\[",
+					"beginCaptures": { "0": { "name": "punctuation.array.start.gsc" } },
+					"end": "\\]",
+					"endCaptures": { "0": { "name": "punctuation.array.end.gsc" } },
+					"patterns": [
+							{
+								"include": "#data_types"
+							},
+							{
+								"include": "#struct_field"
+							},
+							{
+								"include": "#function"
+							}
+						]
+				}
+			]
+		},
+		"vector": {
+			"patterns": [
 				{
-					"name": "support.function.pointer.gsc",
-					"match": "\\:\\:([a-zA-Z0-9_]\\w*)(?=\\(.*?\\)\\;)"
-				},
-				{
-					"name": "support.function.variable.gsc",
-					"match": "\\[\\[([a-zA-Z0-9_]\\w*)\\]\\](?=\\(.*?\\)\\;)"
+					"name": "meta.vector.gsc",
+					"begin": "\\(",
+					"beginCaptures": { "0": { "name": "punctuation.vector.start.gsc" } },
+					"end": "\\)",
+					"endCaptures": { "0": { "name": "punctuation.vector.end.gsc" } },
+					"patterns": [
+							{
+								"include": "#number"
+							},
+							{
+								"include": "#struct_field"
+							},
+							{
+								"include": "#function"
+							}
+						]
 				}
 			]
 		},
 		"variable_declaration": {
-			"name": "support.variable.gsc",
-			"match": "\\b([a-zA-Z0-9_]\\w*)\\b(?=\\s*([-\\+\\*\\/%])?=)"
-		},
-		"argument": {
-			"name": "keyword.operator.argument.gsc",
-			"match": "([a-zA-Z0-9_]\\w*)"
-		},	
-		"include": {
-			"begin": "^(#include\\b)\\s*([^;]*);?$",
-			"beginCaptures": {
-				"1": {
-				"name": "invalid.gsc"
-				},
-				"2": {
-				"name": "constant.gsc"
+			"match": "\\b([a-zA-Z0-9_]\\w*)\\b(?=\\s*([-\\+\\*\\/%])?=)\\s*([^\\/]+?);\\s*($|//.*$)",
+			"captures": 
+				{
+					"1": { "name": "support.variable.gsc" },
+					"3": { "patterns": [
+							{
+								"include": "#data_types"
+							},
+							{
+								"include": "#struct_field"
+							},
+							{
+								"include": "#function"
+							}
+						]},
+					"4": { "name": "comment.line.gsc" }
 				}
-			},
-			"end": "\\s"
 		},
-		"define": {
-			"begin": "^(#define\\b)\\s*([^\\s]+)\\s+(.+)$",
-			"beginCaptures": {
-				"1": {
-				"name": "invalid.gsc"
-				},
-				"2": {
-				"name": "constant.gsc"
-				},
-				"3": {
-					"patterns": [
-					  {
-						"include": "#number"
-					  },
-					  {
-						"include": "#string"
-					  }
-					]
+		"struct_field": {
+			"match": "([a-zA-Z0-9_]\\w*)\\.([a-zA-Z0-9_]\\w*)",
+			"captures": 
+				{
+					"1": { "name": "keyword.control.refvariable.gsc" },
+					"2": { "name": "variable.parameter.refvariable.gsc" }
 				}
-			},
-			"end": "\\s"
 		},
-		"using_animtree": {
-			"name": "support.function.gsc",
-			"match": "^#using_animtree(?=\\()$"
+		"function": {
+			"patterns": [
+				{
+					"match": "([a-zA-Z0-9_]\\w*\\s)?((?<!\\.)(?<!\\w)thread\\s)?([a-zA-Z0-9_]\\w*)(?=\\(.*?\\))",
+					"captures": 
+					{
+						"1": { "name": "invalid.gsc" },
+						"2": { "name": "keyword.control.gsc" },
+						"3": { "name": "support.function.gsc" }
+					}
+				},
+				{
+					"match": "([a-zA-Z0-9_]\\w*\\s)?((?<!\\.)(?<!\\w)thread\\s)?(\\:\\:)([a-zA-Z0-9_]\\w*)(?=\\(.*?\\))",
+					"captures": 
+					{
+						"1": { "name": "invalid.gsc" },
+						"2": { "name": "keyword.control.gsc" },
+						"3": { "name": "support.function.gsc" }
+					}
+				},
+				{
+					"match": "([a-zA-Z0-9_]\\w*\\s)?((?<!\\.)(?<!\\w)thread\\s)?\\[\\[([a-zA-Z0-9_]\\w*)\\]\\](?=\\(.*?\\))",
+					"captures": 
+					{
+						"1": { "name": "invalid.gsc" },
+						"2": { "name": "keyword.control.gsc" },
+						"3": { "name": "support.function.gsc" }
+					}
+				}
+			]
+		},
+		"statement": {
+			"name": "keyword.control.gsc",
+			"match": "(?<!\\.)(?<!\\w)(return|break|continue|wait)(?!\\w)(?!\\.)"
+		},
+		"statement_block": {
+			"patterns": [
+				{
+					"name": "meta.block.gsc",
+					"begin": "\\b(if|else|switch|case|while|for|foreach)\\b",
+					"beginCaptures": { "0": { "name": "keyword.control.gsc" } },
+					"end": "\\}",
+					"endCaptures": { "0": { "name": "punctuation.section.block.end.gsc" } },
+					"patterns": [ { "include": "#block_innards" } ]
+				}
+			]
 		},
 		"block": {
 			"patterns": [
 				{
 					"name": "meta.block.gsc",
 					"begin": "^([a-zA-Z0-9_]\\w*)(?=\\(.*?\\)\\s*(?://.*?$)?)",
-					"beginCaptures": {
-						"1": {
-							"name": "support.function.gsc"
-						}
-					},
+					"beginCaptures": { "1": { "name": "support.function.gsc" } },
 					"end": "\\}",
-					"endCaptures": {
-						"0": {
-							"name": "punctuation.section.block.end.gsc"
-						}
-					},
-					"patterns": [
-						{
-							"include": "#comment"
-						},		
-						{
-							"include": "#string"
-						},
-						{
-							"include": "#number"
-						},
-						{
-							"include": "#keyword_variables"
-						},
-						{
-							"include": "#statement"
-						},
-						{
-							"include": "#operators"
-						},
-						{
-							"include": "#thread"
-						},
-						{
-							"include": "#ref_variable"
-						},
-						{
-							"include": "#entity"
-						},
-						{
-							"include": "#ref_function"
-						},
-						{
-							"include": "#function"
-						},
-						{
-							"include": "#variable_declaration"
-						},
-						{
-							"include": "$base"
-						}
-					]
+					"endCaptures": { "0": { "name": "punctuation.section.block.end.gsc" } },
+					"patterns": [ { "include": "#block_innards" }]
+				}
+			]
+		},
+		"block_innards": {
+			"patterns": [
+				{
+					"include": "#comment"
+				},
+				{
+					"include": "#data_types"
+				},
+				{
+					"include": "#variable_declaration"
+				},
+				{
+					"include": "#struct_field"
+				},
+				{
+					"include": "#function"
+				},
+				{
+					"include": "#statement"
+				},
+				{
+					"include": "#statement_block"
+				},				
+				{
+					"include": "$base"
 				}
 			]
 		}
