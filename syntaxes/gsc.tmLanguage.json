@@ -12,6 +12,9 @@
 			"include": "#using_animtree"
 		},
 		{
+			"include": "#constant_declaration"
+		},
+		{
 			"include": "#comment"
 		},
 		{
@@ -20,31 +23,29 @@
 	],
 	"repository": {
 		"include": {
-			"begin": "^(#include\\b)\\s*([^;]*);?$",
-			"beginCaptures": {
-				"1": { "name": "invalid.gsc" },
-				"2": { "name": "constant.gsc" }
-			},
-			"end": "\\s"
-		},
-		"define": {
-			"begin": "^(#define\\b)\\s*([^\\s]+)\\s+(.+)$",
-			"beginCaptures": {
+			"match": "^(#include\\b)\\s*([^;]*);\\s*($|//.*$)",
+			"captures": {
 				"1": { "name": "invalid.gsc" },
 				"2": { "name": "constant.gsc" },
-				"3": {
-					"patterns": [
-					  {
-						"include": "#data_types"
-					  }
-					]
-				}
-			},
-			"end": "\\s"
+				"3": { "name": "comment.line.gsc" }
+			}
+		},
+		"define": {
+			"match": "^(#define\\b)\\s+([a-zA-Z0-9_]\\w*)\\s+(.+?)\\s*($|//.*$)",
+			"captures": {
+				"1": { "name": "invalid.gsc" },
+				"2": { "name": "strong.constant.gsc" },
+				"3": { "patterns": [{"include": "#data_types"}] },
+				"4": { "name": "comment.line.gsc" }
+			}
 		},
 		"using_animtree": {
-			"name": "support.function.gsc",
-			"match": "^#using_animtree(?=\\()$"
+			"match": "^(#using_animtree\\b)\\(([^)]*)\\);\\s*($|//.*$)",
+			"captures": {
+				"1": { "name": "support.function.gsc" },
+				"2": { "patterns": [{"include": "#string"}] },
+				"3": { "name": "comment.line.gsc" }
+			}
 		},
 		"comment": {
 			"patterns": [
@@ -160,7 +161,7 @@
 			]
 		},
 		"variable_declaration": {
-			"match": "\\b([a-zA-Z0-9_]\\w*)\\b(?=\\s*([-\\+\\*\\/%])?=)\\s*([^\\/]+?);\\s*($|//.*$)",
+			"match": "([a-zA-Z0-9_]\\w*)(?=\\s*([-\\+\\*\\/%])?=)\\s*([^\\/]+?);\\s*($|//.*$)",
 			"captures": 
 				{
 					"1": { "name": "support.variable.gsc" },
@@ -178,6 +179,15 @@
 					"4": { "name": "comment.line.gsc" }
 				}
 		},
+		"constant_declaration": {
+			"match": "([a-zA-Z0-9_]\\w*)(?=\\s*([-\\+\\*\\/%])?=)\\s*([^\\/]+?);\\s*($|//.*$)",
+			"captures": 
+				{
+					"1": { "name": "strong.constant.gsc" },
+					"3": { "patterns": [ {"include": "#data_types"} ] },
+					"4": { "name": "comment.line.gsc" }
+				}
+		},
 		"struct_field": {
 			"match": "([a-zA-Z0-9_]\\w*)\\.([a-zA-Z0-9_]\\w*)",
 			"captures": 
@@ -189,7 +199,7 @@
 		"function": {
 			"patterns": [
 				{
-					"match": "([a-zA-Z0-9_]\\w*\\s)?((?<!\\.)(?<!\\w)thread\\s)?([a-zA-Z0-9_]\\w*)(?=\\(.*?\\))",
+					"match": "([a-zA-Z0-9_]\\w*\\s)?((?<!\\.)(?<!\\w)thread\\s)?\\b(?!if|else|switch|case|while|for|foreach)\\b([a-zA-Z0-9_]\\w*)(?=\\(.*?\\))",
 					"captures": 
 					{
 						"1": { "name": "invalid.gsc" },
@@ -222,7 +232,7 @@
 			"match": "(?<!\\.)(?<!\\w)(return|break|continue|wait)(?!\\w)(?!\\.)"
 		},
 		"statement_block": {
-			"patterns": [
+			"patterns": [				
 				{
 					"name": "meta.block.gsc",
 					"begin": "\\b(if|else|switch|case|while|for|foreach)\\b",
@@ -230,6 +240,10 @@
 					"end": "\\}",
 					"endCaptures": { "0": { "name": "punctuation.section.block.end.gsc" } },
 					"patterns": [ { "include": "#block_innards" } ]
+				},
+				{
+					"name": "keyword.control.gsc",
+					"match": "(?<!\\.)(?<!\\w)(if|else|switch|case|while|for|foreach)(?!\\w)(?!\\.)"
 				}
 			]
 		},
