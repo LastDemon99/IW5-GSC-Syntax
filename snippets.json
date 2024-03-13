@@ -4,14 +4,14 @@
     "body": [
       "#include common_scripts\\utility;"
     ],
-    "description": "include common_scripts\\utility.gsc"
+    "description": "Include all functions from common_scripts\\utility.gsc"
   },
   "common_scripts\\utility::": {
     "prefix": "utility::",
     "body": [
       "common_scripts\\utility::"
     ],
-    "description": "common_scripts\\utility.gsc pointer"
+    "description": "Call a function from common_scripts\\utility.gsc"
   },
 
   "maps\\mp\\_utility": {
@@ -19,14 +19,14 @@
     "body": [
       "#include maps\\mp\\_utility;"
     ],
-    "description": "include maps\\mp\\_utility.gsc"
+    "description": "Include all functions from maps\\mp\\_utility.gsc"
   },
   "maps\\mp\\_utility::": {
     "prefix": "_utility::",
     "body": [
       "maps\\mp\\_utility::"
     ],
-    "description": "maps\\mp\\_utility.gsc pointer"
+    "description": "Call a function from maps\\mp\\_utility.gsc"
   },
 
   "maps\\mp\\gametypes\\_hud_util": {
@@ -34,14 +34,22 @@
     "body": [
       "#include maps\\mp\\gametypes\\_hud_util;"
     ],
-    "description": "include maps\\mp\\gametypes\\_hud_util.gsc"
+    "description": "Include all functions from maps\\mp\\gametypes\\_hud_util.gsc"
   },
   "maps\\mp\\gametypes\\_hud_util::": {
     "prefix": "_hud_util::",
     "body": [
       "maps\\mp\\gametypes\\_hud_util::"
     ],
-    "description": "maps\\mp\\gametypes\\_hud_util.gsc pointer"
+    "description": "Call a function from maps\\mp\\gametypes\\_hud_util.gsc"
+  },
+
+  "using_animtree": {
+    "prefix": "#using_animtree",
+    "body": [
+      "#using_animtree(\"\");"
+    ],
+    "description": "Use an animation tree in the script"
   },
 
 	"scriptInit": {
@@ -49,30 +57,30 @@
 		"body": [
             "init()",
             "{",
-            "    level thread onPlayerConnect();",
+            "   level thread onPlayerConnect();",
             "}",
             "",
             "onPlayerConnect()",
             "{",
-            "    level endon(\"game_ended\");",
+            "   level endon(\"game_ended\");",
             "",
-            "    for (;;)",
-            "    {",
-            "        level waittill(\"connected\", player);",
-            "        ",
-            "        player thread onPlayerSpawn();",
-            "    }",
+            "   for (;;)",
+            "   {",
+            "      level waittill(\"connected\", player);",
+            "      ",
+            "      player thread onPlayerSpawn();",
+            "   }",
             "}",
             "",
             "onPlayerSpawn()",
             "{",
-            "    self endon(\"disconnect\");",
-            "    ",
-            "    for(;;)",
-            "    {",
-            "        self waittill(\"spawned_player\");",
-            "        ",
-            "    }",
+            "   self endon(\"disconnect\");",
+            "   ",
+            "   for(;;)",
+            "   {",
+            "      self waittill(\"spawned_player\");",
+            "      ",
+            "   }",
             "}"
           ],
 		"description": "Script init template"
