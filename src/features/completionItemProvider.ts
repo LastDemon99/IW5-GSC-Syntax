@@ -23,24 +23,7 @@ export class completionItemProvider {
 		const text = document.getText();
 		if (text.includes("#include common_scripts\\utility;"))
 			functions = functions.concat(common_scripts_utility_defs);
-
-		var _defs = defs.map(idef => {
-			const def = new vscode.CompletionItem(idef.name);
-			def.detail = idef.decl;
-			def.documentation = idef.desc;
-			def.kind = vscode.CompletionItemKind.Keyword;
-			return def;
-		});
-
-		var _functions = functions.map(idef => {
-			const def = new vscode.CompletionItem(idef.name);
-			def.detail = idef.decl;
-			def.documentation = idef.desc;
-			def.kind = vscode.CompletionItemKind.Function;
-			return def;
-		})
-
-		this.functions = _defs.concat(_functions)
-		return this.functions;
+		
+		return defs.concat(functions);
 	}
 }
