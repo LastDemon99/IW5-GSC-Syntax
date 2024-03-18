@@ -1,10 +1,11 @@
-<p align="center">
-  <img src="https://github.com/LastDemon99/LastDemon99/blob/main/Data/lb_logo.jpg">  
-  <br><br>
-  <b>IW5 GSC Syntax</b><br>
-  <a>This project aims to support GSC scripting syntax and autocomplete for IW5</a> 
-  <br><br>
-  <img src="https://github.com/LastDemon99/IW5-GSC-Syntax/blob/master/images/screenshots/iw5-gsc-syntax-preview.png"> 
-</p>
+# IW5 GSC Syntax
+This project aims to support GSC scripting syntax and autocomplete for IW5
 
-[GSC Documentation](https://github.com/LastDemon99/IW5-GSC-Syntax/tree/master/gsc-doc)
+This extension is a fork of the CoD-Sense extension, with many more features, highlights and autocomplete focused on iw5.
+
+***This extension is under development***
+
+![alt text](https://github.com/LastDemon99/IW5-GSC-Syntax/blob/master/images/screenshots/iw5-gsc-syntax-preview.png "GSC Syntax Highlight")
+
+-------------------------------------------------------------
+### GSC Documentation: [gsc-doc](https://github.com/LastDemon99/IW5-GSC-Syntax/tree/master/gsc-doc)
