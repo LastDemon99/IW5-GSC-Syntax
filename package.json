@@ -1,9 +1,10 @@
 {
     "name": "lb-iw5-gsc",
-    "displayName": "IW5-GSC-Syntax",
+    "displayName": "IW5 GSC Syntax",
     "description": "GSC scripting syntax and autocomplete used for IW5.",
-    "version": "0.0.1",
-    "publisher": "LethalBeats",
+    "version": "1.1.5",
+    "publisher": "LastDemon99",
+    "company": "LethalBeats",
     "icon": "images/iw5_gsc_syntax_logo_128x128.png",
     "repository": "https://github.com/LastDemon99/IW5-GSC-Syntax",
     "forked_repository": "https://github.com/SE2Dev/CoD-Sense",
