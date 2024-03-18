@@ -61,6 +61,18 @@ tmpDef = new CompletionItem("undefined");
 tmpDef.kind = CompletionItemKind.Value;
 defs.push(tmpDef);
 
+tmpDef = new CompletionItem("player");
+tmpDef.kind = CompletionItemKind.Keyword;
+defs.push(tmpDef);
+
+tmpDef = new CompletionItem("level");
+tmpDef.kind = CompletionItemKind.Keyword;
+defs.push(tmpDef);
+
+tmpDef = new CompletionItem("self");
+tmpDef.kind = CompletionItemKind.Keyword;
+defs.push(tmpDef);
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions declaration port from:: https://github.com/Slvr11/InfinityScript/blob/main/ScriptProcessor/GSCFunctions.cs //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

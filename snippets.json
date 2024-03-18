@@ -6,14 +6,20 @@
     ],
     "description": "Include all functions from common_scripts\\utility.gsc"
   },
-  "common_scripts\\utility::": {
-    "prefix": "utility::",
+  "common_scripts\\_fx;": {
+    "prefix": "#include _fx",
     "body": [
-      "common_scripts\\utility::"
+      "#include common_scripts\\_fx;"
     ],
-    "description": "Call a function from common_scripts\\utility.gsc"
+    "description": "Include all functions from common_scripts\\_fx.gsc"
   },
-
+  "common_scripts\\_createfx;": {
+    "prefix": "#include _createfx",
+    "body": [
+      "#include common_scripts\\_createfx;"
+    ],
+    "description": "Include all functions from common_scripts\\_createfx.gsc"
+  },
   "maps\\mp\\_utility": {
     "prefix": "#include _utility",
     "body": [
@@ -21,14 +27,13 @@
     ],
     "description": "Include all functions from maps\\mp\\_utility.gsc"
   },
-  "maps\\mp\\_utility::": {
-    "prefix": "_utility::",
+  "maps\\mp\\_createfx": {
+    "prefix": "#include _createfx",
     "body": [
-      "maps\\mp\\_utility::"
+      "#include maps\\mp\\_createfx;"
     ],
-    "description": "Call a function from maps\\mp\\_utility.gsc"
+    "description": "Include all functions from maps\\mp\\_createfx.gsc"
   },
-
   "maps\\mp\\gametypes\\_hud_util": {
     "prefix": "#include _hud_util",
     "body": [
@@ -36,12 +41,19 @@
     ],
     "description": "Include all functions from maps\\mp\\gametypes\\_hud_util.gsc"
   },
-  "maps\\mp\\gametypes\\_hud_util::": {
-    "prefix": "_hud_util::",
+  "maps\\mp\\gametypes\\_class": {
+    "prefix": "#include _class",
     "body": [
-      "maps\\mp\\gametypes\\_hud_util::"
+      "#include maps\\mp\\gametypes\\_class;"
     ],
-    "description": "Call a function from maps\\mp\\gametypes\\_hud_util.gsc"
+    "description": "Include all functions from maps\\mp\\gametypes\\_class.gsc"
+  },
+  "maps\\mp\\killstreaks\\_harrier": {
+    "prefix": "#include _class",
+    "body": [
+      "#include maps\\mp\\killstreaks\\_harrier;"
+    ],
+    "description": "Include all functions from maps\\mp\\killstreaks\\_harrier.gsc"
   },
 
   "using_animtree": {
