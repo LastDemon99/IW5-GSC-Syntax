@@ -33,6 +33,9 @@
 			}
 		]
     },
+    "activationEvents": [
+        "onLanguage:gsc"
+    ],
     "scripts": {
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
