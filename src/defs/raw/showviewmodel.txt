@@ -1,8 +1,0 @@
-Name: ShowViewModel
-Function: ShowViewModel()
-Module: Player
-Restriction: SP Only
-Summary: Show the player's current view model.
-CallOn: The player
-Example: level.player ShowViewModel();
-
