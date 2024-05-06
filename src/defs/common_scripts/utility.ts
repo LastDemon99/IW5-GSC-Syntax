@@ -5,955 +5,1037 @@ export var defs = new Array<CompletionItem>();
 export var common_scripts_utility = new Array<CompletionItem>();
 var tmpDef;
 
-tmpDef = new CompletionItem("scriptPrintln");
-tmpDef.detail = "scriptPrintln( <channel>: string, <msg>: string ): void";
+tmpDef = new CompletionItem("Scriptprintln");
+tmpDef.detail = "Scriptprintln( channel, msg )";
 tmpDef.documentation = "Prints a message to a specified channel.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("debugPrintln");
-tmpDef.detail = "debugPrintln( <channel>: string, <msg>: string ): void";
+tmpDef = new CompletionItem("Debugprintln");
+tmpDef.detail = "Debugprintln( channel, msg )";
 tmpDef.documentation = "Prints a message to the debug channel.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("draw_debug_line");
-tmpDef.detail = "draw_debug_line( <start>: vector, <end>: vector, <timer>: float ): void";
+tmpDef = new CompletionItem("Draw_debug_line");
+tmpDef.detail = "Draw_debug_line( start, end, timer )";
 tmpDef.documentation = "Draws a debug line between two points over a specified time.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittillend");
-tmpDef.detail = "waittillend( <msg>: string ): void";
+tmpDef = new CompletionItem("Waittillend");
+tmpDef.detail = "Waittillend( msg )";
 tmpDef.documentation = "Waits until a specific message is received.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("noself_func");
-tmpDef.detail = "noself_func( <func>: string, <parm1>: any?, <parm2>: any?, <parm3>: any?, <parm4>: any? ): void";
+tmpDef = new CompletionItem("Noself_func");
+tmpDef.detail = "Noself_func( func, parm1, parm2, parm3, parm4 )";
 tmpDef.documentation = "Runs a function from level.func array if it exists, without self reference.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("self_func");
-tmpDef.detail = "self_func( <func>: string, <parm1>: any?, <parm2>: any?, <parm3>: any?, <parm4>: any? ): void";
-tmpDef.documentation = "Runs a function from level.func array if it exists, with self reference.";
+tmpDef = new CompletionItem("Self_func");
+tmpDef.detail = "Self_func( func, parm1, parm2, parm3, parm4 )";
+tmpDef.documentation = "Runs a function from level.func array if it exists, without self reference.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("randomvector");
-tmpDef.detail = "randomvector( <num>: any ): vector";
+tmpDef = new CompletionItem("Randomvector");
+tmpDef.detail = "Randomvector( num )";
 tmpDef.documentation = "Returns a random vector centered on <num>.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("randomvectorrange");
-tmpDef.detail = "randomvectorrange( <num_min>: any, <num_max>: any ): vector";
+tmpDef = new CompletionItem("Randomvectorrange");
+tmpDef.detail = "Randomvectorrange( num_min, num_max )";
 tmpDef.documentation = "Returns a random vector centered between <num_min> and <num_max>.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("angle_dif");
-tmpDef.detail = "angle_dif( <oldangle>: any, <newangle>: any ): any";
+tmpDef = new CompletionItem("Angle_dif");
+tmpDef.detail = "Angle_dif ( oldangle, newangle )";
 tmpDef.documentation = "Returns the difference between two yaw angles.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("sign");
-tmpDef.detail = "sign( <x>: any ): any";
+tmpDef = new CompletionItem("Sign");
+tmpDef.detail = "Sign( x )";
 tmpDef.documentation = "Returns the sign of a number.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("track");
-tmpDef.detail = "track( <spot_to_track>: any ): void";
+tmpDef = new CompletionItem("Track");
+tmpDef.detail = "Track( spot_to_Track )";
 tmpDef.documentation = "Tracks a spot.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("get_enemy_team");
-tmpDef.detail = "get_enemy_team( <team>: any ): any";
+tmpDef = new CompletionItem("Get_enemy_team");
+tmpDef.detail = "Get_enemy_team( team )";
 tmpDef.documentation = "Gets the enemy team for a given team.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("clear_exception");
-tmpDef.detail = "clear_exception( <type>: any ): void";
+tmpDef = new CompletionItem("Clear_exception");
+tmpDef.detail = "Clear_exception( type )";
 tmpDef.documentation = "Clears an exception.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("set_exception");
-tmpDef.detail = "set_exception( <type>: any, <func>: any ): void";
+tmpDef = new CompletionItem("Set_exception");
+tmpDef.detail = "Set_exception( type, func )";
 tmpDef.documentation = "Sets an exception.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("set_all_exceptions");
-tmpDef.detail = "set_all_exceptions( <exceptionFunc>: any ): void";
+tmpDef = new CompletionItem("Set_all_exceptions");
+tmpDef.detail = "Set_all_exceptions( exceptionFunc )";
 tmpDef.documentation = "Sets all exceptions.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("cointoss");
-tmpDef.detail = "cointoss(): boolean";
+tmpDef = new CompletionItem("Cointoss");
+tmpDef.detail = "Cointoss()";
 tmpDef.documentation = "Returns true with a 50% chance.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("choose_from_weighted_array");
-tmpDef.detail = "choose_from_weighted_array( <values>: any[], <weights>: any[] ): any";
+tmpDef = new CompletionItem("Choose_from_weighted_array");
+tmpDef.detail = "Choose_from_weighted_array( values, weights )";
 tmpDef.documentation = "Chooses a value from a weighted array.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("get_cumulative_weights");
-tmpDef.detail = "get_cumulative_weights( <weights>: any[] ): any[]";
+tmpDef = new CompletionItem("Get_cumulative_weights");
+tmpDef.detail = "Get_cumulative_weights( weights )";
 tmpDef.documentation = "Calculates cumulative weights from an array of weights.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittill_string");
-tmpDef.detail = "waittill_string( <msg>: any, <ent>: any ): void";
+tmpDef = new CompletionItem("Waittill_string");
+tmpDef.detail = "Waittill_string( msg, ent )";
 tmpDef.documentation = "Waits until a specific message is received.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittill_multiple");
-tmpDef.detail = "waittill_multiple( <string1>: any?, <string2>: any?, <string3>: any?, <string4>: any?, <string5>: any? ): void";
+tmpDef = new CompletionItem("Waittill_multiple");
+tmpDef.detail = "Waittill_multiple( string1, string2, string3, string4, string5 )";
 tmpDef.documentation = "Waits until multiple specific messages are received.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittill_multiple_ents");
-tmpDef.detail = "waittill_multiple_ents( <ent1>: any?, <string1>: any?, <ent2>: any?, <string2>: any?, <ent3>: any?, <string3>: any?, <ent4>: any?, <string4>: any? ): void";
+tmpDef = new CompletionItem("Waittill_multiple_ents");
+tmpDef.detail = "Waittill_multiple_ents( ent1, string1, ent2, string2, ent3, string3, ent4, string4 )";
 tmpDef.documentation = "Waits until multiple specific messages are received from different entities.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittill_any_return");
-tmpDef.detail = "waittill_any_return( <string1>: any?, <string2>: any?, <string3>: any?, <string4>: any?, <string5>: any? ): any";
+tmpDef = new CompletionItem("Waittill_any_return");
+tmpDef.detail = "Waittill_any_return( string1, string2, string3, string4, string5 )";
 tmpDef.documentation = "Waits for any of several messages then returns what it was.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittill_any_timeout");
-tmpDef.detail = "waittill_any_timeout( <timeOut>: any?, <string1>: any?, <string2>: any?, <string3>: any?, <string4>: any?, <string5>: any? ): any";
+tmpDef = new CompletionItem("Waittill_any_timeout");
+tmpDef.detail = "Waittill_any_timeout( timeOut, string1, string2, string3, string4, string5 )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittill_any");
-tmpDef.detail = "waittill_any( <string1>: any, <string2>: any?, <string3>: any?, <string4>: any?, <string5>: any?, <string6>: any?, <string7>: any?, <string8>: any? ): void";
+tmpDef = new CompletionItem("_timeout");
+tmpDef.detail = "_timeout( delay )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittill_any_ents");
-tmpDef.detail = "waittill_any_ents( <ent1>: any, <string1>: any?, <ent2>: any?, <string2>: any?, <ent3>: any?, <string3>: any?, <ent4>: any?, <string4>: any?, <ent5>: any?, <string5>: any?, <ent6>: any?, <string6>: any?, <ent7>: any?, <string7>: any? ): void";
+tmpDef = new CompletionItem("Waittill_any");
+tmpDef.detail = "Waittill_any( string1, string2, string3, string4, string5, string6, string7, string8 )";
+tmpDef.documentation = "Waits for any of several messages then returns what it was.";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Waittill_any_ents");
+tmpDef.detail = "Waittill_any_ents( ent1, string1, ent2, string2, ent3, string3, ent4, string4, ent5, string5, ent6, string6, ent7, string7 )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("isFlashed");
-tmpDef.detail = "isFlashed(): boolean";
+tmpDef = new CompletionItem("Isflashed");
+tmpDef.detail = "Isflashed()";
 tmpDef.documentation = "Returns true if the player or an AI is flashed";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_exist");
-tmpDef.detail = "flag_exist( <flagname>: any ): boolean";
+tmpDef = new CompletionItem("Flag_exist");
+tmpDef.detail = "Flag_exist( message )";
 tmpDef.documentation = "Checks to see if a flag exists";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag");
-tmpDef.detail = "flag( <flagname>: any ): boolean";
-tmpDef.documentation = "Checks if the flag is set. Returns true or false.";
+tmpDef = new CompletionItem("Flag");
+tmpDef.detail = "Flag( message )";
+tmpDef.documentation = "Checks to see if a flag exists";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("init_flags");
-tmpDef.detail = "init_flags(): void";
+tmpDef = new CompletionItem("Init_flags");
+tmpDef.detail = "Init_flags()";
+tmpDef.kind = CompletionItemKind.Function;
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_init");
-tmpDef.detail = "flag_init( <flagname>: any ): void";
+tmpDef = new CompletionItem("Flag_init");
+tmpDef.detail = "Flag_init( message )";
 tmpDef.documentation = "Initialize a flag to be used. All flags must be initialized before using flag_set or flag_wait";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_set");
-tmpDef.detail = "flag_set( <flagname>: any, <setter>: any? ): void";
+tmpDef = new CompletionItem("Empty_init_func");
+tmpDef.detail = "Empty_init_func( empty )";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Issuffix");
+tmpDef.detail = "Issuffix( msg, suffix )";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Flag_set");
+tmpDef.detail = "Flag_set( message, setter )";
 tmpDef.documentation = "Sets the specified flag, all scripts using flag_wait will now continue.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_wait");
-tmpDef.detail = "flag_wait( <flagname>: any, <entity>: any? ): any";
+tmpDef = new CompletionItem("Assign_unique_id");
+tmpDef.detail = "Assign_unique_id()";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Flag_wait");
+tmpDef.detail = "Flag_wait( msg, entity )";
 tmpDef.documentation = "Waits until the specified flag is set.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_clear");
-tmpDef.detail = "flag_clear( <flagname>: any ): void";
+tmpDef = new CompletionItem("Flag_clear");
+tmpDef.detail = "Flag_clear( message )";
 tmpDef.documentation = "Clears the specified flag.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_waitopen");
-tmpDef.detail = "flag_waitopen( <flagname>: any ): void";
+tmpDef = new CompletionItem("Flag_waitopen");
+tmpDef.detail = "Flag_waitopen( msg )";
 tmpDef.documentation = "Waits for the flag to open";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittill_either");
-tmpDef.detail = "waittill_either( <msg1>: any, <msg2>: any ): void";
+tmpDef = new CompletionItem("Waittill_either");
+tmpDef.detail = "Waittill_either( msg1, msg2 )";
 tmpDef.documentation = "Waits until either message, on self";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_thread");
-tmpDef.detail = "array_thread( <entities>: any[], <process>: any, <var1>: any?, <var2>: any?, <var3>: any?, <var4>: any?, <var5>: any?, <var6>: any?, <var7>: any?, <var8>: any?, <var9>: any? ): void";
+tmpDef = new CompletionItem("Array_thread");
+tmpDef.detail = "Array_thread( entities, process, var1, var2, var3, var4, var5, var6, var7, var8, var9 )";
 tmpDef.documentation = "Threads the < process > function on every entity in the < entities > array. The entity will become 'self' in the specified function.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_call");
-tmpDef.detail = "array_call( <entities>: any[], <process>: any, <var1>: any?, <var2>: any?, <var3>: any? ): void";
+tmpDef = new CompletionItem("Array_call");
+tmpDef.detail = "Array_call( entities, process, var1, var2, var3 )";
 tmpDef.documentation = "Runs the code < process > function on every entity in the < entities > array. The entity will become 'self' in the specified function.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_thread4");
-tmpDef.detail = "array_thread4( <entities>: any[], <process>: any, <var1>: any?, <var2>: any?, <var3>: any?, <var4>: any? ): void";
+tmpDef = new CompletionItem("Array_thread4");
+tmpDef.detail = "Array_thread4( entities, process, var1, var2, var3, var4 )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_thread5");
-tmpDef.detail = "array_thread5( <entities>: any[], <process>: any, <var1>: any?, <var2>: any?, <var3>: any?, <var4>: any?, <var5>: any? ): void";
+tmpDef = new CompletionItem("Array_thread5");
+tmpDef.detail = "Array_thread5( entities, process, var1, var2, var3, var4, var5 )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("trigger_on");
-tmpDef.detail = "trigger_on( <name>: any?, <type>: any? ): void";
+tmpDef = new CompletionItem("Trigger_on");
+tmpDef.detail = "Trigger_on( name, type )";
 tmpDef.documentation = "Turns a trigger on. This only needs to be called if it was previously turned off";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("trigger_off");
-tmpDef.detail = "trigger_off( <name>: any?, <type>: any? ): void";
+tmpDef = new CompletionItem("Trigger_on_proc");
+tmpDef.detail = "Trigger_on_proc()";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Trigger_off");
+tmpDef.detail = "Trigger_off( name, type )";
 tmpDef.documentation = "Turns a trigger off so it can no longer be triggered.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("set_trigger_flag_permissions");
-tmpDef.detail = "set_trigger_flag_permissions( <msg>: any ): void";
+tmpDef = new CompletionItem("Trigger_off_proc");
+tmpDef.detail = "Trigger_off_proc()";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Set_trigger_flag_permissions");
+tmpDef.detail = "Set_trigger_flag_permissions( msg )";
 tmpDef.documentation = "turns triggers on or off depending on if they have the proper flags set, based on their shift-g menu settings";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("update_trigger_based_on_flags");
-tmpDef.detail = "update_trigger_based_on_flags(): void";
+tmpDef = new CompletionItem("Update_trigger_based_on_flags");
+tmpDef.detail = "Update_trigger_based_on_flags()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("getstruct");
-tmpDef.detail = "getstruct( <name>: any, <type>: any ): any";
+tmpDef = new CompletionItem("Create_flags_and_return_tokens");
+tmpDef.detail = "Create_flags_and_return_tokens( flags )";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Init_trigger_flags");
+tmpDef.detail = "Init_trigger_flags()";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Getstruct");
+tmpDef.detail = "Getstruct( name, type )";
 tmpDef.documentation = "get a struct by target, targetname,script_noteworthy, or script_linkname types, must be called after maps\\_load::main();";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("getstructarray");
-tmpDef.detail = "getstructarray( <name>: any, <type ): any[]";
+tmpDef = new CompletionItem("Getstructarray");
+tmpDef.detail = "Getstructarray( name, type )";
 tmpDef.documentation = "gets an array of script_structs";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("struct_class_init");
-tmpDef.detail = "struct_class_init(): void";
+tmpDef = new CompletionItem("Struct_class_init");
+tmpDef.detail = "Struct_class_init()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_start");
-tmpDef.detail = "fileprint_start( <file>: any ): void";
+tmpDef = new CompletionItem("Fileprint_start");
+tmpDef.detail = "Fileprint_start( file )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_map_start");
-tmpDef.detail = "fileprint_map_start(): void";
+tmpDef = new CompletionItem("Fileprint_map_start");
+tmpDef.detail = "Fileprint_map_start()";
 tmpDef.documentation = "starts map export with the file trees\\cod3\\cod3\\map_source\\xenon_export\\ < filename > .map adds header / worldspawn entity to the map.  Use this if you want to start a .map export.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_map_keypairprint");
-tmpDef.detail = "fileprint_map_keypairprint( <key1>: any, <key2>: any ): void";
+tmpDef = new CompletionItem("Fileprint_map_header");
+tmpDef.detail = "Fileprint_map_header( bInclude_blank_worldspawn )";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Fileprint_map_keypairprint");
+tmpDef.detail = "Fileprint_map_keypairprint( key1, key2 )";
 tmpDef.documentation = "prints a pair of keys to the current open map( by fileprint_map_start() )";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_map_entity_start");
-tmpDef.detail = "fileprint_map_entity_start(): void";
+tmpDef = new CompletionItem("Fileprint_map_entity_start");
+tmpDef.detail = "Fileprint_map_entity_start()";
 tmpDef.documentation = "prints entity number and opening bracket to currently opened file";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_map_entity_end");
-tmpDef.detail = "fileprint_map_entity_end(): void";
+tmpDef = new CompletionItem("Fileprint_map_entity_end");
+tmpDef.detail = "Fileprint_map_entity_end()";
 tmpDef.documentation = "close brackets an entity, required for the next entity to begin";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_radiant_vec");
-tmpDef.detail = "fileprint_radiant_vec( <vector>: any ): any";
+tmpDef = new CompletionItem("Fileprint_radiant_vec");
+tmpDef.detail = "Fileprint_radiant_vec( vector )";
 tmpDef.documentation = "this converts a vector to a .map file readable format";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_remove");
-tmpDef.detail = "array_remove( <ents>: any[], <remover>: any ): any[]";
+tmpDef = new CompletionItem("Array_remove");
+tmpDef.detail = "Array_remove( ents, remover )";
 tmpDef.documentation = "Returns < ents > array minus < remover > ";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_remove_array");
-tmpDef.detail = "array_remove_array( <ents>: any[], <remover_array>: any[] ): any[]";
+tmpDef = new CompletionItem("Array_remove_array");
+tmpDef.detail = "Array_remove_array( ents, remover_array )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_removeUndefined");
-tmpDef.detail = "array_removeUndefined( <array>: any[] ): any[]";
+tmpDef = new CompletionItem("Array_removeundefined");
+tmpDef.detail = "Array_removeundefined( array )";
 tmpDef.documentation = "Returns a new array of < array > minus the undefined indicies";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_levelthread");
-tmpDef.detail = "array_levelthread( <entities>: any[], <process>: any, <var1>: any, <var2>: any, <var3>: any ): void";
+tmpDef = new CompletionItem("Array_levelthread");
+tmpDef.detail = "Array_levelthread( array, process, var1, var2, var3 )";
 tmpDef.documentation = "Threads the < process > function for every entity in the < entities > array. The level calls the function and each entity of the array is passed as the first parameter to the process.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_levelcall");
-tmpDef.detail = "array_levelcall( <entities>: any[], <process>: any, <var1>: any, <var2>: any, <var3>: any ): void";
+tmpDef = new CompletionItem("Array_levelcall");
+tmpDef.detail = "Array_levelcall( array, process, var1, var2, var3 )";
 tmpDef.documentation = "Calls the < process > function for every entity in the < entities > array. The level calls the function and each entity of the array is passed as the first parameter to the process.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("add_to_array");
-tmpDef.detail = "add_to_array( <array>: any[], <ent>: any ): any[]";
+tmpDef = new CompletionItem("Add_to_array");
+tmpDef.detail = "Add_to_array( array, ent )";
 tmpDef.documentation = "Adds < ent > to < array > and returns the new array.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_assert");
-tmpDef.detail = "flag_assert( <msg>: string ): void";
+tmpDef = new CompletionItem("Flag_assert");
+tmpDef.detail = "Flag_assert( msg )";
 tmpDef.documentation = "Asserts that a flag is clear. Useful for proving an assumption of a flag's state";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_wait_either");
-tmpDef.detail = "flag_wait_either( <flagname1>: string, <flagname2>: string ): void";
+tmpDef = new CompletionItem("Flag_wait_either");
+tmpDef.detail = "Flag_wait_either( flag1, flag2 )";
 tmpDef.documentation = "Waits until either of the the specified flags are set.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_wait_either_return");
-tmpDef.detail = "flag_wait_either_return( <flagname1>: string, <flagname2>: string ): string";
+tmpDef = new CompletionItem("Flag_wait_either_return");
+tmpDef.detail = "Flag_wait_either_return( flag1, flag2 )";
 tmpDef.documentation = "Waits until either of the the specified flags are set, and returns the first one it found.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_wait_any");
-tmpDef.detail = "flag_wait_any( <flagname1>: string, <flagname2>: string, <flagname3>: string, <flagname4>: string, <flagname5>: string, <flagname6>: string ): void";
+tmpDef = new CompletionItem("Flag_wait_any");
+tmpDef.detail = "Flag_wait_any( flag1, flag2, flag3, flag4, flag5, flag6 )";
 tmpDef.documentation = "Waits until any of the the specified flags are set.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_wait_any_return");
-tmpDef.detail = "flag_wait_any_return( <flagname1>: string, <flagname2>: string, <flagname3>: string, <flagname4>: string, <flagname5>: string ): string";
+tmpDef = new CompletionItem("Flag_wait_any_return");
+tmpDef.detail = "Flag_wait_any_return( flag1, flag2, flag3, flag4, flag5 )";
 tmpDef.documentation = "Waits until any of the the specified flags are set, and returns the first set flag that was found.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_wait_all");
-tmpDef.detail = "flag_wait_all( <flagname1>: string, <flagname2>: string, <flagname3>: string, <flagname4>: string ): void";
+tmpDef = new CompletionItem("Flag_wait_all");
+tmpDef.detail = "Flag_wait_all( flag1, flag2, flag3, flag4 )";
 tmpDef.documentation = "Waits until all of the the specified flags are set.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_wait_or_timeout");
-tmpDef.detail = "flag_wait_or_timeout( <flagname>: string, <timer>: int ): void";
+tmpDef = new CompletionItem("Flag_wait_or_timeout");
+tmpDef.detail = "Flag_wait_or_timeout( flagname, timer )";
 tmpDef.documentation = "Waits until either the flag gets set or the timer elapses.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flag_waitopen_or_timeout");
-tmpDef.detail = "flag_waitopen_or_timeout( <flagname>: string, <timer>: int ): void";
+tmpDef = new CompletionItem("Flag_waitopen_or_timeout");
+tmpDef.detail = "Flag_waitopen_or_timeout( flagname, timer )";
 tmpDef.documentation = "Waits until either the flag gets cleared or the timer elapses.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("delayCall");
-tmpDef.detail = "delayCall( <delay>: int, <function>: function, <arg1>: any, <arg2>: any, <arg3>: any, <arg4>: any, <arg5>: any, <arg6>: any, <arg7>: any, <arg8>: any ): void";
+tmpDef = new CompletionItem("Wait_for_flag_or_time_elapses");
+tmpDef.detail = "Wait_for_flag_or_time_elapses( flagname, timer )";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Delaycall");
+tmpDef.detail = "Delaycall( timer, func, param1, param2, param3, param4, param5, param6, param7, param8 )";
 tmpDef.documentation = "delayCall is cool! It saves you from having to write extra script for once off commands. Note you don�t have to thread it off. delaycall is that smart!";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("noself_delayCall");
-tmpDef.detail = "noself_delayCall( <delay>: int, <function>: function, <arg1>: any, <arg2>: any, <arg3>: any, <arg4>: any ): void";
+tmpDef = new CompletionItem("Delaycall_proc");
+tmpDef.detail = "Delaycall_proc( func, timer, param1, param2, param3, param4, param5, param6, param7, param8 )";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Noself_delaycall");
+tmpDef.detail = "Noself_delaycall( timer, func, param1, param2, param3, param4 )";
 tmpDef.documentation = "Calls a command with no self (some commands don't support having self).";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("isSP");
-tmpDef.detail = "isSP(): boolean";
+tmpDef = new CompletionItem("Noself_delaycall_proc");
+tmpDef.detail = "Noself_delaycall_proc( func, timer, param1, param2, param3, param4 )";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Issp");
+tmpDef.detail = "Issp()";
 tmpDef.documentation = "Returns false if the level name begins with mp_";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("isSP_TowerDefense");
-tmpDef.detail = "isSP_TowerDefense(): boolean";
+tmpDef = new CompletionItem("Issp_towerdefense");
+tmpDef.detail = "Issp_towerdefense()";
 tmpDef.documentation = "Returns true if the level name begins with so_td_";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("string_starts_with");
-tmpDef.detail = "string_starts_with( <string>: string, <start>: string ): boolean";
+tmpDef = new CompletionItem("String_starts_with");
+tmpDef.detail = "String_starts_with( string, start )";
 tmpDef.documentation = "Returns true if the first string begins with the first string";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("plot_points");
-tmpDef.detail = "plot_points( <plotpoints>: any[], <r>: int, <g>: int, <b>: int, <timer>: float ): void";
+tmpDef = new CompletionItem("Plot_points");
+tmpDef.detail = "Plot_points( plotpoints, r, g, b, timer )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("draw_line_for_time");
-tmpDef.detail = "draw_line_for_time( <org1>: any, <org2>: any, <r>: float, <g>: float, <b>: float, <timer>: float ): void";
+tmpDef = new CompletionItem("Draw_line_for_time");
+tmpDef.detail = "Draw_line_for_time( org1, org2, r, g, b, timer )";
 tmpDef.documentation = "Draws a line from < org1 > to < org2 > in the specified color for the specified duration";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("array_combine");
-tmpDef.detail = "array_combine( <array1>: any[], <array2>: any[] ): any[]";
+tmpDef = new CompletionItem("Array_combine");
+tmpDef.detail = "Array_combine( array1, array2 )";
 tmpDef.documentation = "Combines the two arrays and returns the resulting array. This function doesn't care if it produces duplicates in the array.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flat_angle");
-tmpDef.detail = "flat_angle( <angle>: any ): any";
+tmpDef = new CompletionItem("Flat_angle");
+tmpDef.detail = "Flat_angle( angle )";
 tmpDef.documentation = "Returns the specified angle as a flat angle.( 45, 90, 30 ) becomes( 0, 90, 30 ). Useful if you just need an angle around Y - axis.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("flat_origin");
-tmpDef.detail = "flat_origin( <org>: any ): any";
+tmpDef = new CompletionItem("Flat_origin");
+tmpDef.detail = "Flat_origin( org )";
 tmpDef.documentation = "Returns a flat origin of the specified origin. Moves Z corrdinate to 0.( x, y, z ) becomes( x, y, 0 )";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("draw_arrow_time");
-tmpDef.detail = "draw_arrow_time( <start>: any, <end>: any, <color>: any, <duration>: any ): void";
+tmpDef = new CompletionItem("Draw_arrow_time");
+tmpDef.detail = "Draw_arrow_time( start, end, color, duration )";
 tmpDef.documentation = "Draws an arrow pointing at < end > in the specified color for < duration > seconds.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("get_linked_ents");
-tmpDef.detail = "get_linked_ents(): any[]";
+tmpDef = new CompletionItem("Get_linked_ents");
+tmpDef.detail = "Get_linked_ents()";
 tmpDef.documentation = "Returns an array of entities that SELF is linked to";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("get_linked_vehicle_nodes");
-tmpDef.detail = "get_linked_vehicle_nodes(): any[]";
+tmpDef = new CompletionItem("Get_linked_vehicle_nodes");
+tmpDef.detail = "Get_linked_vehicle_nodes()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("get_linked_ent");
-tmpDef.detail = "get_linked_ent(): any";
-tmpDef.documentation = "Returns a single entity that SELF is linked to";
+tmpDef = new CompletionItem("Get_linked_ent");
+tmpDef.detail = "Get_linked_ent()";
+tmpDef.documentation = "Returns an array of entities that SELF is linked to";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("get_linked_vehicle_node");
-tmpDef.detail = "get_linked_vehicle_node(): any";
+tmpDef = new CompletionItem("Get_linked_vehicle_node");
+tmpDef.detail = "Get_linked_vehicle_node()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("get_links");
-tmpDef.detail = "get_links( <get_links>: any ): any";
+tmpDef = new CompletionItem("Get_links");
+tmpDef.detail = "Get_links()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("run_thread_on_targetname");
-tmpDef.detail = "run_thread_on_targetname( <msg>: any, <func>: any, <param1>: any, <param2>: any, <param3>: any ): void";
+tmpDef = new CompletionItem("Run_thread_on_targetname");
+tmpDef.detail = "Run_thread_on_targetname( msg, func, param1, param2, param3 )";
 tmpDef.documentation = "Runs the specified thread on any entity with that targetname";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("run_thread_on_noteworthy");
-tmpDef.detail = "run_thread_on_noteworthy( <msg>: any, <func>: any, <param1>: any, <param2>: any, <param3>: any ): void";
+tmpDef = new CompletionItem("Run_thread_on_noteworthy");
+tmpDef.detail = "Run_thread_on_noteworthy( msg, func, param1, param2, param3 )";
 tmpDef.documentation = "Runs the specified thread on any entity with that noteworthy";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("draw_arrow");
-tmpDef.detail = "draw_arrow( <start>: any, <end>: any, <color>: any ): void";
+tmpDef = new CompletionItem("Draw_arrow");
+tmpDef.detail = "Draw_arrow( start, end, color )";
 tmpDef.documentation = "Draws an arrow pointing at < end > in the specified color for < duration > seconds.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("getfx");
-tmpDef.detail = "getfx( <fx>: any ): any";
+tmpDef = new CompletionItem("Getfx");
+tmpDef.detail = "Getfx( fx )";
 tmpDef.documentation = "Gets the associated level._effect";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fxExists");
-tmpDef.detail = "fxExists( <fx>: any ): boolean";
+tmpDef = new CompletionItem("Fxexists");
+tmpDef.detail = "Fxexists( fx )";
 tmpDef.documentation = "Returns whether or not an fx exists";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("print_csv_asset");
-tmpDef.detail = "print_csv_asset( <asset>: any, <type>: any ): void";
+tmpDef = new CompletionItem("Print_csv_asset");
+tmpDef.detail = "Print_csv_asset( asset, type )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_csv_start");
-tmpDef.detail = "fileprint_csv_start( <file>: any ): void";
+tmpDef = new CompletionItem("Fileprint_csv_start");
+tmpDef.detail = "Fileprint_csv_start( file )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
 tmpDef = new CompletionItem("_loadfx");
-tmpDef.detail = "_loadfx( <effect>: any ): any";
+tmpDef.detail = "_loadfx( effect )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("getLastWeapon");
-tmpDef.detail = "getLastWeapon( <getLastWeapon>: any ): any";
+tmpDef = new CompletionItem("Getlastweapon");
+tmpDef.detail = "Getlastweapon()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("PlayerUnlimitedAmmoThread");
-tmpDef.detail = "PlayerUnlimitedAmmoThread(): void";
+tmpDef = new CompletionItem("Playerunlimitedammothread");
+tmpDef.detail = "Playerunlimitedammothread()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("isUsabilityEnabled");
-tmpDef.detail = "isUsabilityEnabled(): boolean";
+tmpDef = new CompletionItem("Isusabilityenabled");
+tmpDef.detail = "Isusabilityenabled()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("_disableUsability");
-tmpDef.detail = "_disableUsability(): void";
+tmpDef = new CompletionItem("_disableusability");
+tmpDef.detail = "_disableusability()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("_enableUsability");
-tmpDef.detail = "_enableUsability(): void";
+tmpDef = new CompletionItem("_enableusability");
+tmpDef.detail = "_enableusability()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("resetUsability");
-tmpDef.detail = "resetUsability(): void";
+tmpDef = new CompletionItem("Resetusability");
+tmpDef.detail = "Resetusability()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("_disableWeapon");
-tmpDef.detail = "_disableWeapon(): void";
+tmpDef = new CompletionItem("_disableweapon");
+tmpDef.detail = "_disableweapon()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("_enableWeapon");
-tmpDef.detail = "_enableWeapon(): void";
+tmpDef = new CompletionItem("_enableweapon");
+tmpDef.detail = "_enableweapon()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("isWeaponEnabled");
-tmpDef.detail = "isWeaponEnabled(): boolean";
+tmpDef = new CompletionItem("Isweaponenabled");
+tmpDef.detail = "Isweaponenabled()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("_disableWeaponSwitch");
-tmpDef.detail = "_disableWeaponSwitch(): void";
+tmpDef = new CompletionItem("_disableweaponswitch");
+tmpDef.detail = "_disableweaponswitch()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("_enableWeaponSwitch");
-tmpDef.detail = "_enableWeaponSwitch(): void";
+tmpDef = new CompletionItem("_enableweaponswitch");
+tmpDef.detail = "_enableweaponswitch()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("isWeaponSwitchEnabled");
-tmpDef.detail = "isWeaponSwitchEnabled(): boolean";
+tmpDef = new CompletionItem("Isweaponswitchenabled");
+tmpDef.detail = "Isweaponswitchenabled()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("_disableOffhandWeapons");
-tmpDef.detail = "_disableOffhandWeapons(): void";
+tmpDef = new CompletionItem("_disableoffhandweapons");
+tmpDef.detail = "_disableoffhandweapons()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("_enableOffhandWeapons");
-tmpDef.detail = "_enableOffhandWeapons(): void";
+tmpDef = new CompletionItem("_enableoffhandweapons");
+tmpDef.detail = "_enableoffhandweapons()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("isOffhandWeaponEnabled");
-tmpDef.detail = "isOffhandWeaponEnabled(): boolean";
+tmpDef = new CompletionItem("Isoffhandweaponenabled");
+tmpDef.detail = "Isoffhandweaponenabled()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("random");
-tmpDef.detail = "random( <array> ): any";
-tmpDef.documentation = "chose a random element of an array";
+tmpDef = new CompletionItem("Random");
+tmpDef.detail = "Random( array )";
+tmpDef.documentation = "Returns a random vector centered on <num>.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("spawn_tag_origin");
-tmpDef.detail = "spawn_tag_origin(): entity";
+tmpDef = new CompletionItem("Spawn_tag_origin");
+tmpDef.detail = "Spawn_tag_origin()";
 tmpDef.documentation = "Spawn a script model with tag_origin model";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waittill_notify_or_timeout");
-tmpDef.detail = "waittill_notify_or_timeout( <msg>: string, <timer>: float ): void";
+tmpDef = new CompletionItem("Waittill_notify_or_timeout");
+tmpDef.detail = "Waittill_notify_or_timeout( msg, timer )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_launcher_start_file");
-tmpDef.detail = "fileprint_launcher_start_file(): void";
+tmpDef = new CompletionItem("Fileprint_launcher_start_file");
+tmpDef.detail = "Fileprint_launcher_start_file()";
 tmpDef.documentation = "Tells Launcher to start storing text to a file.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_launcher");
-tmpDef.detail = "fileprint_launcher( <string>: string ): void";
-tmpDef.documentation = "Tell launcher to append text to current open file.";
+tmpDef = new CompletionItem("Fileprint_launcher");
+tmpDef.detail = "Fileprint_launcher( string )";
+tmpDef.documentation = "Tells Launcher to start storing text to a file.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fileprint_launcher_end_file");
-tmpDef.detail = "fileprint_launcher_end_file( <file_relative_to_game>: string, <bIsPerforceEnabled>: boolean ): boolean";
+tmpDef = new CompletionItem("Fileprint_launcher_end_file");
+tmpDef.detail = "Fileprint_launcher_end_file( file_relative_to_game, bIsPerforceEnabled )";
 tmpDef.documentation = "Tell launcher to write out Text that has been started and appended.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("launcher_write_clipboard");
-tmpDef.detail = "launcher_write_clipboard( <str>: string ): void";
+tmpDef = new CompletionItem("Launcher_write_clipboard");
+tmpDef.detail = "Launcher_write_clipboard( str )";
 tmpDef.documentation = "send a string to your Connected PC's clipboard through launcher";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("isDestructible");
-tmpDef.detail = "isDestructible(): boolean";
+tmpDef = new CompletionItem("Isdestructible");
+tmpDef.detail = "Isdestructible()";
 tmpDef.documentation = "returns true if self is a destructible";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("pauseEffect");
-tmpDef.detail = "pauseEffect(): void";
+tmpDef = new CompletionItem("Pauseeffect");
+tmpDef.detail = "Pauseeffect()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("activate_individual_exploder");
-tmpDef.detail = "activate_individual_exploder(): void";
+tmpDef = new CompletionItem("Activate_individual_exploder");
+tmpDef.detail = "Activate_individual_exploder()";
 tmpDef.documentation = "Activates an individual exploder, rather than all the exploders of a given number";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("waitframe");
-tmpDef.detail = "waitframe(): void";
+tmpDef = new CompletionItem("Waitframe");
+tmpDef.detail = "Waitframe()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("brush_delete");
-tmpDef.detail = "brush_delete(): void";
+tmpDef = new CompletionItem("Brush_delete");
+tmpDef.detail = "Brush_delete()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("brush_throw");
-tmpDef.detail = "brush_throw(): void";
+tmpDef = new CompletionItem("Brush_throw");
+tmpDef.detail = "Brush_throw()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("get_target_ent");
-tmpDef.detail = "get_target_ent( <target>: string ): entity";
+tmpDef = new CompletionItem("Get_target_ent");
+tmpDef.detail = "Get_target_ent( target )";
 tmpDef.documentation = "Returns whatever SINGLE ent is targeted, be it node, struct, or entity";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("brush_show");
-tmpDef.detail = "brush_show(): void";
+tmpDef = new CompletionItem("Brush_show");
+tmpDef.detail = "Brush_show()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("exploder_earthquake");
-tmpDef.detail = "exploder_earthquake(): void";
+tmpDef = new CompletionItem("Exploder_earthquake");
+tmpDef.detail = "Exploder_earthquake()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("do_earthquake");
-tmpDef.detail = "do_earthquake( <name>: string, <origin>: vector ): void";
+tmpDef = new CompletionItem("Do_earthquake");
+tmpDef.detail = "Do_earthquake( name, origin )";
 tmpDef.documentation = "Play an earthquake that is defined by add_earthquake()";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("exploder_rumble");
-tmpDef.detail = "exploder_rumble(): void";
+tmpDef = new CompletionItem("Exploder_rumble");
+tmpDef.detail = "Exploder_rumble()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("exploder_delay");
-tmpDef.detail = "exploder_delay(): void";
+tmpDef = new CompletionItem("Exploder_delay");
+tmpDef.detail = "Exploder_delay()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("exploder_damage");
-tmpDef.detail = "exploder_damage(): void";
+tmpDef = new CompletionItem("Exploder_damage");
+tmpDef.detail = "Exploder_damage()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("stop_exploder");
-tmpDef.detail = "stop_exploder( <num>: any ): void";
+tmpDef = new CompletionItem("Stop_exploder");
+tmpDef.detail = "Stop_exploder( num )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("effect_loopsound");
-tmpDef.detail = "effect_loopsound(): void";
+tmpDef = new CompletionItem("Effect_loopsound");
+tmpDef.detail = "Effect_loopsound()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("play_loopsound_in_space");
-tmpDef.detail = "play_loopsound_in_space( <alias>: string, <origin>: vector ): entity";
+tmpDef = new CompletionItem("Play_loopsound_in_space");
+tmpDef.detail = "Play_loopsound_in_space( alias, origin )";
 tmpDef.documentation = "Use the PlayLoopSound command at a position in space. Unrelated to caller.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("sound_effect");
-tmpDef.detail = "sound_effect(): void";
+tmpDef = new CompletionItem("Sound_effect");
+tmpDef.detail = "Sound_effect()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("effect_soundalias");
-tmpDef.detail = "effect_soundalias(): void";
+tmpDef = new CompletionItem("Effect_soundalias");
+tmpDef.detail = "Effect_soundalias()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("play_sound_in_space");
-tmpDef.detail = "play_sound_in_space( <alias>: string, <origin>: vector, <master>: boolean ): void";
+tmpDef = new CompletionItem("Play_sound_in_space");
+tmpDef.detail = "Play_sound_in_space( alias, origin, master )";
 tmpDef.documentation = "Play a sound at an origin, unrelated to caller";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("cannon_effect");
-tmpDef.detail = "cannon_effect(): void";
+tmpDef = new CompletionItem("Ent_wait_for_flag_or_time_elapses_cs");
+tmpDef.detail = "Ent_wait_for_flag_or_time_elapses_cs( flagname, timer )";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Cannon_effect");
+tmpDef.detail = "Cannon_effect()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("exploder_playSound");
-tmpDef.detail = "exploder_playSound(): void";
+tmpDef = new CompletionItem("Exploder_playsound");
+tmpDef.detail = "Exploder_playsound()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("fire_effect");
-tmpDef.detail = "fire_effect(): void";
+tmpDef = new CompletionItem("Fire_effect");
+tmpDef.detail = "Fire_effect()";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("loop_fx_sound");
-tmpDef.detail = "loop_fx_sound( <alias>: string, <origin>: vector, <culled>: int, <ender>: string, <timeout>: float ): void";
+tmpDef = new CompletionItem("Loop_fx_sound");
+tmpDef.detail = "Loop_fx_sound( alias, origin, culled, ender, timeout )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("loop_fx_sound_interval");
-tmpDef.detail = "loop_fx_sound_interval( <alias>: string, <origin>: vector, <ender>: string, <timeout>: float, <delay_min>: float, <delay_max>: float ): void";
+tmpDef = new CompletionItem("Loop_fx_sound_interval");
+tmpDef.detail = "Loop_fx_sound_interval( alias, origin, ender, timeout, delay_min, delay_max )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("loop_sound_delete");
-tmpDef.detail = "loop_sound_delete( <ender>: string, <ent>: entity ): void";
+tmpDef = new CompletionItem("Loop_sound_delete");
+tmpDef.detail = "Loop_sound_delete( ender, ent )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("exploder_before_load");
-tmpDef.detail = "exploder_before_load( <num>: string ): void";
+tmpDef = new CompletionItem("Exploder_before_load");
+tmpDef.detail = "Exploder_before_load( num )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("exploder_after_load");
-tmpDef.detail = "exploder_after_load( <num>: string ): void";
+tmpDef = new CompletionItem("Exploder_after_load");
+tmpDef.detail = "Exploder_after_load( num )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("activate_exploder");
-tmpDef.detail = "activate_exploder( <num>: string ): void";
+tmpDef = new CompletionItem("Activate_exploder");
+tmpDef.detail = "Activate_exploder( num )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("createLoopEffect");
-tmpDef.detail = "createLoopEffect( <fxid>: string ): entity";
+tmpDef = new CompletionItem("Createloopeffect");
+tmpDef.detail = "Createloopeffect( fxid )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("createOneshotEffect");
-tmpDef.detail = "createOneshotEffect( <fxid>: string ): entity";
+tmpDef = new CompletionItem("Createoneshoteffect");
+tmpDef.detail = "Createoneshoteffect( fxid )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("createExploder");
-tmpDef.detail = "createExploder( <fxid>: string ): entity";
+tmpDef = new CompletionItem("Createexploder");
+tmpDef.detail = "Createexploder( fxid )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("alphabetize");
-tmpDef.detail = "alphabetize( <array>: array ): array";
+tmpDef = new CompletionItem("Alphabetize");
+tmpDef.detail = "Alphabetize( array )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("is_later_in_alphabet");
-tmpDef.detail = "is_later_in_alphabet( <string1>: string, <string2>: string ): bool";
+tmpDef = new CompletionItem("Is_later_in_alphabet");
+tmpDef.detail = "Is_later_in_alphabet( string1, string2 )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("alphabet_compare");
-tmpDef.detail = "alphabet_compare( <a>: string, <b>: string ): string";
+tmpDef = new CompletionItem("Alphabet_compare");
+tmpDef.detail = "Alphabet_compare( a, b )";
 tmpDef.documentation = "";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("play_loop_sound_on_entity");
-tmpDef.detail = "play_loop_sound_on_entity( <alias>: string, <offset>: vector ): void";
+tmpDef = new CompletionItem("Play_loop_sound_on_entity");
+tmpDef.detail = "Play_loop_sound_on_entity( alias, offset )";
 tmpDef.documentation = "Play loop sound alias on an entity.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("stop_loop_sound_on_entity");
-tmpDef.detail = "stop_loop_sound_on_entity( <alias>: string ): void";
+tmpDef = new CompletionItem("Stop_loop_sound_on_entity");
+tmpDef.detail = "Stop_loop_sound_on_entity( alias )";
 tmpDef.documentation = "Stop playing the loop sound alias on an entity.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("delete_on_death");
-tmpDef.detail = "delete_on_death( <ent>: entity ): void";
+tmpDef = new CompletionItem("Delete_on_death");
+tmpDef.detail = "Delete_on_death( ent )";
 tmpDef.documentation = "Delete the entity when 'self' dies.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("exploder");
-tmpDef.detail = "exploder( <num>: int ): void";
-tmpDef.documentation = "Sets off the desired exploder.";
+tmpDef = new CompletionItem("Error");
+tmpDef.detail = "Error( msg )";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("create_dvar");
-tmpDef.detail = "create_dvar( <var>: string, <val>: string ): void";
+tmpDef = new CompletionItem("Exploder");
+tmpDef.detail = "Exploder( num )";
+tmpDef.documentation = "Activates an individual exploder, rather than all the exploders of a given number";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Create_dvar");
+tmpDef.detail = "Create_dvar( var, val )";
 tmpDef.documentation = "Initialize a dvar with a given value.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("tag_project");
-tmpDef.detail = "tag_project( <tagname>: string, <dist>: float ): vector";
+tmpDef = new CompletionItem("Void");
+tmpDef.detail = "Void()";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Tag_project");
+tmpDef.detail = "Tag_project( tagname, dist  )";
 tmpDef.documentation = "Returns a point projected off a tag.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("ter_op");
-tmpDef.detail = "ter_op( <statement>: boolean, <true_value>: any, <false_value>: any ): any";
+tmpDef = new CompletionItem("Ter_op");
+tmpDef.detail = "Ter_op( statement, true_value, false_value )";
 tmpDef.documentation = "Function that serves as a tertiary operator in C/C++.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("create_lock");
-tmpDef.detail = "create_lock( <msg>: string, <count>: int ): void";
+tmpDef = new CompletionItem("Create_lock");
+tmpDef.detail = "Create_lock( msg, count )";
 tmpDef.documentation = "Create a lock with a specified count.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("lock");
-tmpDef.detail = "lock( <msg>: string ): void";
-tmpDef.documentation = "Acquire a lock.";
+tmpDef = new CompletionItem("Lock");
+tmpDef.detail = "Lock( msg )";
+tmpDef.documentation = "Create a lock with a specified count.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("is_locked");
-tmpDef.detail = "is_locked( <msg>: string ): boolean";
+tmpDef = new CompletionItem("Is_locked");
+tmpDef.detail = "Is_locked( msg )";
 tmpDef.documentation = "Check if a lock is acquired.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("unlock_wait");
-tmpDef.detail = "unlock_wait( <msg>: string ): void";
+tmpDef = new CompletionItem("Unlock_wait");
+tmpDef.detail = "Unlock_wait( msg )";
 tmpDef.documentation = "Unlock and wait for the specified message.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("unlock");
-tmpDef.detail = "unlock( <msg>: string ): void";
-tmpDef.documentation = "Unlock without waiting for the specified message.";
+tmpDef = new CompletionItem("Unlock");
+tmpDef.detail = "Unlock( msg )";
+tmpDef.documentation = "Unlock and wait for the specified message.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
 
-tmpDef = new CompletionItem("get_template_level");
-tmpDef.detail = "get_template_level(): any";
+tmpDef = new CompletionItem("Unlock_thread");
+tmpDef.detail = "Unlock_thread( msg )";
+tmpDef.kind = CompletionItemKind.Function;
+common_scripts_utility.push(tmpDef);
+
+tmpDef = new CompletionItem("Get_template_level");
+tmpDef.detail = "Get_template_level()";
 tmpDef.documentation = "Returns the templated level or level.script.";
 tmpDef.kind = CompletionItemKind.Function;
 common_scripts_utility.push(tmpDef);
