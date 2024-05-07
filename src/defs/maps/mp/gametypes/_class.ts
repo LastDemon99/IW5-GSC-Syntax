@@ -1,7 +1,6 @@
 import { CompletionItem } from 'vscode';
 import { CompletionItemKind } from 'vscode';
 
-export var defs = new Array<CompletionItem>();
 export var maps_mp_gametypes__class = new Array<CompletionItem>();
 var tmpDef;
 

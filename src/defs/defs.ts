@@ -45,8 +45,12 @@ tmpDef = new CompletionItem("continue");
 tmpDef.kind = CompletionItemKind.Keyword;
 defs.push(tmpDef);
 
-tmpDef = new CompletionItem("wait");
-tmpDef.kind = CompletionItemKind.Keyword;
+tmpDef = new CompletionItem("Wait");
+tmpDef.kind = CompletionItemKind.Function;
+defs.push(tmpDef);
+
+tmpDef = new CompletionItem("Waittill");
+tmpDef.kind = CompletionItemKind.Function;
 defs.push(tmpDef);
 
 tmpDef = new CompletionItem("true");
