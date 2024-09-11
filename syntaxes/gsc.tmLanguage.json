@@ -1,64 +1,28 @@
 {
-  "name": "Game Script Code",
   "scopeName": "source.gsc",
-  "fileTypes": [ "gsc" ],
-  "version": "",
-  "information": [
-    "This file is essentially C syntax with modifications for gsc",
-    "See https://github.com/jeff-hykin/cpp-textmate-grammar/blob/master"
-  ],
+  "fileTypes": ["gsc"],
+  "name": "Game Script Code",
   "patterns": [
-    {
-      "include": "#comments"
-    },
-    {
-      "include": "#switch_statement"
-    },
-    {
-      "include": "#function_declaration"
-    }, 
-    {
-      "include": "#variable"
-    },
-    {
-      "include": "#operators"
-    },
-    {
-      "include": "#numbers"
-    },
-    {
-      "include": "#strings"
-    },
     {
       "include": "#include"
     },
     {
-		  "include": "#define"
+      "include": "#define"
     },
     {
-		  "include": "#using_animtree"
+      "include": "#comment_line"
     },
     {
-      "include": "#block"
+      "include": "#comment_block"
     },
     {
-      "include": "#parens"
+      "include": "#keyword"
     },
     {
-      "include": "#line_continuation_character"
+      "include": "#function"
     },
     {
-      "include": "#square_bracket_access"
-    },
-    {
-      "include": "#square_bracket_declaration"
-    },
-    {
-      "match": ",",
-      "name": "punctuation.separator.delimiter.c"
-    },
-    {
-      "include": "#thread"
+      "include": "#variable"
     }
   ],
   "repository": {
@@ -66,17 +30,26 @@
       "begin": "^\\s*(#\\s*include)\\b",
       "beginCaptures": {
         "1": {
-          "name": "invalid.gsc"
+          "name": "keyword.control.include.gsc"
         },
         "2": {
-          "name": "punctuation.definition.directive.c"
+          "name": "punctuation.definition.directive.gsc"
         }
       },
-      "end": "(?=(?://|/\\*))|(?<!\\\\)(?=\\n)",
+      "end": ";",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.terminator.statement.gsc"
+        }
+      },
       "patterns": [
         {
-          "match": "[a-zA-Z_$][\\w$]*",
-          "name": "strong.constant.gsc"
+          "match": "[a-zA-Z_$][\\w$]*(?:\\\\[a-zA-Z_$][\\w$]*)*",
+          "name": "punctuation.definition.path.gsc"
+        },
+        {
+          "match": "(\\\\)\\n",
+          "name": "constant.character.escape.line-continuation.gsc"
         }
       ]
     },
@@ -84,1090 +57,58 @@
       "begin": "^\\s*(#define)\\s+((?<!\\w)[a-zA-Z_]\\w*(?!\\w))(\\b)",
       "beginCaptures": {
         "1": {
-          "name": "invalid.gsc"
+          "name": "keyword.control.gsc"
         },
         "2": {
-          "name": "strong.constant.gsc"
+          "name": "constant.language.gsc"
         },
         "3": {
-          "name": "punctuation.definition.directive.c"
+          "name": "punctuation.definition.gsc"
         }
       },
       "end": "(?<!\\\\)(?=\\n)",
       "patterns": [
-          {
-            "match": "\\(",
-            "name": "punctuation.section.parens.begin.bracket.round.c"
-          },
-          {
-            "match": "\\)",
-            "name": "punctuation.section.parens.end.bracket.round.c"
-          },
-          {
-            "include": "#strings"
-          },
-          {
-            "include": "$base"
-          }
-      ]
-    },
-    "using_animtree": {
-    },
-    "square_bracket_access": {
-      "name": "meta.bracket.square.access.c",
-      "begin": "([a-zA-Z_][a-zA-Z_0-9]*|(?<=[\\]\\)]))?(\\[)(?!\\])",
-      "beginCaptures": {
-        "1": {
-        "name": "variable.object.c"
-        },
-        "2": {
-        "name": "punctuation.definition.begin.bracket.square.c"
-        }
-      },
-      "end": "\\]",
-      "endCaptures": {
-        "0": {
-        "name": "punctuation.definition.end.bracket.square.c"
-        }
-      },
-      "patterns": [
         {
-          "include": "#function-call-innards"
-        }
-      ]
-    },
-    "square_bracket_declaration": {
-      "name": "storage.modifier.array.bracket.square.c",
-      "match": "\\[\\s*\\]"
-    },
-    "block": {
-      "patterns": [
-        {
-          "begin": "{",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.section.block.begin.bracket.curly.c"
-            }
-          },
-          "end": "}",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.section.block.end.bracket.curly.c"
-            }
-          },
-          "name": "meta.block.c",
-          "patterns": [
-            {
-              "include": "#block_innards"
-            }
-          ]
-        }
-      ]
-    },
-    "block_innards": {
-      "patterns": [
-        {
-          "include": "#member_access"
+          "match": "\\(",
+          "name": "punctuation.section.parens.begin.bracket.round.gsc"
         },
         {
-          "include": "#function_call"
+          "match": "\\)",
+          "name": "punctuation.section.parens.end.bracket.round.gsc"
         },
         {
-          "include": "#statement"
-        },
-        {
-          "begin": "{",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.section.block.begin.bracket.curly.c"
-            }
-          },
-          "end": "}",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.section.block.end.bracket.curly.c"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#block_innards"
-            }
-          ]
-        },
-        {
-          "include": "#parens-block"
+          "include": "#string"
         },
         {
           "include": "$base"
         }
       ]
     },
-    "c_conditional_context": {
+    "comment_line": {
+      "name": "comment.gsc",
+      "match": "//.*"
+    },
+    "comment_block": {
+      "name": "comment.block.gsc",
+      "begin": "/\\*",
+      "end": "\\*/"
+    },
+    "keyword": {
+      "name": "keyword.control.gsc",
+      "match": "\\b(if|else|for|foreach|while|return|switch|case|default|break|continue|wait|waittill|waittillframeend|endon|notify|thread)\\b"
+    },
+    "numeric": {
+      "name": "constant.numeric.gsc",
+      "match": "\\b\\d+\\b"
+    },
+    "string": {
+      "name": "string.quoted.double.gsc",
+      "begin": "\"",
+      "end": "\"",
       "patterns": [
         {
-          "include": "$self"
-        },
-        {
-          "include": "#block_innards"
-        }
-      ]
-    },
-    "function_declaration": {
-      "patterns": [        
-        {
-          "name": "support.function.gsc",
-          "match": "^[a-zA-Z0-9_]\\w*(?=\\()"
-        }
-      ]
-		},
-    "function_call": {
-      "patterns": [
-        {
-          "begin": "(?x)\n(?!(?:if|else|while|for|foreach|switch)\\s*\\()\n(?=\n(?:[A-Za-z_][A-Za-z0-9_]*+)++\\s*\\(  # actual name\n)",
-          "end": "(?<=\\))(?!\\w)",
-          "name": "meta.function-call.c",
-          "patterns": [
-            {
-              "include": "#function-call-innards"
-            }
-          ]
-        },
-        {
-          "name": "support.function.gsc",
-			    "match": "::[a-zA-Z0-9_]\\w*"
-        },
-        {
-          "name": "variable.other.object.access.c",
-          "match": "([a-zA-Z_]\\w*)(\\s*\\\\\\s*([a-zA-Z_]\\w*))*::([a-zA-Z_]\\w*)",
-          "captures": {
-            "4": {
-              "name": "support.function.gsc"
-            }
-          }
-        }
-      ]
-    },
-    "case_statement": {
-      "name": "meta.conditional.case.c",
-      "begin": "((?>(?:(?:(?>(?<!\\s)\\s+)|(\\/\\*)((?>(?:[^\\*]|(?>\\*+)[^\\/])*)((?>\\*+)\\/)))+|(?:(?:(?:(?:\\b|(?<=\\W))|(?=\\W))|\\A)|\\Z))))((?<!\\w)case(?!\\w))",
-      "beginCaptures": {
-        "1": {
-          "patterns": [
-            {
-              "include": "#inline_comment"
-            }
-          ]
-        },
-        "2": {
-          "name": "comment.block.c punctuation.definition.comment.begin.c"
-        },
-        "3": {
-          "name": "comment.block.c"
-        },
-        "4": {
-          "patterns": [
-            {
-              "match": "\\*\\/",
-              "name": "comment.block.c punctuation.definition.comment.end.c"
-            },
-            {
-              "match": "\\*",
-              "name": "comment.block.c"
-            }
-          ]
-        },
-        "5": {
-          "name": "keyword.control.case.c"
-        }
-      },
-      "end": "(:)",
-      "endCaptures": {
-        "1": {
-          "name": "punctuation.separator.colon.case.c"
-        }
-      },
-      "patterns": [
-        {
-          "include": "#evaluation_context"
-        },
-        {
-          "include": "#c_conditional_context"
-        }
-      ]
-    },
-    "comments": {
-      "patterns": [
-        {
-          "name": "comment.line.double-slash.documentation.c",
-          "begin": "(?:^)(?>\\s*)(\\/\\/[!\\/]+)",
-          "beginCaptures": {
-            "1": {
-              "name": "punctuation.definition.comment.documentation.c"
-            }
-          },
-          "end": "(?<=\\n)(?<!\\\\\\n)",
-          "patterns": [
-            {
-              "include": "#line_continuation_character"
-            },
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:callergraph|callgraph|else|endif|f\\$|f\\[|f\\]|hidecallergraph|hidecallgraph|hiderefby|hiderefs|hideinitializer|htmlinclude|n|nosubgrouping|private|privatesection|protected|protectedsection|public|publicsection|pure|showinitializer|showrefby|showrefs|tableofcontents|\\$|\\#|<|>|%|\"|\\.|=|::|\\||\\-\\-|\\-\\-\\-)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "((?<=[\\s*!\\/])[\\\\@](?:a|em|e))\\s+(\\S+)",
-              "captures": {
-                "1": {
-                  "name": "storage.type.class.doxygen.c"
-                },
-                "2": {
-                  "name": "markup.italic.doxygen.c"
-                }
-              }
-            },
-            {
-              "match": "((?<=[\\s*!\\/])[\\\\@]b)\\s+(\\S+)",
-              "captures": {
-                "1": {
-                  "name": "storage.type.class.doxygen.c"
-                },
-                "2": {
-                  "name": "markup.bold.doxygen.c"
-                }
-              }
-            },
-            {
-              "match": "((?<=[\\s*!\\/])[\\\\@](?:c|p))\\s+(\\S+)",
-              "captures": {
-                "1": {
-                  "name": "storage.type.class.doxygen.c"
-                },
-                "2": {
-                  "name": "markup.inline.raw.string.c"
-                }
-              }
-            },
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:a|anchor|b|c|cite|copybrief|copydetail|copydoc|def|dir|dontinclude|e|em|emoji|enum|example|extends|file|idlexcept|implements|include|includedoc|includelineno|latexinclude|link|memberof|namespace|p|package|ref|refitem|related|relates|relatedalso|relatesalso|verbinclude)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:addindex|addtogroup|category|class|defgroup|diafile|dotfile|elseif|fn|headerfile|if|ifnot|image|ingroup|interface|line|mainpage|mscfile|name|overload|page|property|protocol|section|skip|skipline|snippet|snippetdoc|snippetlineno|struct|subpage|subsection|subsubsection|typedef|union|until|vhdlflow|weakgroup)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "((?<=[\\s*!\\/])[\\\\@]param)(?:\\s*\\[((?:,?\\s*(?:in|out)\\s*)+)\\])?\\s+(\\b\\w+\\b)",
-              "captures": {
-                "1": {
-                  "name": "storage.type.class.doxygen.c"
-                },
-                "2": {
-                  "patterns": [
-                    {
-                      "match": "in|out",
-                      "name": "keyword.other.parameter.direction.$0.c"
-                    }
-                  ]
-                },
-                "3": {
-                  "name": "variable.parameter.c"
-                }
-              }
-            },
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:arg|attention|author|authors|brief|bug|copyright|date|deprecated|details|exception|invariant|li|note|par|paragraph|param|post|pre|remark|remarks|result|return|returns|retval|sa|see|short|since|test|throw|todo|tparam|version|warning|xrefitem)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:code|cond|docbookonly|dot|htmlonly|internal|latexonly|link|manonly|msc|parblock|rtfonly|secreflist|uml|verbatim|xmlonly|endcode|endcond|enddocbookonly|enddot|endhtmlonly|endinternal|endlatexonly|endlink|endmanonly|endmsc|endparblock|endrtfonly|endsecreflist|enduml|endverbatim|endxmlonly)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "(?:\\b[A-Z]+:|@[a-z_]+:)",
-              "name": "storage.type.class.gtkdoc"
-            }
-          ]
-        },
-        {
-          "match": "(\\/\\*[!*]+(?=\\s))(.+)([!*]*\\*\\/)",
-          "captures": {
-            "1": {
-              "name": "punctuation.definition.comment.begin.documentation.c"
-            },
-            "2": {
-              "patterns": [
-                {
-                  "match": "(?<=[\\s*!\\/])[\\\\@](?:callergraph|callgraph|else|endif|f\\$|f\\[|f\\]|hidecallergraph|hidecallgraph|hiderefby|hiderefs|hideinitializer|htmlinclude|n|nosubgrouping|private|privatesection|protected|protectedsection|public|publicsection|pure|showinitializer|showrefby|showrefs|tableofcontents|\\$|\\#|<|>|%|\"|\\.|=|::|\\||\\-\\-|\\-\\-\\-)\\b(?:\\{[^}]*\\})?",
-                  "name": "storage.type.class.doxygen.c"
-                },
-                {
-                  "match": "((?<=[\\s*!\\/])[\\\\@](?:a|em|e))\\s+(\\S+)",
-                  "captures": {
-                    "1": {
-                      "name": "storage.type.class.doxygen.c"
-                    },
-                    "2": {
-                      "name": "markup.italic.doxygen.c"
-                    }
-                  }
-                },
-                {
-                  "match": "((?<=[\\s*!\\/])[\\\\@]b)\\s+(\\S+)",
-                  "captures": {
-                    "1": {
-                      "name": "storage.type.class.doxygen.c"
-                    },
-                    "2": {
-                      "name": "markup.bold.doxygen.c"
-                    }
-                  }
-                },
-                {
-                  "match": "((?<=[\\s*!\\/])[\\\\@](?:c|p))\\s+(\\S+)",
-                  "captures": {
-                    "1": {
-                      "name": "storage.type.class.doxygen.c"
-                    },
-                    "2": {
-                      "name": "markup.inline.raw.string.c"
-                    }
-                  }
-                },
-                {
-                  "match": "(?<=[\\s*!\\/])[\\\\@](?:a|anchor|b|c|cite|copybrief|copydetail|copydoc|def|dir|dontinclude|e|em|emoji|enum|example|extends|file|idlexcept|implements|include|includedoc|includelineno|latexinclude|link|memberof|namespace|p|package|ref|refitem|related|relates|relatedalso|relatesalso|verbinclude)\\b(?:\\{[^}]*\\})?",
-                  "name": "storage.type.class.doxygen.c"
-                },
-                {
-                  "match": "(?<=[\\s*!\\/])[\\\\@](?:addindex|addtogroup|category|class|defgroup|diafile|dotfile|elseif|fn|headerfile|if|ifnot|image|ingroup|interface|line|mainpage|mscfile|name|overload|page|property|protocol|section|skip|skipline|snippet|snippetdoc|snippetlineno|struct|subpage|subsection|subsubsection|typedef|union|until|vhdlflow|weakgroup)\\b(?:\\{[^}]*\\})?",
-                  "name": "storage.type.class.doxygen.c"
-                },
-                {
-                  "match": "((?<=[\\s*!\\/])[\\\\@]param)(?:\\s*\\[((?:,?\\s*(?:in|out)\\s*)+)\\])?\\s+(\\b\\w+\\b)",
-                  "captures": {
-                    "1": {
-                      "name": "storage.type.class.doxygen.c"
-                    },
-                    "2": {
-                      "patterns": [
-                        {
-                          "match": "in|out",
-                          "name": "keyword.other.parameter.direction.$0.c"
-                        }
-                      ]
-                    },
-                    "3": {
-                      "name": "variable.parameter.c"
-                    }
-                  }
-                },
-                {
-                  "match": "(?<=[\\s*!\\/])[\\\\@](?:arg|attention|author|authors|brief|bug|copyright|date|deprecated|details|exception|invariant|li|note|par|paragraph|param|post|pre|remark|remarks|result|return|returns|retval|sa|see|short|since|test|throw|todo|tparam|version|warning|xrefitem)\\b(?:\\{[^}]*\\})?",
-                  "name": "storage.type.class.doxygen.c"
-                },
-                {
-                  "match": "(?<=[\\s*!\\/])[\\\\@](?:code|cond|docbookonly|dot|htmlonly|internal|latexonly|link|manonly|msc|parblock|rtfonly|secreflist|uml|verbatim|xmlonly|endcode|endcond|enddocbookonly|enddot|endhtmlonly|endinternal|endlatexonly|endlink|endmanonly|endmsc|endparblock|endrtfonly|endsecreflist|enduml|endverbatim|endxmlonly)\\b(?:\\{[^}]*\\})?",
-                  "name": "storage.type.class.doxygen.c"
-                },
-                {
-                  "match": "(?:\\b[A-Z]+:|@[a-z_]+:)",
-                  "name": "storage.type.class.gtkdoc"
-                }
-              ]
-            },
-            "3": {
-              "name": "punctuation.definition.comment.end.documentation.c"
-            }
-          },
-          "name": "comment.block.documentation.c"
-        },
-        {
-          "name": "comment.block.documentation.c",
-          "begin": "((?>\\s*)\\/\\*[!*]+(?:(?:\\n|$)|(?=\\s)))",
-          "beginCaptures": {
-            "1": {
-              "name": "punctuation.definition.comment.begin.documentation.c"
-            }
-          },
-          "end": "([!*]*\\*\\/)",
-          "endCaptures": {
-            "1": {
-              "name": "punctuation.definition.comment.end.documentation.c"
-            }
-          },
-          "patterns": [
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:callergraph|callgraph|else|endif|f\\$|f\\[|f\\]|hidecallergraph|hidecallgraph|hiderefby|hiderefs|hideinitializer|htmlinclude|n|nosubgrouping|private|privatesection|protected|protectedsection|public|publicsection|pure|showinitializer|showrefby|showrefs|tableofcontents|\\$|\\#|<|>|%|\"|\\.|=|::|\\||\\-\\-|\\-\\-\\-)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "((?<=[\\s*!\\/])[\\\\@](?:a|em|e))\\s+(\\S+)",
-              "captures": {
-                "1": {
-                  "name": "storage.type.class.doxygen.c"
-                },
-                "2": {
-                  "name": "markup.italic.doxygen.c"
-                }
-              }
-            },
-            {
-              "match": "((?<=[\\s*!\\/])[\\\\@]b)\\s+(\\S+)",
-              "captures": {
-                "1": {
-                  "name": "storage.type.class.doxygen.c"
-                },
-                "2": {
-                  "name": "markup.bold.doxygen.c"
-                }
-              }
-            },
-            {
-              "match": "((?<=[\\s*!\\/])[\\\\@](?:c|p))\\s+(\\S+)",
-              "captures": {
-                "1": {
-                  "name": "storage.type.class.doxygen.c"
-                },
-                "2": {
-                  "name": "markup.inline.raw.string.c"
-                }
-              }
-            },
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:a|anchor|b|c|cite|copybrief|copydetail|copydoc|def|dir|dontinclude|e|em|emoji|enum|example|extends|file|idlexcept|implements|include|includedoc|includelineno|latexinclude|link|memberof|namespace|p|package|ref|refitem|related|relates|relatedalso|relatesalso|verbinclude)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:addindex|addtogroup|category|class|defgroup|diafile|dotfile|elseif|fn|headerfile|if|ifnot|image|ingroup|interface|line|mainpage|mscfile|name|overload|page|property|protocol|section|skip|skipline|snippet|snippetdoc|snippetlineno|struct|subpage|subsection|subsubsection|typedef|union|until|vhdlflow|weakgroup)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "((?<=[\\s*!\\/])[\\\\@]param)(?:\\s*\\[((?:,?\\s*(?:in|out)\\s*)+)\\])?\\s+(\\b\\w+\\b)",
-              "captures": {
-                "1": {
-                  "name": "storage.type.class.doxygen.c"
-                },
-                "2": {
-                  "patterns": [
-                    {
-                      "match": "in|out",
-                      "name": "keyword.other.parameter.direction.$0.c"
-                    }
-                  ]
-                },
-                "3": {
-                  "name": "variable.parameter.c"
-                }
-              }
-            },
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:arg|attention|author|authors|brief|bug|copyright|date|deprecated|details|exception|invariant|li|note|par|paragraph|param|post|pre|remark|remarks|result|return|returns|retval|sa|see|short|since|test|throw|todo|tparam|version|warning|xrefitem)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "(?<=[\\s*!\\/])[\\\\@](?:code|cond|docbookonly|dot|htmlonly|internal|latexonly|link|manonly|msc|parblock|rtfonly|secreflist|uml|verbatim|xmlonly|endcode|endcond|enddocbookonly|enddot|endhtmlonly|endinternal|endlatexonly|endlink|endmanonly|endmsc|endparblock|endrtfonly|endsecreflist|enduml|endverbatim|endxmlonly)\\b(?:\\{[^}]*\\})?",
-              "name": "storage.type.class.doxygen.c"
-            },
-            {
-              "match": "(?:\\b[A-Z]+:|@[a-z_]+:)",
-              "name": "storage.type.class.gtkdoc"
-            }
-          ]
-        },
-        {
-          "match": "^\\/\\* =(\\s*.*?)\\s*= \\*\\/$\\n?",
-          "captures": {
-            "1": {
-              "name": "meta.toc-list.banner.block.c"
-            }
-          },
-          "name": "comment.block.banner.c"
-        },
-        {
-          "name": "comment.block.c",
-          "begin": "(\\/\\*)",
-          "beginCaptures": {
-            "1": {
-              "name": "punctuation.definition.comment.begin.c"
-            }
-          },
-          "end": "(\\*\\/)",
-          "endCaptures": {
-            "1": {
-              "name": "punctuation.definition.comment.end.c"
-            }
-          }
-        },
-        {
-          "match": "^\\/\\/ =(\\s*.*?)\\s*=$\\n?",
-          "captures": {
-            "1": {
-              "name": "meta.toc-list.banner.line.c"
-            }
-          },
-          "name": "comment.line.banner.c"
-        },
-        {
-          "begin": "((?:^[ \\t]+)?)(?=\\/\\/)",
-          "beginCaptures": {
-            "1": {
-              "name": "punctuation.whitespace.comment.leading.c"
-            }
-          },
-          "end": "(?!\\G)",
-          "patterns": [
-            {
-              "name": "comment.line.double-slash.c",
-              "begin": "(\\/\\/)",
-              "beginCaptures": {
-                "1": {
-                  "name": "punctuation.definition.comment.c"
-                }
-              },
-              "end": "(?=\\n)",
-              "patterns": [
-                {
-                  "include": "#line_continuation_character"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    "default_statement": {
-      "name": "meta.conditional.case.c",
-      "begin": "((?>(?:(?:(?>(?<!\\s)\\s+)|(\\/\\*)((?>(?:[^\\*]|(?>\\*+)[^\\/])*)((?>\\*+)\\/)))+|(?:(?:(?:(?:\\b|(?<=\\W))|(?=\\W))|\\A)|\\Z))))((?<!\\w)default(?!\\w))",
-      "beginCaptures": {
-        "1": {
-          "patterns": [
-            {
-              "include": "#inline_comment"
-            }
-          ]
-        },
-        "2": {
-          "name": "comment.block.c punctuation.definition.comment.begin.c"
-        },
-        "3": {
-          "name": "comment.block.c"
-        },
-        "4": {
-          "patterns": [
-            {
-              "match": "\\*\\/",
-              "name": "comment.block.c punctuation.definition.comment.end.c"
-            },
-            {
-              "match": "\\*",
-              "name": "comment.block.c"
-            }
-          ]
-        },
-        "5": {
-          "name": "keyword.control.default.c"
-        }
-      },
-      "end": "(:)",
-      "endCaptures": {
-        "1": {
-          "name": "punctuation.separator.colon.case.default.c"
-        }
-      },
-      "patterns": [
-        {
-          "include": "#evaluation_context"
-        },
-        {
-          "include": "#c_conditional_context"
-        }
-      ]
-    },
-    "evaluation_context": {
-      "patterns": [
-        {
-          "include": "#function-call-innards"
-        },
-        {
-          "include": "$base"
-        }
-      ]
-    },
-    "function-call-innards": {
-      "patterns": [
-        {
-          "include": "#comments"
-        },
-        {
-          "include": "#member_access"
-        },
-        {
-          "include": "#operators"
-        },
-        {
-          "begin": "(?x)\n(?!(?:if|else|while|for|foreach|switch)\\s*\\()\n(\n(?:[A-Za-z_][A-Za-z0-9_]*+|::)++  # actual name\n|\n(?:(?<=operator)(?:[-*&<>=+!]+|\\(\\)|\\[\\]))\n)\n\\s*(\\()",
-          "beginCaptures": {
-            "1": {
-              "name": "entity.name.function.c"
-            },
-            "2": {
-              "name": "punctuation.section.arguments.begin.bracket.round.c"
-            }
-          },
-          "end": "\\)",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.section.arguments.end.bracket.round.c"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#function-call-innards"
-            }
-          ]
-        },
-        {
-          "begin": "\\(",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.section.parens.begin.bracket.round.c"
-            }
-          },
-          "end": "\\)",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.section.parens.end.bracket.round.c"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#function-call-innards"
-            }
-          ]
-        },
-        {
-          "include": "#block_innards"
-        }
-      ]
-    },
-    "function-innards": {
-      "patterns": [
-        {
-          "include": "#comments"
-        },
-        {
-          "include": "#operators"
-        },
-        {
-          "name": "meta.function.definition.parameters.c",
-          "begin": "(?x)\n(?!(?:if|else|while|for|foreach|switch)\\s*\\()\n(\n(?:[A-Za-z_][A-Za-z0-9_]*+|::)++  # actual name\n|\n(?:(?<=operator)(?:[-*&<>=+!]+|\\(\\)|\\[\\]))\n)\n\\s*(\\()",
-          "beginCaptures": {
-            "1": {
-              "name": "entity.name.function.c"
-            },
-            "2": {
-              "name": "punctuation.section.parameters.begin.bracket.round.c"
-            }
-          },
-          "end": "\\)",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.section.parameters.end.bracket.round.c"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#function-innards"
-            }
-          ]
-        },
-        {
-          "begin": "\\(",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.section.parens.begin.bracket.round.c"
-            }
-          },
-          "end": "\\)",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.section.parens.end.bracket.round.c"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#function-innards"
-            }
-          ]
-        },
-        {
-          "include": "$base"
-        }
-      ]
-    },
-    "inline_comment": {
-      "match": "(\\/\\*)((?>(?:[^\\*]|(?>\\*+)[^\\/])*)((?>\\*+)\\/))",
-      "captures": {
-        "1": {
-          "name": "comment.block.c punctuation.definition.comment.begin.c"
-        },
-        "2": {
-          "name": "comment.block.c"
-        },
-        "3": {
-          "patterns": [
-            {
-              "match": "\\*\\/",
-              "name": "comment.block.c punctuation.definition.comment.end.c"
-            },
-            {
-              "match": "\\*",
-              "name": "comment.block.c"
-            }
-          ]
-        }
-      }
-    },
-    "line_continuation_character": {
-      	"match": "(\\\\)\\n",
-        "captures": {
-          "1": {
-            "name": "constant.character.escape.line-continuation.c"
-          }
-        }
-    },
-    "parens": {
-      "name": "meta.parens.c",
-      "begin": "\\(",
-      "beginCaptures": {
-        "0": {
-          "name": "punctuation.section.parens.begin.bracket.round.c"
-        }
-      },
-      "end": "\\)",
-      "endCaptures": {
-        "0": {
-          "name": "punctuation.section.parens.end.bracket.round.c"
-        }
-      },
-      "patterns": [
-        {
-          "include": "$base"
-        }
-      ]
-    },
-    "parens-block": {
-      "name": "meta.parens.block.c",
-      "begin": "\\(",
-      "beginCaptures": {
-        "0": {
-          "name": "punctuation.section.parens.begin.bracket.round.c"
-        }
-      },
-      "end": "\\)",
-      "endCaptures": {
-        "0": {
-          "name": "punctuation.section.parens.end.bracket.round.c"
-        }
-      },
-      "patterns": [
-        {
-          "include": "#block_innards"
-        },
-        {
-          "match": "(?-mix:(?<!:):(?!:))",
-          "name": "punctuation.range-based.c"
-        }
-      ]
-    },
-    "string_escaped_char": {
-      "patterns": [
-        {
-          "match": "(?x)\\\\ (\n\\\\\t\t\t |\n[abefnprtv'\"?]   |\n[0-3]\\d{,2}\t |\n[4-7]\\d?\t\t|\nx[a-fA-F0-9]{,2} |\nu[a-fA-F0-9]{,4} |\nU[a-fA-F0-9]{,8} )",
-          "name": "constant.character.escape.c"
-        },
-        {
-          "match": "\\\\.",
-          "name": "invalid.illegal.unknown-escape.c"
-        }
-      ]
-    },
-    "switch_conditional_parentheses": {
-      "name": "meta.conditional.switch.c",
-      "begin": "((?>(?:(?:(?>(?<!\\s)\\s+)|(\\/\\*)((?>(?:[^\\*]|(?>\\*+)[^\\/])*)((?>\\*+)\\/)))+|(?:(?:(?:(?:\\b|(?<=\\W))|(?=\\W))|\\A)|\\Z))))(\\()",
-      "beginCaptures": {
-        "1": {
-          "patterns": [
-            {
-              "include": "#inline_comment"
-            }
-          ]
-        },
-        "2": {
-          "name": "comment.block.c punctuation.definition.comment.begin.c"
-        },
-        "3": {
-          "name": "comment.block.c"
-        },
-        "4": {
-          "patterns": [
-            {
-              "match": "\\*\\/",
-              "name": "comment.block.c punctuation.definition.comment.end.c"
-            },
-            {
-              "match": "\\*",
-              "name": "comment.block.c"
-            }
-          ]
-        },
-        "5": {
-          "name": "punctuation.section.parens.begin.bracket.round.conditional.switch.c"
-        }
-      },
-      "end": "(\\))",
-      "endCaptures": {
-        "1": {
-          "name": "punctuation.section.parens.end.bracket.round.conditional.switch.c"
-        }
-      },
-      "patterns": [
-        {
-          "include": "#evaluation_context"
-        },
-        {
-          "include": "#c_conditional_context"
-        }
-      ]
-    },
-    "switch_statement": {
-      "name": "meta.block.switch.c",
-      "begin": "(((?>(?:(?:(?>(?<!\\s)\\s+)|(\\/\\*)((?>(?:[^\\*]|(?>\\*+)[^\\/])*)((?>\\*+)\\/)))+|(?:(?:(?:(?:\\b|(?<=\\W))|(?=\\W))|\\A)|\\Z))))((?<!\\w)switch(?!\\w)))",
-      "beginCaptures": {
-        "1": {
-          "name": "meta.head.switch.c"
-        },
-        "2": {
-          "patterns": [
-            {
-              "include": "#inline_comment"
-            }
-          ]
-        },
-        "3": {
-          "name": "comment.block.c punctuation.definition.comment.begin.c"
-        },
-        "4": {
-          "name": "comment.block.c"
-        },
-        "5": {
-          "patterns": [
-            {
-              "match": "\\*\\/",
-              "name": "comment.block.c punctuation.definition.comment.end.c"
-            },
-            {
-              "match": "\\*",
-              "name": "comment.block.c"
-            }
-          ]
-        },
-        "6": {
-          "name": "keyword.control.switch.c"
-        }
-      },
-      "end": "(?:(?<=\\}|%>|\\?\\?>)|(?=[;>\\[\\]=]))",
-      "patterns": [
-        {
-          "name": "meta.head.switch.c",
-          "begin": "\\G ?",
-          "end": "((?:\\{|<%|\\?\\?<|(?=;)))",
-          "endCaptures": {
-            "1": {
-              "name": "punctuation.section.block.begin.bracket.curly.switch.c"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#switch_conditional_parentheses"
-            },
-            {
-              "include": "$self"
-            }
-          ]
-        },
-        {
-          "name": "meta.body.switch.c",
-          "begin": "(?<=\\{|<%|\\?\\?<)",
-          "end": "(\\}|%>|\\?\\?>)",
-          "endCaptures": {
-            "1": {
-              "name": "punctuation.section.block.end.bracket.curly.switch.c"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#default_statement"
-            },
-            {
-              "include": "#case_statement"
-            },
-            {
-              "include": "$self"
-            },
-            {
-              "include": "#block_innards"
-            }
-          ]
-        },
-        {
-          "name": "meta.tail.switch.c",
-          "begin": "(?<=\\}|%>|\\?\\?>)[\\s\\n]*",
-          "end": "[\\s\\n]*(?=;)",
-          "patterns": [
-            {
-              "include": "$self"
-            }
-          ]
-        }
-      ]
-    },
-    "statement": {
-      "patterns": [
-        {
-          "match": "\\b(break|continue|return|if|else|while|for|foreach|thread)\\b",
-          "name": "keyword.control"
-        },
-        {
-          "match": "([a-zA-Z0-9_.]\\w*)?\\s*\\b(thread)\\b\\s*",
-          "captures": 
-          {
-            "1": { "name": "support.variable" },
-            "2": { "name": "keyword.control" }
-          }
-        },
-        {
-          "match": "(?<=\\b[a-zA-Z0-9_.]\\w*)\\s*\\b(in)\\b\\s*(?=[a-zA-Z0-9_.]\\w*\\b)",
-          "captures": {
-              "1": {
-                  "name": "keyword.control"
-              }
-          }
-        }
-      ]
-    },
-    "member_access": {
-      "patterns": [
-        {
-          "name": "variable.other.gsc",
-          "match": "(self|level)\\s*\\.\\s*([a-zA-Z_]\\w*)\\s*\\.\\s*([a-zA-Z_][\\w]\\w*)\\b"
-        },
-        {
-          "match": "([a-zA-Z_]\\w*)\\s*\\.\\s*([a-zA-Z_][\\w]*)\\b",
-          "captures": {
-            "1": {
-              "name": "variable.other.object.access.c"
-            },
-            "2": {
-              "name": "variable.other.member.c"
-            }
-          }
-        }
-      ]
-    },
-    "operators": {
-      "patterns": [
-        {
-          "match": "--",
-          "name": "keyword.operator.decrement.c"
-        },
-        {
-          "match": "\\+\\+",
-          "name": "keyword.operator.increment.c"
-        },
-        {
-          "match": "%=|\\+=|-=|\\*=|(?<!\\()/=",
-          "name": "keyword.operator.assignment.compound.c"
-        },
-        {
-          "match": "&=|\\^=|<<=|>>=|\\|=",
-          "name": "keyword.operator.assignment.compound.bitwise.c"
-        },
-        {
-          "match": "<<|>>",
-          "name": "keyword.operator.bitwise.shift.c"
-        },
-        {
-          "match": "!=|<=|>=|==|<|>",
-          "name": "keyword.operator.comparison.c"
-        },
-        {
-          "match": "&&|!|\\|\\|",
-          "name": "keyword.operator.logical.c"
-        },
-        {
-          "match": "&|\\||\\^|~",
-          "name": "keyword.operator.c"
-        },
-        {
-          "match": "=",
-          "name": "keyword.operator.assignment.c"
-        },
-        {
-          "match": "%|\\*|/|-|\\+",
-          "name": "keyword.operator.c"
-        },
-        {
-          "begin": "(\\?)",
-          "beginCaptures": {
-            "1": {
-              "name": "keyword.operator.ternary.c"
-            }
-          },
-          "end": "(:)",
-          "endCaptures": {
-            "1": {
-              "name": "keyword.operator.ternary.c"
-            }
-          },
-          "patterns": [
-            {
-              "include": "#function-call-innards"
-            },
-            {
-              "include": "$base"
-            }
-          ]
-        }
-      ]
-    },
-    "numbers": {
-		"name": "constant.character.escape.gsc",
-		"match": "(?<!\\w)(?:-?(?:0|[1-9]\\d*)(?:\\.\\d+)?|\\.\\d+)(?:[eE][+-]?\\d+)?(?!\\w)"
-	  },
-    "strings": {
-      "patterns": [
-        {
-          "begin": "\"",
-          "beginCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.begin.c"
-            }
-          },
-          "end": "\"",
-          "endCaptures": {
-            "0": {
-              "name": "punctuation.definition.string.end.c"
-            }
-          },
-          "name": "string.quoted.double.c",
-          "patterns": [
-            {
-              "include": "#string_escaped_char"
-            },
-            {
-              "include": "#line_continuation_character"
-            }
-          ]
+          "name": "constant.character.escape.gsc",
+          "match": "\\\\."
         }
       ]
     },
@@ -1175,23 +116,39 @@
       "patterns": [
         {
           "match": "\\b(true|false|undefined)\\b",
-          "name": "constant.language.keywords"
+          "name": "constant.language.gsc"
         },
         {
-          "include": "#numbers"
+          "include": "#numeric"
         },
         {
-          "include": "#strings"
+          "include": "#string"
         },
         {
-          "match": "\\b(level|self)\\b",
-          "name": "support.variable"
-        },
-        {
-          "match": "[a-zA-Z0-9_]\\w*",
-          "name": "variable.alphanumeric.object"
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b",
+          "name": "variable.other.gsc"
         }
       ]
-    }
+    },
+    "function": {
+      "patterns": [  
+        {
+          "name": "punctuation.function.path.gsc",
+          "match": "[a-zA-Z0-9_\\\\]+(?=::)"
+        },
+        {
+          "name": "support.function.gsc",
+          "match": "::[a-zA-Z0-9_]\\w*"
+        },
+        {
+          "name": "support.function.gsc",
+          "match": "[a-zA-Z0-9_]\\w*(?=\\()"
+        },
+        {
+          "name": "support.function.gsc",
+          "match": "\\[\\s*\\[\\s*[a-zA-Z_][a-zA-Z0-9_]*\\s*\\]\\s*\\](?=\\()"
+        }
+      ]
+		}
   }
 }
