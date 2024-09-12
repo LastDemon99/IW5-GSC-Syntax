@@ -1,16 +1,23 @@
 import * as vscode from 'vscode';
-import * as completion from './features/completionItemProvider'
-import * as definition from './features/definitionProvider'
+import { completionItemProvider } from './features/completionItemProvider'
+import { definitionProvider } from './features/definitionProvider'
+import { showUrlInputBox } from './features/downloadScripts';
+import { join } from 'path';
+
+const scriptsPath = join(process.env.LOCALAPPDATA || '', 'Plutonium', 'storage', 'iw5', 'scripts');
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log("IW5-GSC-Syntax: Init");
 
-	// Completion provider
+	vscode.commands.registerCommand('extension.downloadFiles', async () => {
+        await showUrlInputBox(scriptsPath);
+    });
+
 	vscode.languages.registerCompletionItemProvider("gsc",
-		new completion.completionItemProvider(), '.');
+		new completionItemProvider(), '.');
 
 	vscode.languages.registerDefinitionProvider("gsc",
-		new definition.definitionProvider());
+		new definitionProvider(scriptsPath));
 }
 
 export function deactivate() {
