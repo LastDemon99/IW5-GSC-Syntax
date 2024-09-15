@@ -16,16 +16,16 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
         
         const wordRange = document.getWordRangeAtPosition(position);
         const word = document.getText(wordRange);
+        
+        const definitionData = this.scriptsWatcher.getDefinitionData();
+        if (definitionData[word]) {
+            const data = definitionData[word];
+            return new vscode.Location(vscode.Uri.file(data.path), data.position);
+        }
 
         const definition = findDefinitionInDocument(document, word);
         if (definition) {
             return new vscode.Location(document.uri, definition);
-        }
-
-        const definitionData = this.scriptsWatcher.getDefinitionData();        
-        if (definitionData[word]) {
-            const data = definitionData[word];
-            return new vscode.Location(vscode.Uri.file(data.path), data.position);
         }
 
         return null;

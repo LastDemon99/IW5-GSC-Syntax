@@ -1,8 +1,7 @@
 import * as chokidar from 'chokidar';
 import { join, extname, relative } from 'path';
-import { CompletionItem, CompletionItemKind, TextDocument } from 'vscode';
+import { CompletionItem, CompletionItemKind, TextDocument, Position } from 'vscode';
 import { readFile } from 'fs';
-import { Position} from 'vscode';
 
 const PLUTONIUM_FOLDER = join(process.env.LOCALAPPDATA || '', 'Plutonium', 'storage', 'iw5');
 const SCRIPTS_FOLDER = join(PLUTONIUM_FOLDER, 'scripts');
@@ -83,7 +82,7 @@ export class ScriptsWatcher {
         }
     }
 
-    public async updateData(document: TextDocument) {
+    public updateData(document: TextDocument) {
         const currentIncludes: string[] = [];
         const text = document.getText();
         const commentRanges = CommentBlocksRange(text);
@@ -121,6 +120,7 @@ export class ScriptsWatcher {
     }
 
     private setFunctionData(path: string) {
+        this.includedFiles[path] = []        
         const functionsData: FunctionData[] = [];
         const fullPath = join(PLUTONIUM_FOLDER, path) + GSC_EXTENSION;
         readFile(fullPath, 'utf8', (err, data) => {

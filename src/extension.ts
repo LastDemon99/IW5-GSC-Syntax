@@ -7,29 +7,45 @@ import { ScriptsWatcher } from './features/scriptsWatcher';
 export function activate(context: vscode.ExtensionContext) {
 	console.log("IW5-GSC-Syntax: Init");
 
-	const filesWatcher = ScriptsWatcher.getInstance();
-	context.subscriptions.push({
-        dispose() { filesWatcher.stopWatching(); }
+	let filesWatcher: ScriptsWatcher;
+
+	const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor) {
+		filesWatcher = ScriptsWatcher.getInstance();
+		context.subscriptions.push({
+			dispose() { filesWatcher.stopWatching(); }
+		});
+		filesWatcher.updateData(activeEditor.document);
+	}
+
+	const onChangeFileDisplay = vscode.window.onDidChangeVisibleTextEditors(editors => {
+        editors.forEach(editor => { 
+			const document = editor.document;
+			if (document.languageId === 'gsc')filesWatcher.updateData(document); 
+		});
     });
 
-	vscode.workspace.onDidOpenTextDocument((document: vscode.TextDocument) => {
-        if (document.languageId === 'gsc') filesWatcher.updateData(document);
-    });
-
-    vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent) => {
+    const onChangeDocument = vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent) => {
 		const document = event.document;
         if (document.languageId === 'gsc') filesWatcher.updateData(event.document);
     });
 
-	vscode.commands.registerCommand('extension.downloadFiles', async () => {
-        await showUrlInputBox();
-    });
-
-	vscode.languages.registerCompletionItemProvider("gsc",
+	const completionItemProvider = vscode.languages.registerCompletionItemProvider("gsc",
 		new CompletionItemProvider(), '.');
 
-	vscode.languages.registerDefinitionProvider("gsc",
+	const definitionProvider = vscode.languages.registerDefinitionProvider("gsc",
 		new DefinitionProvider());
+
+	const registerCommand = vscode.commands.registerCommand('extension.downloadFiles', async () => {
+		await showUrlInputBox();
+	});
+
+	context.subscriptions.push(
+		onChangeFileDisplay,
+		onChangeDocument,
+		completionItemProvider,
+		definitionProvider,
+		registerCommand);
 }
 
 export function deactivate() {
