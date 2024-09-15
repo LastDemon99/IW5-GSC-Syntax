@@ -1,59 +1,18 @@
 {
-  "common_scripts\\utility": {
-    "prefix": "#include utility",
+  "include": {
+    "prefix": "#include",
     "body": [
-      "#include common_scripts\\utility;"
+      "#include"
     ],
-    "description": "Include all functions from common_scripts\\utility.gsc"
+    "description": "Use to inlcude a gsc path"
   },
-  "common_scripts\\_fx;": {
-    "prefix": "#include _fx",
+
+  "documentation": {
+    "prefix": "#using_animtree",
     "body": [
-      "#include common_scripts\\_fx;"
+      "#using_animtree(\"\");"
     ],
-    "description": "Include all functions from common_scripts\\_fx.gsc"
-  },
-  "common_scripts\\_createfx;": {
-    "prefix": "#include _createfx",
-    "body": [
-      "#include common_scripts\\_createfx;"
-    ],
-    "description": "Include all functions from common_scripts\\_createfx.gsc"
-  },
-  "maps\\mp\\_utility": {
-    "prefix": "#include _utility",
-    "body": [
-      "#include maps\\mp\\_utility;"
-    ],
-    "description": "Include all functions from maps\\mp\\_utility.gsc"
-  },
-  "maps\\mp\\_createfx": {
-    "prefix": "#include _createfx",
-    "body": [
-      "#include maps\\mp\\_createfx;"
-    ],
-    "description": "Include all functions from maps\\mp\\_createfx.gsc"
-  },
-  "maps\\mp\\gametypes\\_hud_util": {
-    "prefix": "#include _hud_util",
-    "body": [
-      "#include maps\\mp\\gametypes\\_hud_util;"
-    ],
-    "description": "Include all functions from maps\\mp\\gametypes\\_hud_util.gsc"
-  },
-  "maps\\mp\\gametypes\\_class": {
-    "prefix": "#include _class",
-    "body": [
-      "#include maps\\mp\\gametypes\\_class;"
-    ],
-    "description": "Include all functions from maps\\mp\\gametypes\\_class.gsc"
-  },
-  "maps\\mp\\killstreaks\\_harrier": {
-    "prefix": "#include _class",
-    "body": [
-      "#include maps\\mp\\killstreaks\\_harrier;"
-    ],
-    "description": "Include all functions from maps\\mp\\killstreaks\\_harrier.gsc"
+    "description": "Use an animation tree in the script"
   },
 
   "using_animtree": {

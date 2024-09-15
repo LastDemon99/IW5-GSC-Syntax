@@ -1,23 +1,35 @@
 import * as vscode from 'vscode';
-import { completionItemProvider } from './features/completionItemProvider'
-import { definitionProvider } from './features/definitionProvider'
+import { CompletionItemProvider } from './features/completionItemProvider'
+import { DefinitionProvider } from './features/definitionProvider'
 import { showUrlInputBox } from './features/downloadScripts';
-import { join } from 'path';
-
-const scriptsPath = join(process.env.LOCALAPPDATA || '', 'Plutonium', 'storage', 'iw5', 'scripts');
+import { ScriptsWatcher } from './features/scriptsWatcher';
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log("IW5-GSC-Syntax: Init");
 
+	const filesWatcher = ScriptsWatcher.getInstance();
+	context.subscriptions.push({
+        dispose() { filesWatcher.stopWatching(); }
+    });
+
+	vscode.workspace.onDidOpenTextDocument((document: vscode.TextDocument) => {
+        if (document.languageId === 'gsc') filesWatcher.updateData(document);
+    });
+
+    vscode.workspace.onDidChangeTextDocument((event: vscode.TextDocumentChangeEvent) => {
+		const document = event.document;
+        if (document.languageId === 'gsc') filesWatcher.updateData(event.document);
+    });
+
 	vscode.commands.registerCommand('extension.downloadFiles', async () => {
-        await showUrlInputBox(scriptsPath);
+        await showUrlInputBox();
     });
 
 	vscode.languages.registerCompletionItemProvider("gsc",
-		new completionItemProvider(), '.');
+		new CompletionItemProvider(), '.');
 
 	vscode.languages.registerDefinitionProvider("gsc",
-		new definitionProvider(scriptsPath));
+		new DefinitionProvider());
 }
 
 export function deactivate() {

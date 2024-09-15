@@ -2,14 +2,17 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import axios from 'axios';
+import { join } from 'path';
 
-export async function showUrlInputBox(scriptsPath: string) {
+const SCRIPTS_FOLDER = join(process.env.LOCALAPPDATA || '', 'Plutonium', 'storage', 'iw5', 'scripts');
+
+export async function showUrlInputBox() {
     const repoUrl = await vscode.window.showInputBox({
         prompt: 'Enter the file or directory GitHub URL',
         placeHolder: 'Example: https://github.com/LastDemon99/IW5-Sripts/tree/main/GSC/Utility'
     });
     if (!repoUrl) return;
-    await downloadFilesFromGitHub(repoUrl, scriptsPath);
+    await downloadFilesFromGitHub(repoUrl, SCRIPTS_FOLDER);
 }
 
 async function downloadFilesFromGitHub(repoUrl: string, savePath: string) {
