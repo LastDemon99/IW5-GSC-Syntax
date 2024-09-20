@@ -1,44 +1,71 @@
 import * as vscode from 'vscode';
-import { ScriptsWatcher } from './scriptsWatcher';
+import * as utility from './utility';
 
 export class DefinitionProvider implements vscode.DefinitionProvider {
-    private scriptsWatcher: ScriptsWatcher;
-
     constructor() {
-        this.scriptsWatcher = ScriptsWatcher.getInstance();
     }
 
-    public provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition> {
-        
-        if (document.languageId !== 'gsc') {
-            return null;
-        }
-        
+    async provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.Definition | null> {
         const wordRange = document.getWordRangeAtPosition(position);
         const word = document.getText(wordRange);
+
+        if (!word || word === "") {
+            return null;
+        }
+
+        const line = document.lineAt(position.line).text;
+        const functionPattern = new RegExp(`(?:([a-zA-Z0-9_\\\\]+::))?(${word})\\(`, 'g');
+
+        let match;
+        let isFunction = false;
+        while ((match = functionPattern.exec(line)) !== null) {
+            const matchPrefix = match[1];
+            const matchWord = match[2];
+            const start = match.index + (matchPrefix ? matchPrefix.length : 0);
+            const end = start + matchWord.length;
+            const matchRange = new vscode.Range(new vscode.Position(position.line, start), new vscode.Position(position.line, end));
+            if (matchRange.contains(position)) isFunction = true;
+        }
+
+        if (!isFunction) return null;
+
+        const text = document.getText();        
+        const lineStart = text.indexOf(line);
+        const lineEnd = lineStart + document.lineCount;
+
+        const commentIndex = line.indexOf('//');
+        let isComment = commentIndex !== -1 && commentIndex < lineStart;
+        if (!isComment) isComment = utility.commentBlocksRange(text).some(range => lineEnd > range.start && lineStart < range.end)
+        if (isComment) return null;
+
+        const funcDeclaration = await getFunctionLocation(word, text, document, token);
+        if (funcDeclaration) return funcDeclaration;
         
-        const definitionData = this.scriptsWatcher.getDefinitionData();
-        if (definitionData[word]) {
-            const data = definitionData[word];
-            return new vscode.Location(vscode.Uri.file(data.path), data.position);
+        const callFromInclude = utility.getIncludeCallFunction(word, text, document, position);
+        if (!callFromInclude) {
+            const includes = utility.getIncludes(document);
+            for (const include of includes) {
+                const includeDocument = await vscode.workspace.openTextDocument(utility.includePathToUri(include));
+                const declaration = await getFunctionLocation(word, includeDocument.getText(), includeDocument, token);
+                if (declaration) return declaration;
+            }
         }
-
-        const definition = findDefinitionInDocument(document, word);
-        if (definition) {
-            return new vscode.Location(document.uri, definition);
+        else {
+            const includeDocument = await vscode.workspace.openTextDocument(utility.includePathToUri(callFromInclude.split('::')[0]));
+            const declaration = await getFunctionLocation(word, includeDocument.getText(), includeDocument, token);
+            if (declaration) return declaration;
         }
-
         return null;
     }
 }
 
-function findDefinitionInDocument(document: vscode.TextDocument, functionName: string): vscode.Position | null {
-    const functionPattern = new RegExp(`^${functionName}\\s*\\(`);
-    for (let i = 0; i < document.lineCount; i++) {
-        const lineText = document.lineAt(i).text;
-        if (functionPattern.test(lineText)) {
-            return new vscode.Position(i, lineText.indexOf(functionName));
-        }
+async function getFunctionLocation(word: string, text: string, document: vscode.TextDocument, token: vscode.CancellationToken): Promise<vscode.Location | null> {
+    if (token.isCancellationRequested) return null;
+    const functionPattern = new RegExp(`^${word}\\s*\\(.*\\)\\s*\\{`, 'gm');
+    let match: RegExpExecArray | null;
+    while ((match = functionPattern.exec(text)) !== null) {
+        const startPosition = document.positionAt(match.index);
+        return new vscode.Location(document.uri, startPosition);
     }
     return null;
 }
