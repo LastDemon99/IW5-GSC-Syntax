@@ -2,7 +2,7 @@
     "name": "lb-iw5-gsc",
     "displayName": "IW5 GSC Syntax",
     "description": "GSC scripting syntax and autocomplete used for IW5.",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "publisher": "LastDemon99",
     "company": "LethalBeats",
     "icon": "images/iw5_gsc_syntax_logo_128x128.png",

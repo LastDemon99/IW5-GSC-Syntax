@@ -6,13 +6,13 @@ This extension is a fork of the CoD-Sense extension, with many more features foc
 
 You can search this extension in your vscode right now. [VisualStudio MarketPlace](https://marketplace.visualstudio.com/items?itemName=LastDemon99.lb-iw5-gsc)
 
-### GSC Documentation: [GSC Documentation](https://lastdemon99.github.io/IW5-Documentation/index_gsc.html)
+### Documentation: [GSC Documentation](https://lastdemon99.github.io/IW5-Documentation/index_gsc.html)
 
 -------------------------------------------------------------
 
 ## Changelog
 
-### 1.5.0:
+### 1.5.2:
 
 - **Autocomplete**: Autocomplete support for functions, some structure fields, and include paths.
 - **Function Renaming**: Easily rename functions with F2.

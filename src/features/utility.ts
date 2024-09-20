@@ -20,7 +20,7 @@ export function isGSCFile(filePath: string) {
 }
 
 export function includePathToUri(include: string) {
-    return  vscode.Uri.file(includePathToFilePath(include));
+    return vscode.Uri.file(includePathToFilePath(include));
 }
 
 export function includePathToFilePath(include: string) {
@@ -59,7 +59,8 @@ export function getIncludes(document: vscode.TextDocument): string[] {
 		const match = lines[i].match(/^\s*#include\s+([^;]+)/);  
 		if (!match) continue;
 
-		elements.push(match[1].trim());  
+        const include = match[1].trim();
+        if (include.startsWith("scripts\\")) elements.push(include);
 	} 
     return [...new Set(elements)];
 }
