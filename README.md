@@ -6,6 +6,10 @@ This extension is a fork of the CoD-Sense extension, with many more features foc
 
 You can search this extension in your vscode right now. [VisualStudio MarketPlace](https://marketplace.visualstudio.com/items?itemName=LastDemon99.lb-iw5-gsc)
 
+### GSC Documentation: [GSC Documentation](https://lastdemon99.github.io/IW5-Documentation/index_gsc.html)
+
+-------------------------------------------------------------
+
 ## Changelog
 
 ### 1.5.0:
@@ -29,4 +33,5 @@ In future updates, I plan to implement the following improvements:
 
 > **Note**: These features are planned for the next version. While they shouldn't be too complicated to implement, they were not included in the current release due to time constraints. Please note that the upcoming update will not be released immediately. In the meantime, feel free to leave any issues or suggestions in this repository.
 
-### GSC Documentation: [gsc-doc](https://github.com/LastDemon99/IW5-GSC-Syntax/tree/master/gsc-doc)
+## Sponsor
+<a href="https://www.paypal.com/paypalme/lastdemon99/"><img src="https://github.com/LastDemon99/LastDemon99/blob/main/Data/paypal_dark.svg" height="60"></a>

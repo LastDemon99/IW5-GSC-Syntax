@@ -4,3 +4,4 @@
 /src/defs/debug/
 /typings
 package-lock.json
+*.vsix
