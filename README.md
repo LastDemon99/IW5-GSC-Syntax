@@ -23,5 +23,10 @@ You can find this extension in the Visual Studio Code marketplace: [Visual Studi
 - Go to Definition: Quickly navigate to variable declarations within the function scope.
 - Function Documentation: Read and display docstrings from files to show arguments and descriptions of functions. `snippets: #docstring`
 
+-------------------------------------------------------------
+
+## 1.5.4:
+- Fix Readme Error
+
 ## Sponsor
 <a href="https://www.paypal.com/paypalme/lastdemon99/"><img src="https://github.com/LastDemon99/LastDemon99/blob/main/Data/paypal_dark.svg" height="60"></a>
