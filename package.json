@@ -25,9 +25,9 @@
         "menus": {
             "editor/title": [
                 {
-                "command": "extension.downloadFiles",
-                "when": "resourceExtname == .gsc",
-                "group": "navigation"
+                    "command": "extension.downloadFiles",
+                    "when": "resourceExtname == .gsc",
+                    "group": "navigation"
                 }
             ]
         },

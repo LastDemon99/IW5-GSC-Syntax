@@ -1,18 +1,23 @@
 {
+  "docstring": {
+    "prefix": "#docstring",
+    "body": [
+      "/*",
+      "///DocStringBegin",
+      "detail: func_name(argName: <type>): array",
+      "summary: Replace This.",
+      "///DocStringEnd",
+      "*/"
+    ],
+    "description": "Use to inlcude a function documentation"
+  },
+
   "include": {
     "prefix": "#include",
     "body": [
       "#include"
     ],
     "description": "Use to inlcude a gsc path"
-  },
-
-  "documentation": {
-    "prefix": "#using_animtree",
-    "body": [
-      "#using_animtree(\"\");"
-    ],
-    "description": "Use an animation tree in the script"
   },
 
   "using_animtree": {
@@ -23,40 +28,39 @@
     "description": "Use an animation tree in the script"
   },
 
-	"scriptInit": {
-		"prefix": "init",
-		"body": [
-            "init()",
-            "{",
-            "   level thread onPlayerConnect();",
-            "}",
-            "",
-            "onPlayerConnect()",
-            "{",
-            "   level endon(\"game_ended\");",
-            "",
-            "   for (;;)",
-            "   {",
-            "      level waittill(\"connected\", player);",
-            "      ",
-            "      player thread onPlayerSpawn();",
-            "   }",
-            "}",
-            "",
-            "onPlayerSpawn()",
-            "{",
-            "   self endon(\"disconnect\");",
-            "   ",
-            "   for(;;)",
-            "   {",
-            "      self waittill(\"spawned_player\");",
-            "      ",
-            "   }",
-            "}"
-          ],
-		"description": "Script init template"
-	},
-
+  "scriptInit": {
+    "prefix": "init",
+    "body": [
+      "init()",
+      "{",
+      "    level thread onPlayerConnect();",
+      "}",
+      "",
+      "onPlayerConnect()",
+      "{",
+      "    level endon(\"game_ended\");",
+      "",
+      "    for (;;)",
+      "    {",
+      "        level waittill(\"connected\", player);",
+      "        ",
+      "        player thread onPlayerSpawn();",
+      "    }",
+      "}",
+      "",
+      "onPlayerSpawn()",
+      "{",
+      "    self endon(\"disconnect\");",
+      "    ",
+      "    for(;;)",
+      "    {",
+      "        self waittill(\"spawned_player\");",
+      "        ",
+      "    }",
+      "}"
+    ],
+    "description": "Script init template"
+  },
   "onPlayerKilled": {
     "prefix": "onPlayerDamage",
     "body": [

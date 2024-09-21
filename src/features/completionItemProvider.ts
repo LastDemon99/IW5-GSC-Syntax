@@ -99,15 +99,45 @@ export class CompletionItemProvider {
 }
 
 function getFunctionCompletionItems(text: string): vscode.CompletionItem[] {
-	const functionPattern = new RegExp(`^(\\w+)\\s*\\(.*\\)\\s*\\{`, 'gm');
-	const completionItems: vscode.CompletionItem[] = [];
-	let match: RegExpExecArray | null;
-	while ((match = functionPattern.exec(text)) !== null) {
-		const functionName = match[1];
-		const completionItem = new vscode.CompletionItem(functionName, vscode.CompletionItemKind.Function);
-		completionItems.push(completionItem);
-	}
-	return completionItems;
+    const lines = text.split('\n');
+    const functionPattern = new RegExp(`^(\\w+)\\s*\\(.*\\)\\s*\\{`, 'gm');
+    const completionItems: vscode.CompletionItem[] = [];
+    let match: RegExpExecArray | null;
+
+    while ((match = functionPattern.exec(text)) !== null) {
+        const functionName = match[1];
+        const lineIndex = text.substring(0, match.index).split('\n').length - 1;
+        let docString = '';
+
+        for (let i = lineIndex - 1; i >= Math.max(0, lineIndex - 6); i--) {
+            const line = lines[i].trim();
+            if (line.startsWith('///DocStringBegin')) {
+                for (let j = i + 1; j < lines.length && !lines[j].trim().startsWith('///DocStringEnd'); j++) {
+                    docString += lines[j].trim() + '\n';
+                }
+                break;
+            }
+        }
+
+        const completionItem = new vscode.CompletionItem(functionName, vscode.CompletionItemKind.Function);
+        if (docString) {
+            const docLines = docString.split('\n');
+            const detailLine = docLines.find(line => line.startsWith('detail:'));
+            const summaryLine = docLines.find(line => line.startsWith('summary:'));
+
+            if (detailLine) {
+                completionItem.detail = detailLine.replace('detail:', '').trim();
+            }
+            if (summaryLine) {
+                const markdownString = new vscode.MarkdownString(summaryLine.replace('summary:', '').trim());
+                markdownString.isTrusted = true;
+                completionItem.documentation = markdownString;
+            }
+        }
+
+        completionItems.push(completionItem);
+    }
+    return completionItems;
 }
 
 function getFunctionBlock(text: string, position: vscode.Position): string {
