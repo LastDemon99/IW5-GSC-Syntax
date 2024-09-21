@@ -10,6 +10,9 @@ export function activate(context: ExtensionContext) {
 
 	const filesWatcher = new ScriptsWatcher();
 	filesWatcher.startWatching();
+
+	//languages.registerDocumentSemanticTokensProvider("gsc",
+		//new SemanticTokensProvider(), legend);
 	
 	const completionItemProvider = languages.registerCompletionItemProvider("gsc",
 		new CompletionItemProvider(), '.');

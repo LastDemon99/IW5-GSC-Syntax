@@ -11,52 +11,50 @@ export class RenameProvider implements vscode.RenameProvider {
         const word = document.getText(wordRange);
         const workspaceEdit = new vscode.WorkspaceEdit();
 
-        if (!word || word === "") {
+        if (!word || word === "" || utility.isCommentAtPosition(document, position))
             return workspaceEdit;
-        }
 
         const text = document.getText();
         const line = document.lineAt(position.line).text;
-        const lineStart = text.indexOf(line);
-        const lineEnd = lineStart + document.lineCount;
-
-        const commentIndex = line.indexOf('//');
-        let isComment = commentIndex !== -1 && commentIndex < lineStart;
-        if (!isComment) isComment = utility.commentBlocksRange(text).some(range => lineEnd > range.start && lineStart < range.end);
         
-        if (isComment) return workspaceEdit;
+        if (!utility.isFunctionAtPosition(line, position, word)) {
+            const functionScope = utility.tryGetFunctionScope(text, position);
+            if (!functionScope) return workspaceEdit;
+            tryReplaceVariablesFromScope(text, functionScope, word, newName, document.uri);
+            return workspaceEdit;
+        }
 
-        const callFromInclude = utility.getIncludeCallFunction(word, text, document, position);
+        const callFromInclude = utility.tryGetIncludeCallPath(word, text, document, position);
 
         let mainInclude;
 
-        if (!callFromInclude) {
+        // First rename the function in the file where it is declared
+        if (callFromInclude) {
+            mainInclude = callFromInclude.split('::')[0];
+            const includeDocument = await vscode.workspace.openTextDocument(utility.includePathToUri(mainInclude));
+            await renameFunction(includeDocument, mainInclude, word, newName, workspaceEdit);
+        }
+        else {
             if (utility.STATEMENTS.some(keyword => keyword === word)) return workspaceEdit;
 
-            if (hasFunctionDeclaration(text, word)) {
+            if (utility.tryGetFunctionDeclarationLocation(word, text, document)) {
                 mainInclude = utility.filePathToIncludePath(document.uri.fsPath);
                 await renameFunction(document, mainInclude, word, newName, workspaceEdit);
             }
             else {
-                const includes = utility.getIncludes(document);
+                const includes = utility.getIncludesFromDocument(document);
                 for (const include of includes) {
                     const includeDocument = await vscode.workspace.openTextDocument(utility.includePathToUri(include));
-                    if (hasFunctionDeclaration(includeDocument.getText(), word)) {
+                    if (utility.tryGetFunctionDeclarationLocation(word, includeDocument.getText(), includeDocument)) {
                         mainInclude = include;
                         await renameFunction(includeDocument, mainInclude, word, newName, workspaceEdit);
                     }
                 }
             }
         }
-        else {
-            mainInclude = callFromInclude.split('::')[0];
-            const includeDocument = await vscode.workspace.openTextDocument(utility.includePathToUri(mainInclude));
-            await renameFunction(includeDocument, mainInclude, word, newName, workspaceEdit);
-        }
 
-        if (!mainInclude) return workspaceEdit;
-        
-        const filesPath: string[] = await getFilesUsingInclude(mainInclude);
+        if (!mainInclude) return workspaceEdit;        
+        const filesPath: string[] = await getFilesPathUsingInclude(mainInclude);
         for (const path of filesPath) {
             const document = await vscode.workspace.openTextDocument(vscode.Uri.file(path));
             await renameFunction(document, mainInclude, word, newName, workspaceEdit);
@@ -68,7 +66,7 @@ export class RenameProvider implements vscode.RenameProvider {
 
 async function renameFunction(document: vscode.TextDocument, include: string, funcName: string, newName: string, workspaceEdit: vscode.WorkspaceEdit) {
     const text = document.getText();
-    const commentRanges = utility.commentBlocksRange(text);
+    const commentRanges = utility.getCommentLinesRange(text);
     const pathFuncPattern = new RegExp(`(?:${include}::)?(${funcName})\\(`, 'g');
 
     for (let i = 0; i < document.lineCount; i++) {
@@ -95,13 +93,13 @@ async function renameFunction(document: vscode.TextDocument, include: string, fu
     }
 }
 
-async function getFilesUsingInclude(include: string) {
+async function getFilesPathUsingInclude(include: string) {
     const filesPath: string[] = [];
     for (const includeTarget of getAllIncludesPath()) {
         if (includeTarget !== include) {
             const filePath = utility.includePathToFilePath(includeTarget);
             const text = await utility.readFileAsync(filePath, 'utf8');
-            const commentRanges = utility.commentBlocksRange(text);
+            const commentRanges = utility.getCommentLinesRange(text);
             const lines = text.split('\n');
 
             for (let i = 0; i < lines.length; i++) {
@@ -124,21 +122,47 @@ async function getFilesUsingInclude(include: string) {
     return filesPath;
 }
 
-function hasFunctionDeclaration(text: string, funcName: string): boolean {
-    const escapedFuncName = funcName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const functionDeclarationPattern = new RegExp(`^\\s*${escapedFuncName}\\s*\\([^)]*\\)\\s*\\{`, 'gm');
-    let match;
+export function tryReplaceVariablesFromScope(text: string, functionScope: vscode.Location, variableName: string, newName: string, uri: vscode.Uri): void {
+    const blockStart = functionScope.range.start.line;
+    const blockEnd = functionScope.range.end.line;
+    const blockText = text.split('\n').slice(blockStart, blockEnd + 1).join('\n');
 
-    while ((match = functionDeclarationPattern.exec(text)) !== null) {
-        const start = match.index;
-        const openBraces = [];
-        let end = start + match[0].length;
+    const workspaceEdit = new vscode.WorkspaceEdit();
 
-        for (let i = end; i < text.length; i++) {
-            if (text[i] === '{') openBraces.push('{');
-            if (text[i] === '}') openBraces.pop();
-            if (openBraces.length === 0) return true; 
+    // search argument
+    const argPattern = /^\s*\w+\s*\(([^)]*)\)/m;
+    const match = argPattern.exec(blockText);
+    if (match) {
+        const args = match[1].split(',').map(arg => arg.trim()).filter(arg => arg.length > 0);
+        if (args.includes(variableName)) {
+            const lineIndex = blockText.substring(0, match.index).split('\n').length - 1;
+            const colIndex = match.index - blockText.lastIndexOf('\n', match.index) - 1 + match[0].indexOf(variableName);
+
+            const range = new vscode.Range(
+                new vscode.Position(blockStart + lineIndex, colIndex),
+                new vscode.Position(blockStart + lineIndex, colIndex + variableName.length)
+            );
+
+            workspaceEdit.replace(uri, range, newName);
         }
     }
-    return false;
+
+    // search variable
+    const variablePattern = new RegExp(`\\b${variableName}\\b`, 'g');
+    let matchVar;
+    while ((matchVar = variablePattern.exec(blockText)) !== null) {
+        const variableIndex = matchVar.index;
+
+        const lineIndex = blockText.substring(0, variableIndex).split('\n').length - 1;
+        const colIndex = variableIndex - blockText.lastIndexOf('\n', variableIndex) - 1;
+
+        const range = new vscode.Range(
+            new vscode.Position(blockStart + lineIndex, colIndex),
+            new vscode.Position(blockStart + lineIndex, colIndex + variableName.length)
+        );
+
+        workspaceEdit.replace(uri, range, newName);
+    }
+
+    vscode.workspace.applyEdit(workspaceEdit);
 }
