@@ -4,15 +4,14 @@ import { DefinitionProvider } from './features/definitionProvider'
 import { showUrlInputBox } from './features/downloadScripts';
 import { RenameProvider } from './features/renameProvider';
 import { ScriptsWatcher } from './features/scriptsWatcher';
+import { HoverProvider } from './features/hoverProvider';
+import { FoldingRangeProvider } from './features/foldingRangeProvider';
 
 export function activate(context: ExtensionContext) {
 	console.log("IW5-GSC-Syntax: Init");
 
 	const filesWatcher = new ScriptsWatcher();
 	filesWatcher.startWatching();
-
-	//languages.registerDocumentSemanticTokensProvider("gsc",
-		//new SemanticTokensProvider(), legend);
 	
 	const completionItemProvider = languages.registerCompletionItemProvider("gsc",
 		new CompletionItemProvider(), '.');
@@ -27,12 +26,20 @@ export function activate(context: ExtensionContext) {
 		await showUrlInputBox();
 	});
 
+	const foldingProvider = languages.registerFoldingRangeProvider('gsc', 
+		new FoldingRangeProvider());
+
+	const hoverProvider = languages.registerHoverProvider('gsc', 
+		new HoverProvider());
+
 	context.subscriptions.push(
 		{dispose() { filesWatcher.stopWatching(); }},
 		completionItemProvider,
 		definitionProvider,
 		renameProvider,
-		downloadCommand);
+		downloadCommand,
+		hoverProvider,
+		foldingProvider);
 }
 
 export function deactivate() {

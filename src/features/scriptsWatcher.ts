@@ -1,6 +1,7 @@
 import * as chokidar from 'chokidar';
 import * as utility from './utility';
-import { addIncludePath, removeIncludePath } from './completionItemProvider';
+import { addIncludeCompletion, removeIncludeCompletion } from './completionItemProvider';
+import { addInclude, removeInclude } from './renameProvider';
 
 export class ScriptsWatcher {
     private watcher: chokidar.FSWatcher | undefined;
@@ -15,8 +16,14 @@ export class ScriptsWatcher {
 
     private handleFileEvent(filePath: string, event: string) {
         if (!utility.isGSCFile(filePath)) return;
-        if (event === 'add') addIncludePath(filePath);
-        else if (event == "unlink") removeIncludePath(filePath);
+        if (event === 'add') {
+            addIncludeCompletion(filePath);
+            addInclude(filePath);
+        }
+        else if (event == "unlink") {
+            removeIncludeCompletion(filePath);
+            removeInclude(filePath);
+        }
     }
 
     public stopWatching() {

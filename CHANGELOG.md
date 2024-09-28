@@ -1,20 +1,28 @@
 # Change Log
 
 ## 1.5.2:
-- Autocomplete: Autocomplete support for functions, some structure fields, and include paths.
-- Function Renaming: Easily rename functions with F2.
-- Go to Definition: Quickly navigate to function declarations with ctrl + click.
-- Script Download: Option to download scripts from a GitHub url.
+- **Autocomplete**: Autocomplete support for functions, some structure fields, and include paths.
+- **Function Renaming**: Easily rename functions with F2.
+- **Go to Definition**: Quickly navigate to function declarations with ctrl + click.
+- **Script Download**: Option to download scripts from a GitHub url.
 
 -------------------------------------------------------------
 
 ## 1.5.3:
-- Autocomplete: Autocomplete support for variables within the function scope.
-- Function Renaming: Easily rename variables within the function scope.
-- Go to Definition: Quickly navigate to variable declarations within the function scope.
-- Function Documentation: Read and display docstrings from files to show arguments and descriptions of functions. `snippets: #docstring`
+- **Autocomplete**: Autocomplete support for variables within the function scope.
+- **Function Renaming**: Easily rename variables within the function scope.
+- **Go to Definition**: Quickly navigate to variable declarations within the function scope.
+- **Function Documentation**: Read and display docstrings from files to show arguments and descriptions of functions. `snippets: #docstring`
 
 -------------------------------------------------------------
 
 ## 1.5.4:
-- Fix Readme Error
+- **Fix Readme Error**
+
+-------------------------------------------------------------
+
+## 1.5.5:
+- **Hover Provider**: Added a hover provider, when hovering over a function, a window will display its documentation if available.
+- **Folding Region**: Added the functionality of folding regions to facilitate code organization.
+- **Go to Definition**: Now this functionality can be used on paths.
+- **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.

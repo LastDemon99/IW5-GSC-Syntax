@@ -8,22 +8,14 @@ import { game } from '../defs/game';
 let includeCompletion: vscode.CompletionItem[] = [];
 let includeCallCompletion: vscode.CompletionItem[] = [];
 
-export function addIncludePath(filePath: string) {
-	const include = utility.filePathToIncludePath(filePath);
+export function addIncludeCompletion(filePath: string) {
+	const include = utility.pathToInclude(filePath.toLowerCase());
 	includeCompletion.push(new vscode.CompletionItem(include + ";", vscode.CompletionItemKind.File));
 	includeCallCompletion.push(new vscode.CompletionItem(include + "::", vscode.CompletionItemKind.File));
 }
 
-export function getAllIncludesPath(): string[] {
-	const paths: string[] = [];
-	includeCompletion.forEach(item => {
-		paths.push(item.label.toString().replace(";", ""));
-	});
-	return paths;
-}
-
-export function removeIncludePath(filePath: string) {
-	const include = utility.filePathToIncludePath(filePath);
+export function removeIncludeCompletion(filePath: string) {
+	const include = utility.pathToInclude(filePath);
 	includeCompletion = includeCompletion.filter(item => item.label !== include + ";");
 	includeCallCompletion = includeCallCompletion.filter(item => item.label !== include + "::");
 }
@@ -46,7 +38,13 @@ export class CompletionItemProvider {
 
 	async provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): Promise<vscode.CompletionItem[]> {
 		return new Promise<vscode.CompletionItem[]>(async (resolve, reject) => {
-			const line = document.lineAt(position).text;
+			const text = utility.getDocumentText(document);
+			if (utility.isCommentAtPosition(text, document, position)) {
+				resolve([]);
+				return;
+			}
+
+			const line = utility.getDocumentLine(document, position);
 			const linePrefix = line.substring(0, position.character).trim();
 
 			if (linePrefix.startsWith('#include ')) {
@@ -62,31 +60,28 @@ export class CompletionItemProvider {
 				return;
 			}
 
-			const text = document.getText();
-			const functionsCompletion: vscode.CompletionItem[] = getFunctionCompletionItems(text);
+			const completions: vscode.CompletionItem[] = this.functions.concat(getFunctionCompletionItems(text));
 
 			const textBeforeCursor = line.substring(0, position.character);
-			const pattern = /.*?([a-zA-Z0-9_]+(?:\\[a-zA-Z0-9_]+)*)::/;
-			const match = pattern.exec(textBeforeCursor);
+			const includeCallPattern = /.*?([a-zA-Z0-9_]+(?:\\[a-zA-Z0-9_]+)*)::/i;
+			const match = includeCallPattern.exec(textBeforeCursor);
 
 			if (match) {
-				const includeDocument = await vscode.workspace.openTextDocument(utility.includePathToUri(match[1]));
-				functionsCompletion.push(...getFunctionCompletionItems(includeDocument.getText()));
-			}
-			
-			const currentBlock = getFunctionBlock(text, position);
-			if (currentBlock) {
-				functionsCompletion.push(...getFunctionArguments(currentBlock));
-				functionsCompletion.push(...getVariablesFromBlock(currentBlock));
-			}
-			
-			const includes = utility.getIncludesFromDocument(document);
-			for (const include of includes) {
-				const includeDocument = await vscode.workspace.openTextDocument(utility.includePathToUri(include));
-				functionsCompletion.push(...getFunctionCompletionItems(includeDocument.getText()));
+				const includeDocument = await vscode.workspace.openTextDocument(utility.includeToUri(match[1]));
+				resolve(getFunctionCompletionItems(includeDocument.getText()));
+				return;
 			}
 
-			resolve(this.functions.concat(functionsCompletion).concat(includeCallCompletion));
+			const functionScope = utility.tryGetFuncScopeLocation(text, position);
+			if (functionScope) completions.push(...getVariables(text, functionScope));			
+			
+			const includes = utility.getIncludes(text);
+			for (const include of includes) {
+				const includeDocument = await vscode.workspace.openTextDocument(utility.includeToUri(include));
+				completions.push(...getFunctionCompletionItems(includeDocument.getText()));
+			}
+
+			resolve(completions.concat(includeCallCompletion));
 		});
 	}
 
@@ -100,99 +95,71 @@ export class CompletionItemProvider {
 
 function getFunctionCompletionItems(text: string): vscode.CompletionItem[] {
     const lines = text.split('\n');
-    const functionPattern = new RegExp(`^(\\w+)\\s*\\(.*\\)\\s*\\{`, 'gm');
-    const completionItems: vscode.CompletionItem[] = [];
+    const functionPattern = new RegExp(`^(\\w+)\\s*\\(.*\\)\\s*\\{`, 'gmi');
+    const completions: vscode.CompletionItem[] = [];
     let match: RegExpExecArray | null;
 
     while ((match = functionPattern.exec(text)) !== null) {
-        const functionName = match[1];
         const lineIndex = text.substring(0, match.index).split('\n').length - 1;
         let docString = '';
 
         for (let i = lineIndex - 1; i >= Math.max(0, lineIndex - 6); i--) {
-            const line = lines[i].trim();
-            if (line.startsWith('///DocStringBegin')) {
-                for (let j = i + 1; j < lines.length && !lines[j].trim().startsWith('///DocStringEnd'); j++) {
+            const line = lines[i].trim().toLowerCase();
+            if (line.startsWith('///docstringbegin')) {
+                for (let j = i + 1; j < lines.length && !lines[j].trim().startsWith('///docstringend'); j++) {
                     docString += lines[j].trim() + '\n';
                 }
                 break;
             }
         }
 
-        const completionItem = new vscode.CompletionItem(functionName, vscode.CompletionItemKind.Function);
+        const completionItem = new vscode.CompletionItem(match[1], vscode.CompletionItemKind.Function);
         if (docString) {
+			const markdownString = new vscode.MarkdownString();
             const docLines = docString.split('\n');
             const detailLine = docLines.find(line => line.startsWith('detail:'));
             const summaryLine = docLines.find(line => line.startsWith('summary:'));
 
-            if (detailLine) {
-                completionItem.detail = detailLine.replace('detail:', '').trim();
+			if (detailLine) {
+                markdownString.appendCodeblock(detailLine.replace('detail:', ''), 'typescript');
+				markdownString.isTrusted = true;
             }
             if (summaryLine) {
-                const markdownString = new vscode.MarkdownString(summaryLine.replace('summary:', '').trim());
+                markdownString.appendMarkdown(summaryLine.replace('summary:', ''));
                 markdownString.isTrusted = true;
-                completionItem.documentation = markdownString;
             }
-        }
 
-        completionItems.push(completionItem);
+			if (markdownString.isTrusted)
+            	completionItem.documentation = markdownString;
+        }
+        completions.push(completionItem);
     }
-    return completionItems;
+    return completions;
 }
 
-function getFunctionBlock(text: string, position: vscode.Position): string {
-	const functionPattern = new RegExp(`^(\\w+)\\s*\\(.*\\)\\s*\\{`, 'gm');
+function getVariables(text: string, functionScope: vscode.Location): vscode.CompletionItem[] {
+    const blockStart = functionScope.range.start.line;
+    const blockEnd = functionScope.range.end.line;
+    const blockText = text.split('\n').slice(blockStart, blockEnd + 1).join('\n');
+	const completions: vscode.CompletionItem[] = [];
 
 	let match;
-	while ((match = functionPattern.exec(text)) !== null) {
-		let openBraces = 1;
-		let index = match.index + match[0].length;
 
-		const startLine = text.substring(0, match.index).split('\n').length - 1;
-		const startCol = match.index - text.lastIndexOf('\n', match.index) - 1;
-
-		while (openBraces > 0 && index < text.length) {
-			if (text[index] === '{') openBraces++;
-			else if (text[index] === '}') openBraces--;
-			index++;
-		}
-
-		const endLine = text.substring(0, index).split('\n').length - 1;
-		const endCol = index - text.lastIndexOf('\n', index) - 1;
-
-		if (
-			(position.line > startLine || (position.line === startLine && position.character >= startCol)) &&
-			(position.line < endLine || (position.line === endLine && position.character <= endCol))
-		) {
-			const functionBlock = text.substring(match.index, index);
-			return functionBlock;
-		}
-	}
-	return "";
-}
-
-function getFunctionArguments(block: string): vscode.CompletionItem[] {
-    const argPattern = /^\s*\w+\s*\(([^)]*)\)/m;
-    const completionItems: vscode.CompletionItem[] = [];
-    const match = argPattern.exec(block);
+    // search argument
+    const argPattern = /^\s*\w+\s*\(([^)]*)\)/mi;
+    match = argPattern.exec(blockText);
     if (match) {
         const args = match[1].split(',').map(arg => arg.trim()).filter(arg => arg.length > 0);
-        for (const arg of args) {
-            const completionItem = new vscode.CompletionItem(arg, vscode.CompletionItemKind.Variable);
-            completionItems.push(completionItem);
-        }
+		for (const arg of args) {
+			completions.push(new vscode.CompletionItem(arg, vscode.CompletionItemKind.Variable));
+		}
     }
-    return completionItems;
-}
 
-function getVariablesFromBlock(block: string): vscode.CompletionItem[] {
-    const variablePattern = /([a-zA-Z_][a-zA-Z0-9]*)\s*=\s*[^;/]*;/gm;
-    const completionItems: vscode.CompletionItem[] = [];
-    let match;
-    while ((match = variablePattern.exec(block)) !== null) {
-        const variableName = match[1];
-        const completionItem = new vscode.CompletionItem(variableName, vscode.CompletionItemKind.Variable);
-        completionItems.push(completionItem);
+    // search variable
+    const variablePattern = /([a-zA-Z_][a-zA-Z0-9]*)\s*=\s*[^;/]*;/gmi;
+    while ((match = variablePattern.exec(blockText)) !== null) {
+        completions.push(new vscode.CompletionItem(match[1], vscode.CompletionItemKind.Variable));
     }
-    return completionItems;
+
+    return completions;
 }

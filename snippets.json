@@ -100,5 +100,19 @@
       "}"
     ],
     "description": "players foreach"
+  },
+  "region": {
+    "prefix": "#region",
+    "body": [
+      "//#region $1"
+    ],
+    "description": "Create a code region"
+  },
+  "endregion": {
+    "prefix": "#endregion",
+    "body": [
+      "//#endregion"
+    ],
+    "description": "End a code region"
   }
 }

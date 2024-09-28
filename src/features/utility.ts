@@ -1,61 +1,98 @@
 import * as vscode from 'vscode';
 import { join, relative, extname } from 'path';
-import { promisify } from 'util';
-import { readFile } from 'fs';
-
-export const readFileAsync = promisify(readFile);
+import { accessSync, constants } from 'fs';
 
 export const PLUTONIUM_FOLDER = join(process.env.LOCALAPPDATA || '', 'Plutonium', 'storage', 'iw5');
 export const SCRIPTS_FOLDER = join(PLUTONIUM_FOLDER, 'scripts');
 export const GSC_EXTENSION = '.gsc';
-export const STATEMENTS = ["if", "foreach", "while", "switch", "wait", "waittill", "waittillframeend", "endon", "notify"];
+const STATEMENTS = ["if", "for", "foreach", "while", "switch"];
 
 export interface Range {
     start: number,
     end: number
 }
 
+export function fileExists(filePath: string): boolean {
+    try {
+        accessSync(filePath, constants.F_OK);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+export function directoryExists(directoryPath: string): boolean {
+    try {
+        accessSync(directoryPath, constants.R_OK);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+export function isWordStatement(word: string): boolean {
+    const wordLower = word.toLowerCase();
+    return STATEMENTS.some(keyword => keyword === wordLower)
+}
+
+export function getDocumentLine(document: vscode.TextDocument, position: vscode.Position): string {
+    return document.lineAt(position).text.toLowerCase();
+}
+
+export function getDocumentText(document: vscode.TextDocument): string {
+    return document.getText().toLowerCase();
+}
+
 export function isGSCFile(filePath: string) {
     return extname(filePath) === GSC_EXTENSION;
 }
 
-export function includePathToUri(include: string) {
-    return vscode.Uri.file(includePathToFilePath(include));
+export function includeToUri(include: string) {
+    return vscode.Uri.file(includeToPath(include));
 }
 
-export function includePathToFilePath(include: string) {
+export function includeToPath(include: string) {
     return join(PLUTONIUM_FOLDER, include) + GSC_EXTENSION;
 }
 
-export function filePathToIncludePath(filePath: string): string {
+export function pathToInclude(filePath: string): string {
     return 'scripts\\' + relative(SCRIPTS_FOLDER, filePath).replace(GSC_EXTENSION, "");
 }
 
-export function getIncludesFromDocument(document: vscode.TextDocument): string[] { 
-    const elements: string[] = [];
-    const text = document.getText(); 
+export function validateInclude(include: string): string | undefined {
+    include = include.trim().toLowerCase();
+    return include.startsWith("scripts\\") ? include : undefined;
+}
+
+export function getIncludes(text: string): string[] {
 	const commentRanges = getCommentLinesRange(text);
-	const lines = text.split('\n');  
-	
-	for (let i = 0; i < lines.length; i++) { 
-		const lineStart = text.indexOf(lines[i]);  
-		const lineEnd = lineStart + lines[i].length;
-		if (commentRanges.some(range => lineEnd > range.start && lineStart < range.end)) 
-			continue;
+    const pattern = new RegExp(/^\s*#include\s+([^\s;]+)/igm);
+    const includes: string[] = [];
 
-		const match = lines[i].match(/^\s*#include\s+([^;]+)/);  
-		if (!match) continue;
+    let match;
+    while ((match = pattern.exec(text)) !== null) {
+        if (isCommentAtMatch(match, commentRanges)) continue;
+        const include = validateInclude(match[1]);    
+        
+        if (!include || !fileExists(includeToPath(include))) {
+            console.log("Error: Include no existente", include);
+            continue;
+        }
 
-        const include = match[1].trim();
-        if (include.startsWith("scripts\\")) elements.push(include);
-	} 
-    return [...new Set(elements)];
+        if (includes.includes(include)) {
+            console.log("Error: Include ya definido", include);
+            continue;
+        }
+
+        includes.push(include);
+    }
+    return includes;
 }
 
 export function getCommentLinesRange(text: string): Range[] {
-    const commentBlocks = /\/\*[\s\S]*?\*\/|\/\/.*/g;
-    let match;
+    const commentBlocks = /\/\*[\s\S]*?\*\/|\/\/[^\n]*/g;
     const ranges: Range[] = [];
+    let match;
     while ((match = commentBlocks.exec(text)) !== null) {
         ranges.push({
             start: match.index,
@@ -65,38 +102,66 @@ export function getCommentLinesRange(text: string): Range[] {
     return ranges;
 }
 
-export function isCommentAtPosition(document: vscode.TextDocument, position: vscode.Position): boolean {
-    const text = document.getText();
-    const commentRanges = getCommentLinesRange(text);
+export function isCommentAtPosition(text: string, document: vscode.TextDocument, position: vscode.Position): boolean {
     const offset = document.offsetAt(position);
+    const commentBlocks = /\/\*[\s\S]*?\*\/|\/\/[^\n]*/g;
+    const commentRanges: Range[] = [];
+    let match;
+    while ((match = commentBlocks.exec(text)) !== null) {
+        if (match.index > offset) {
+            break;
+        }
+        commentRanges.push({
+            start: match.index,
+            end: match.index + match[0].length
+        });
+    }
 
     for (const range of commentRanges) {
         if (offset >= range.start && offset < range.end) {
             return true;
         }
     }
-
     return false;
 }
 
+export function isCommentAtMatch(match: any, commentRanges: Range[]): boolean {
+    const start  = match.index;
+    const end = start + match[0].length;
+    return commentRanges.some((range) => start > range.start && end < range.end);
+}
+
 export function isFunctionAtPosition(line: string, position: vscode.Position, word: string): boolean | undefined {
-    const functionPattern = new RegExp(`(?:([a-zA-Z0-9_\\\\]+::))?(${word})\\(`, 'g');
     let match;
-    while ((match = functionPattern.exec(line)) !== null) {
+
+    const pattern1 = new RegExp(`(?:([a-zA-Z0-9_\\\\]+::)?)(${word})\\(`, 'gi');
+    const pattern2 = new RegExp(`(?:([a-zA-Z0-9_\\\\]*::))(${word})`, 'gi');
+
+    while ((match = pattern1.exec(line)) !== null) {
         const matchPrefix = match[1];
         const matchWord = match[2];
         const start = match.index + (matchPrefix ? matchPrefix.length : 0);
         const end = start + matchWord.length;
-        const matchRange = new vscode.Range(new vscode.Position(position.line, start), new vscode.Position(position.line, end));        
+        const matchRange = new vscode.Range(new vscode.Position(position.line, start), new vscode.Position(position.line, end));
         if (matchRange.contains(position)) return true;
     }
+
+    while ((match = pattern2.exec(line)) !== null) {
+        const matchPrefix = match[1];
+        const matchWord = match[2];
+        const start = match.index + (matchPrefix ? matchPrefix.length : 0);
+        const end = start + matchWord.length;
+        const matchRange = new vscode.Range(new vscode.Position(position.line, start), new vscode.Position(position.line, end));
+        if (matchRange.contains(position)) return true;
+    }
+
     return false;
 }
 
-export function tryGetIncludeCallPath(funcName: string, text: string, document: vscode.TextDocument, position: vscode.Position): string | undefined {
+export function tryGetFuncIncludeCall(funcName: string, text: string, document: vscode.TextDocument, position: vscode.Position): string | undefined {
     let match;
 
-    const pattern = new RegExp(`([a-zA-Z0-9_]+(?:\\\\[a-zA-Z0-9_]+)*::)?${funcName}(?=\\()`, 'g');
+    const pattern = new RegExp(`([a-zA-Z0-9_]+(?:\\\\[a-zA-Z0-9_]+)*)::${funcName}(?:\\(.*\\))?`, 'gi');
     
     while ((match = pattern.exec(text)) !== null) {
         const matchStart = match.index;
@@ -104,14 +169,14 @@ export function tryGetIncludeCallPath(funcName: string, text: string, document: 
         const matchEndPosition = document.positionAt(matchStart + match[0].length);
 
         if (matchStartPosition.line === position.line && matchStartPosition.character <= position.character && matchEndPosition.character >= position.character) {
-            if (!!match[1]) return match[0];
+            if (match[1]) return match[1];
         }
     }
     return undefined;
 }
 
-export function tryGetFunctionDeclarationLocation(word: string, text: string, document: vscode.TextDocument): vscode.Location | null {
-    const functionPattern = new RegExp(`^${word}\\s*\\(.*\\)\\s*\\{`, 'gm');
+export function tryGetFuncDefLocation(word: string, text: string, document: vscode.TextDocument): vscode.Location | null {
+    const functionPattern = new RegExp(`^${word}\\s*\\(.*\\)\\s*\\{`, 'gmi');
     let match: RegExpExecArray | null;
     while ((match = functionPattern.exec(text)) !== null) {
         const startPosition = document.positionAt(match.index);
@@ -120,8 +185,8 @@ export function tryGetFunctionDeclarationLocation(word: string, text: string, do
     return null;
 }
 
-export function tryGetFunctionScope(text: string, position: vscode.Position): vscode.Location | null {
-    const functionPattern = new RegExp(`^(\\w+)\\s*\\(.*\\)\\s*\\{`, 'gm');
+export function tryGetFuncScopeLocation(text: string, position: vscode.Position): vscode.Location | null {
+    const functionPattern = new RegExp(`^(\\w+)\\s*\\(.*\\)\\s*\\{`, 'gmi');
 
     let match;
     while ((match = functionPattern.exec(text)) !== null) {
@@ -147,48 +212,4 @@ export function tryGetFunctionScope(text: string, position: vscode.Position): vs
         }
     }
     return null;
-}
-
-export function tryGetVariableFromScope(text: string, functionScope: vscode.Location, variableName: string, uri: vscode.Uri): vscode.Location | undefined {
-    const blockStart = functionScope.range.start.line;
-    const blockEnd = functionScope.range.end.line;
-    const blockText = text.split('\n').slice(blockStart, blockEnd + 1).join('\n');
-
-    // search argument
-    const argPattern = /^\s*\w+\s*\(([^)]*)\)/m;
-    const match = argPattern.exec(blockText);
-    if (match) {
-        const args = match[1].split(',').map(arg => arg.trim()).filter(arg => arg.length > 0);
-        if (args.includes(variableName)) {
-            const lineIndex = blockText.substring(0, match.index).split('\n').length - 1;
-            const colIndex = match.index - blockText.lastIndexOf('\n', match.index) - 1 + match[0].indexOf(variableName);
-
-            return new vscode.Location(
-                uri,
-                new vscode.Range(
-                    new vscode.Position(blockStart + lineIndex, colIndex),
-                    new vscode.Position(blockStart + lineIndex, colIndex + variableName.length)
-                )
-            );
-        }
-    }
-
-    // search variable
-    const variablePattern = new RegExp(`\\b${variableName}\\b`, 'g');
-    let matchVar;
-    while ((matchVar = variablePattern.exec(blockText)) !== null) {
-        const variableIndex = matchVar.index;
-
-        const lineIndex = blockText.substring(0, variableIndex).split('\n').length - 1;
-        const colIndex = variableIndex - blockText.lastIndexOf('\n', variableIndex) - 1;
-
-        return new vscode.Location(
-            uri,
-            new vscode.Range(
-                new vscode.Position(blockStart + lineIndex, colIndex),
-                new vscode.Position(blockStart + lineIndex, colIndex + variableName.length)
-            )
-        );
-    }
-    return undefined;
 }
