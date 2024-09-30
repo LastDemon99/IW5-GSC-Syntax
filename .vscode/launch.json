@@ -6,6 +6,21 @@
 	"version": "0.2.0",
     "configurations": [
         {
+            "name": "IW5 GSC Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--folder-uri=C:/Users/luist/AppData/Local/Plutonium/storage/iw5/scripts"
+            ],
+            "outFiles": [
+                "${workspaceFolder}/out/**/*.js"
+            ],
+            "preLaunchTask": "npm: watch",
+            "cwd": "C:/Users/luist/AppData/Local/Plutonium/storage/iw5/scripts"
+        },
+        {
             "name": "Extension",
             "type": "extensionHost",
             "request": "launch",

@@ -6,10 +6,16 @@ export const PLUTONIUM_FOLDER = join(process.env.LOCALAPPDATA || '', 'Plutonium'
 export const SCRIPTS_FOLDER = join(PLUTONIUM_FOLDER, 'scripts');
 export const GSC_EXTENSION = '.gsc';
 const STATEMENTS = ["if", "for", "foreach", "while", "switch"];
+const DOWNLOAD_ALLOWED_EXTENSIONS = [GSC_EXTENSION, '.cfg', '.csv'];
 
 export interface Range {
     start: number,
     end: number
+}
+
+export function isDownloadAllowedExtension(fileName: string): boolean {
+    const ext = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+    return DOWNLOAD_ALLOWED_EXTENSIONS.includes(ext);
 }
 
 export function fileExists(filePath: string): boolean {
@@ -208,7 +214,7 @@ export function tryGetFuncScopeLocation(text: string, position: vscode.Position)
         if ((position.line > startLine || (position.line === startLine && position.character >= startCol)) && (position.line < endLine || (position.line === endLine && position.character <= endCol))) {
             const start = new vscode.Position(startLine, startCol);
             const end = new vscode.Position(endLine, endCol);
-            return new vscode.Location(vscode.Uri.file(''), new vscode.Range(start, end)); // Aquí puedes especificar la URI del archivo
+            return new vscode.Location(vscode.Uri.file(''), new vscode.Range(start, end));
         }
     }
     return null;

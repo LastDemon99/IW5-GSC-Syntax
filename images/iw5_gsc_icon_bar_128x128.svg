@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <style>
+    .text-large { font: bold 122px sans-serif; fill: #424242; }
+    .text-small { font: bold 100px sans-serif; fill: #666; }
+  </style>
+  <text x="43" y="100" class="text-small">IW5</text>
+  <text x="-5" y="225" class="text-large">GSC</text>
+</svg>

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as utility from './utility';
+import * as path from 'path';
 
 let allIncludes: string[] = [];
 
@@ -49,22 +50,22 @@ export class RenameProvider implements vscode.RenameProvider {
 
         if (!includeTarget) return workspaceEdit;
 
-        renameFunctions(text, document, includeTarget, word, newName, workspaceEdit);
+        renameFuncsInDocument(text, document, includeTarget, word, newName, workspaceEdit);
 
         const includeDocument = await vscode.workspace.openTextDocument(utility.includeToUri(includeTarget));
-        renameFunctions(includeDocument.getText(), includeDocument, includeTarget, word, newName, workspaceEdit);
+        renameFuncsInDocument(includeDocument.getText(), includeDocument, includeTarget, word, newName, workspaceEdit);
 
         for (const include of allIncludes) {
             if ( include === currentInclude || include === includeTarget) continue;
             const includeDocument = await vscode.workspace.openTextDocument(utility.includeToUri(include));
-            renameFunctions(includeDocument.getText(), includeDocument, includeTarget, word, newName, workspaceEdit);
+            renameFuncsInDocument(includeDocument.getText(), includeDocument, includeTarget, word, newName, workspaceEdit);
         }
         
         return workspaceEdit;
     }
 }
 
-function renameFunctions(text: string, document: vscode.TextDocument, include: string, funcName: string, newName: string, workspaceEdit: vscode.WorkspaceEdit) {
+function renameFuncsInDocument(text: string, document: vscode.TextDocument, include: string, funcName: string, newName: string, workspaceEdit: vscode.WorkspaceEdit) {
     const commentRanges = utility.getCommentLinesRange(text);
     const funcPattern = new RegExp(`(?:(?:([a-zA-Z0-9_\\\\]*::)|::)?)(${funcName})(\\()?(\\))?`, 'gi');
     const hasInclude = utility.getIncludes(text).includes(include) || utility.pathToInclude(document.uri.fsPath) === include;
@@ -130,4 +131,91 @@ function renameVariables(text: string, functionScope: vscode.Location, variableN
         workspaceEdit.replace(uri, range, newName);
     }
     vscode.workspace.applyEdit(workspaceEdit);
+}
+
+export async function renameInclude(oldPath: string, newPath: string) {
+    const normalizedOldPath = path.normalize(oldPath);
+    const normalizedNewPath = path.normalize(newPath);
+    const oldInclude = utility.pathToInclude(normalizedOldPath).toLowerCase();
+    
+    if (!oldInclude.startsWith("scripts\\")) return;
+
+    const newInclude = utility.pathToInclude(normalizedNewPath);
+
+    if (utility.fileExists(normalizedNewPath) && normalizedNewPath.endsWith(utility.GSC_EXTENSION)) {
+        await updateIncludePaths(oldInclude, newInclude);
+        return;
+    }
+
+    if (utility.directoryExists(normalizedNewPath)) {
+        await updateIncludesForDirectory(oldInclude, newInclude);
+        return;
+    }
+}
+
+async function updateIncludePaths(oldInclude: string, newInclude: string) {
+    for (const include of allIncludes) {
+        if (!utility.fileExists(utility.includeToPath(include))) continue;
+        try {
+            const uri = utility.includeToUri(include);
+            const document = await vscode.workspace.openTextDocument(uri);
+            const text = document.getText();
+            const edit = new vscode.WorkspaceEdit();
+
+            let match;
+            const pathPattern = /([a-zA-Z0-9_]+(?:\\[a-zA-Z0-9_]+)+)(?::|;|$)/g;
+
+            while ((match = pathPattern.exec(text)) !== null) {
+                const pathMatch = match[0].replace(';', '').replace(':', '').toLowerCase();
+                if (pathMatch !== oldInclude) continue;
+
+                const matchStart = match.index;
+                const matchEnd = matchStart + pathMatch.length;
+                const startPos = document.positionAt(matchStart);
+                const endPos = document.positionAt(matchEnd);
+                edit.replace(uri, new vscode.Range(startPos, endPos), newInclude);
+            }
+
+            if (edit.size > 0) {
+                await vscode.workspace.applyEdit(edit);
+                await document.save();
+            }
+        } catch (error) {
+            console.error(`Failed to process include: ${include}, Error: ${error}`);
+        }
+    }
+}
+
+async function updateIncludesForDirectory(oldInclude: string, newInclude: string) {
+    for (const include of allIncludes) {
+        if (!utility.fileExists(utility.includeToPath(include))) continue;
+        try {
+            const uri = utility.includeToUri(include)
+            const document = await vscode.workspace.openTextDocument(uri);
+            const text = document.getText();
+            const edit = new vscode.WorkspaceEdit();
+
+            let match;
+            const pathPattern = /([a-zA-Z0-9_]+(?:\\[a-zA-Z0-9_]+)+)(?::|;|$)/g;
+
+            while ((match = pathPattern.exec(text)) !== null) {
+                const pathMatch = match[0].replace(';', '').replace(':', '').toLowerCase();
+                if (!pathMatch.startsWith(oldInclude)) continue;
+
+                const newPathMatch = pathMatch.replace(oldInclude, newInclude);
+                const matchStart = match.index;
+                const matchEnd = matchStart + pathMatch.length;
+                const startPos = document.positionAt(matchStart);
+                const endPos = document.positionAt(matchEnd);
+                edit.replace(uri, new vscode.Range(startPos, endPos), newPathMatch);
+            }
+
+            if (edit.size > 0) {
+                await vscode.workspace.applyEdit(edit);
+                await document.save();
+            }
+        } catch (error) {
+            console.error(`Failed to process include: ${include}, Error: ${error}`);
+        }
+    }
 }

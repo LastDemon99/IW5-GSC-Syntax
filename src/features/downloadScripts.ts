@@ -1,10 +1,8 @@
-import * as vscode from 'vscode';
+import * as vscode from 'vscode'; 
 import * as fs from 'fs';
 import * as path from 'path';
 import axios from 'axios';
-import { join } from 'path';
-
-const SCRIPTS_FOLDER = join(process.env.LOCALAPPDATA || '', 'Plutonium', 'storage', 'iw5', 'scripts');
+import { SCRIPTS_FOLDER, isDownloadAllowedExtension } from './utility';
 
 export async function showUrlInputBox() {
     const repoUrl = await vscode.window.showInputBox({
@@ -15,17 +13,13 @@ export async function showUrlInputBox() {
     await downloadFilesFromGitHub(repoUrl, SCRIPTS_FOLDER);
 }
 
-async function downloadFilesFromGitHub(repoUrl: string, savePath: string) {
+export async function downloadFilesFromGitHub(repoUrl: string, savePath: string) {
     try {
-        if (await downloadBlobFile(repoUrl, savePath)) return;    
+        if (await downloadBlobFile(repoUrl, savePath)) return;
         if (!(await downloadTreeDirectory(repoUrl, savePath))) 
-            vscode.window.showErrorMessage(`Download error or invalid Url.`);
+            vscode.window.showErrorMessage(`Download error or invalid URL.`);
     } catch (error) {
-        if (error instanceof Error) {
-            vscode.window.showErrorMessage(`Download error or invalid Url: ${error.message}`);
-        } else {
-            vscode.window.showErrorMessage(`Download error or invalid Url.`);
-        }
+        vscode.window.showErrorMessage(`Download error or invalid URL: ${(error instanceof Error) ? error.message : ''}`);
     }
 }
 
@@ -33,21 +27,22 @@ async function downloadBlobFile(repoUrl: string, savePath: string) {
     const match = repoUrl.match(/https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)/);        
     if (!match) return false;
     
-    const [_, user, repo, branch, dir] = match;
-    const rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${dir}`;
-    const fileName = path.basename(dir);
+    const [, user, repo, branch, filePath] = match;
+    const rawUrl = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${filePath}`;
+    const fileName = path.basename(filePath);
+
+    if (!isDownloadAllowedExtension(fileName)) {
+        vscode.window.showErrorMessage(`File ${fileName} has an invalid extension. Only .gsc, .cfg, and .csv are allowed.`);
+        return true;
+    }
 
     try {
-        const filePath = path.join(savePath, fileName);
+        const fileSavePath = path.join(savePath, fileName);
         const response = await axios.get(rawUrl, { responseType: 'arraybuffer' });
-        fs.writeFileSync(filePath, response.data);
+        fs.writeFileSync(fileSavePath, response.data);
         vscode.window.showInformationMessage(`File ${fileName} downloaded successfully.`);
     } catch (error) {
-        if (error instanceof Error) {
-            vscode.window.showErrorMessage(`Error when downloading file ${fileName}: ${error.message}`);
-        } else {
-            vscode.window.showErrorMessage(`Error when downloading file ${fileName}.`);
-        }
+        vscode.window.showErrorMessage(`Error downloading file ${fileName}: ${(error instanceof Error) ? error.message : ''}`);
     }
     return true;
 }
@@ -56,52 +51,53 @@ async function downloadTreeDirectory(repoUrl: string, savePath: string) {
     const match = repoUrl.match(/https:\/\/github\.com\/([^\/]+)\/([^\/]+)\/tree\/([^\/]+)\/(.+)/);
     if (!match) return false;
 
-    const [_, user, repo, branch, dir] = match;
-    const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${dir}?ref=${branch}`;
-    const dirPath = path.basename(dir);
+    const [, user, repo, branch, dirPath] = match;
+    const apiUrl = `https://api.github.com/repos/${user}/${repo}/git/trees/${branch}?recursive=1`;  // Fetch the entire tree in one request
     
     try {
-        const apiUrl_response = await axios.get(apiUrl, {
+        const response = await axios.get(apiUrl, {
             headers: {
                 'Accept': 'application/vnd.github.v3+json',
             }
         });
+        
+        const tree = response.data.tree;
+        const filesToDownload = tree.filter((item: any) => 
+            item.type === 'blob' && isDownloadAllowedExtension(item.path) && item.path.startsWith(dirPath)
+        );
 
-        const files = apiUrl_response.data;
-
-        if (!fs.existsSync(savePath))
-            fs.mkdirSync(savePath);
-
-        for (const file of files) {
-            if (file.type === 'dir') {
-                const dir = savePath + '\\' + file.name;
-                await downloadFilesFromGitHub(repoUrl + '/' + file.name, dir);
-            }
-            else if (file.type === 'file' && file.download_url) {
-                await downloadAndSaveFile(savePath, file.download_url, file.name);
-            }
+        if (!fs.existsSync(savePath)) {
+            createDirRecursively(savePath);
         }
+
+        await Promise.all(filesToDownload.map(async (file: any) => {
+            const fileUrl = `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${file.path}`;
+            const fileSavePath = path.join(savePath, path.basename(file.path));
+            await downloadAndSaveFile(fileSavePath, fileUrl);
+        }));
+
     } catch (error) {
-        if (error instanceof Error) {
-            vscode.window.showErrorMessage(`Error when downloading directory ${dirPath}: ${error.message}`);
-        } else {
-            vscode.window.showErrorMessage(`Error when downloading directory ${dirPath}.`);
-        }
+        vscode.window.showErrorMessage(`Error downloading directory ${dirPath}: ${(error instanceof Error) ? error.message : ''}`);
     }
     return true;
 }
 
-async function downloadAndSaveFile(savePath: string, fileUrl: string, fileName: string) {
+async function downloadAndSaveFile(filePath: string, fileUrl: string) {
     try {
         const response = await axios.get(fileUrl, { responseType: 'arraybuffer' });
-        const filePath = path.join(savePath, fileName);
         fs.writeFileSync(filePath, response.data);
-        vscode.window.showInformationMessage(`File ${fileName} downloaded successfully.`);
+        vscode.window.showInformationMessage(`File ${path.basename(filePath)} downloaded successfully.`);
     } catch (error) {
-        if (error instanceof Error) {
-            vscode.window.showErrorMessage(`Error when downloading file ${fileName}: ${error.message}`);
-        } else {
-            vscode.window.showErrorMessage(`Error when downloading file ${fileName}`);
-        }
+        vscode.window.showErrorMessage(`Error downloading file ${path.basename(filePath)}: ${(error instanceof Error) ? error.message : ''}`);
+    }
+}
+
+function createDirRecursively(directory: string) {
+    const parentDir = path.dirname(directory);
+    if (!fs.existsSync(parentDir)) {
+        createDirRecursively(parentDir);
+    }
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory);
     }
 }

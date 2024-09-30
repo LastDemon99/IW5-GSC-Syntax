@@ -36,5 +36,14 @@ You can find this extension in the Visual Studio Code marketplace: [Visual Studi
 - **Go to Definition**: Now this functionality can be used on paths.
 - **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.
 
+-------------------------------------------------------------
+
+## 1.5.6:
+- **Hover Provider**: Added a hover provider, when hovering over a function, a window will display its documentation if available.
+- **Folding Region**: Added the functionality of folding regions to facilitate code organization.
+- **Go to Definition**: Now this functionality can be used on paths.
+- **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.
+- **Market PLace**: An iw5 gsc icon is added to the bar to display a window that will show different scripts from github repositories.
+
 ## Sponsor
 <a href="https://www.paypal.com/paypalme/lastdemon99/"><img src="https://github.com/LastDemon99/LastDemon99/blob/main/Data/paypal_dark.svg" height="60"></a>

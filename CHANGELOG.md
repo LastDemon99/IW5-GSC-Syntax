@@ -26,3 +26,12 @@
 - **Folding Region**: Added the functionality of folding regions to facilitate code organization.
 - **Go to Definition**: Now this functionality can be used on paths.
 - **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.
+
+-------------------------------------------------------------
+
+## 1.5.6:
+- **Hover Provider**: Added a hover provider, when hovering over a function, a window will display its documentation if available.
+- **Folding Region**: Added the functionality of folding regions to facilitate code organization.
+- **Go to Definition**: Now this functionality can be used on paths.
+- **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.
+- **Market PLace**: An iw5 gsc icon is added to the bar to display a window that will show different scripts from github repositories.
