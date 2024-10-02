@@ -1,11 +1,11 @@
 {
     "name": "lb-iw5-gsc",
-    "displayName": "IW5 GSC Syntax",
-    "description": "GSC scripting syntax and autocomplete used for IW5.",
-    "version": "1.5.5",
+    "displayName": "IW5 GSC",
+    "description": "GSC scripting syntax highlight and autocomplete used for IW5.",
+    "version": "1.5.6",
     "publisher": "LastDemon99",
     "company": "LethalBeats",
-    "icon": "images/iw5_gsc_syntax_logo_128x128.png",
+    "icon": "media/images/iw5_gsc_icon_128x128.png",
     "repository": "https://github.com/LastDemon99/IW5-GSC-Syntax",
     "forked_repository": "https://github.com/SE2Dev/CoD-Sense",
     "engines": {
@@ -16,21 +16,6 @@
     ],
     "main": "./out/extension",
     "contributes": {
-        "commands": [
-            {
-                "command": "extension.downloadFiles",
-                "title": "Download IW5 Scripts Files from GitHub"
-            }
-        ],
-        "menus": {
-            "editor/title": [
-                {
-                    "command": "extension.downloadFiles",
-                    "when": "resourceExtname == .gsc",
-                    "group": "navigation"
-                }
-            ]
-        },
         "languages": [
             {
                 "id": "gsc",

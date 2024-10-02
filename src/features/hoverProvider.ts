@@ -48,9 +48,9 @@ export class HoverProvider implements vscode.HoverProvider {
 
 function getFunctionHover(text: string, funcName: string): vscode.Hover | null {
     const lines = text.split('\n');
-    const functionPattern = new RegExp(`^${funcName}\\s*\\(.*\\)\\s*\\{`, 'gmi');
     let match: RegExpExecArray | null;
 
+    const functionPattern = new RegExp(`^${funcName}\\s*\\([^\\)]*\\)\\s*(//.*)?\\s*\\{`, 'gmi');
     while ((match = functionPattern.exec(text)) !== null) {
         const lineIndex = text.substring(0, match.index).split('\n').length - 1;
         let docString = '';

@@ -17,7 +17,7 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
         if (file) return file;
         
         if (!utility.isFunctionAtPosition(line, position, word)) {
-            const functionScope = utility.tryGetFuncScopeLocation(text, position);
+            const functionScope = utility.tryGetFuncScopeRanges(text, position);
             if (functionScope) {
                 const varDefinition = tryGetVariablesLocation(text, functionScope, word, document.uri);
                 if (varDefinition) return varDefinition;
@@ -49,10 +49,8 @@ export class DefinitionProvider implements vscode.DefinitionProvider {
     }
 }
 
-function tryGetVariablesLocation(text: string, functionScope: vscode.Location, variableName: string, uri: vscode.Uri): vscode.Location | undefined {
-    const blockStart = functionScope.range.start.line;
-    const blockEnd = functionScope.range.end.line;
-    const blockText = text.split('\n').slice(blockStart, blockEnd + 1).join('\n');
+function tryGetVariablesLocation(text: string, functionScope: utility.BasicRange, variableName: string, uri: vscode.Uri): vscode.Location | undefined {
+    const blockText = text.split('\n').slice(functionScope.start, functionScope.end + 1).join('\n');
 
     let match;
 
@@ -68,8 +66,8 @@ function tryGetVariablesLocation(text: string, functionScope: vscode.Location, v
             return new vscode.Location(
                 uri,
                 new vscode.Range(
-                    new vscode.Position(blockStart + lineIndex, colIndex),
-                    new vscode.Position(blockStart + lineIndex, colIndex + variableName.length)
+                    new vscode.Position(functionScope.start + lineIndex, colIndex),
+                    new vscode.Position(functionScope.start + lineIndex, colIndex + variableName.length)
                 )
             );
         }
@@ -86,8 +84,8 @@ function tryGetVariablesLocation(text: string, functionScope: vscode.Location, v
         return new vscode.Location(
             uri,
             new vscode.Range(
-                new vscode.Position(blockStart + lineIndex, colIndex),
-                new vscode.Position(blockStart + lineIndex, colIndex + variableName.length)
+                new vscode.Position(functionScope.start + lineIndex, colIndex),
+                new vscode.Position(functionScope.start + lineIndex, colIndex + variableName.length)
             )
         );
     }

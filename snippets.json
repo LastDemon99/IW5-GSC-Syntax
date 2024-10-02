@@ -61,8 +61,56 @@
     ],
     "description": "Script init template"
   },
+  "onPlayerConnect": {
+    "prefix": "onPlayerConnect",
+    "body": [
+      "onPlayerConnect()",
+      "{",
+      "    level endon(\"game_ended\");",
+      "",
+      "    for (;;)",
+      "    {",
+      "        level waittill(\"connected\", player);",
+      "        ",
+      "    }",
+      "}"
+    ],
+    "description": "onPlayerConnect function template"
+  },
+  "onPlayerSpawn": {
+    "prefix": "onPlayerSpawn",
+    "body": [
+      "onPlayerSpawn()",
+      "{",
+      "    self endon(\"disconnect\");",
+      "    ",
+      "    for(;;)",
+      "    {",
+      "        self waittill(\"spawned_player\");",
+      "        ",
+      "    }",
+      "}"
+    ],
+    "description": "onPlayerSpawn function template"
+  },
+  "onGiveLoadout": {
+    "prefix": "onGiveLoadout",
+    "body": [
+      "onGiveLoadout()",
+      "{",
+      "    self endon(\"disconnect\");",
+      "    ",
+      "    for(;;)",
+      "    {",
+      "        self waittill(\"giveLoadout\", team, class, allowCopycat, setPrimarySpawnWeapon);",
+      "        ",
+      "    }",
+      "}"
+    ],
+    "description": "onPlayerSpawn function template"
+  },
   "onPlayerKilled": {
-    "prefix": "onPlayerDamage",
+    "prefix": "onPlayerKilled",
     "body": [
       "onPlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, psOffsetTime, deathAnimDuration, killId)",
       "{",
@@ -82,7 +130,7 @@
     "description": "onPlayerDamage function template"
   },
   "onPlayerLastStand": {
-    "prefix": "onPlayerDamage",
+    "prefix": "onPlayerLastStand",
     "body": [
       "onPlayerLastStand(eInflictor, eAttacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, timeOffset, deathAnimDuration)",
       "{",

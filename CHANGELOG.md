@@ -26,3 +26,14 @@
 - **Folding Region**: Added the functionality of folding regions to facilitate code organization.
 - **Go to Definition**: Now this functionality can be used on paths.
 - **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.
+
+-------------------------------------------------------------
+
+## 1.5.6:
+- **Autocomplete**: Added autocompletions for waittils arguments, defines constants, and mod damages.
+- **File Renaming**: Renaming or moving files will now also auto rename includes.
+- **Expanded File Scope**: The extension now observes files in the entire `iw5/` workspace, not just `iw5/scripts`.
+- **Folding**: Added folding functionality to functions and multiline comments.
+- **Hover Highlighting**: Added highlighting in hover code documentation.
+- **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.
+- **Removed Script Download**: Despite the creation a version with marketplace panel due to the API rate limit, this feature will be removed for now.
