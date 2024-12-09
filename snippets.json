@@ -4,7 +4,7 @@
     "body": [
       "/*",
       "///DocStringBegin",
-      "detail: func_name(argName: <type>): array",
+      "detail: func_name(argName: <Type>): <Array>",
       "summary: Replace This.",
       "///DocStringEnd",
       "*/"
@@ -18,6 +18,22 @@
       "#include"
     ],
     "description": "Use to inlcude a gsc path"
+  },
+
+  "define": {
+    "prefix": "#define",
+    "body": [
+      "#define"
+    ],
+    "description": "Use to define a macro"
+  },
+
+  "undef": {
+    "prefix": "#define",
+    "body": [
+      "#undef"
+    ],
+    "description": "Use to set undefined a macro"
   },
 
   "using_animtree": {
@@ -162,5 +178,89 @@
       "//#endregion"
     ],
     "description": "End a code region"
+  },
+  "left": {
+    "prefix": "LEFT",
+    "body": [ "\"LEFT\"" ],
+    "description": "HUD Element: Horizontal Point"
+  },
+  "right": {
+    "prefix": "RIGHT",
+    "body": [ "\"RIGHT\"" ],
+    "description": "HUD Element: Horizontal Point"
+  },
+  "bottom": {
+    "prefix": "BOTTOM",
+    "body": [ "\"BOTTOM\"" ],
+    "description": "HUD Element: Vertical Point"
+  },
+  "bottomLeft": {
+    "prefix": "BOTTOM LEFT",
+    "body": [ "\"BOTTOM LEFT\"" ],
+    "description": "HUD Element: Vertical Point"
+  },
+  "bottomRight": {
+    "prefix": "BOTTOM RIGHT",
+    "body": [ "\"BOTTOM RIGHT\"" ],
+    "description": "HUD Element: Vertical Point"
+  },
+  "top": {
+    "prefix": "TOP",
+    "body": [ "\"TOP\"" ],
+    "description": "HUD Element: Vertical Point"
+  },
+  "topLeft": {
+    "prefix": "TOP LEFT",
+    "body": [ "\"TOP LEFT\"" ],
+    "description": "HUD Element: Vertical Point"
+  },
+  "topRight": {
+    "prefix": "TOP RIGHT",
+    "body": [ "\"TOP RIGHT\"" ],
+    "description": "HUD Element: Vertical Point"
+  },
+  "center": {
+    "prefix": "CENTER",
+    "body": [ "\"CENTER\"" ],
+    "description": "HUD Element: Vertical & Horizontal Point"
+  },
+  "fontDefault": {
+    "prefix": "default",
+    "body": [ "\"default\"" ],
+    "description": "HUD Element: Font"
+  },
+  "fontObjective": {
+    "prefix": "objective",
+    "body": [ "\"objective\"" ],
+    "description": "HUD Element: Font"
+  },
+  "fontBigfixed": {
+    "prefix": "bigfixed",
+    "body": [ "\"bigfixed\"" ],
+    "description": "HUD Element: Font"
+  },
+  "fontSmallfixed": {
+    "prefix": "smallfixed",
+    "body": [ "\"smallfixed\"" ],
+    "description": "HUD Element: Font"
+  },
+  "fontHudsmall": {
+    "prefix": "hudsmall",
+    "body": [ "\"hudsmall\"" ],
+    "description": "HUD Element: Font"
+  },
+  "notifyData": {
+    "prefix": "notifyData",
+    "body": [
+      "notifyData = spawnStruct();",
+      "notifyData.titleText = \"Title\";",
+      "notifyData.titleLabel = \"Subtitle\";",
+      "notifyData.notifyText = \"wheee\";",
+      "notifyData.iconName = \"iw5_cardicon_burningrunner\";",
+      "notifyData.glowColor = (1, 0, 0);",
+      "notifyData.sound = \"mp_level_up\";",
+      "notifyData.duration = 4.0;"
+    ],
+    "description": "Notify data template"
   }
 }

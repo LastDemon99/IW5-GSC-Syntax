@@ -2,7 +2,7 @@
     "name": "lb-iw5-gsc",
     "displayName": "IW5 GSC",
     "description": "GSC scripting syntax highlight and autocomplete used for IW5.",
-    "version": "1.5.6",
+    "version": "1.5.7",
     "publisher": "LastDemon99",
     "company": "LethalBeats",
     "icon": "media/images/iw5_gsc_icon_128x128.png",
@@ -15,6 +15,7 @@
         "Programming Languages"
     ],
     "main": "./out/extension",
+    "editor.semanticHighlighting.enabled": true,
     "contributes": {
         "languages": [
             {
@@ -42,6 +43,12 @@
                 "language": "gsc",
                 "path": "./snippets.json"
             }
+        ],
+        "commands": [
+            {
+                "command": "colorHover.showPicker",
+                "title": "Show color picker"
+            }
         ]
     },
     "activationEvents": [
@@ -56,11 +63,14 @@
     "dependencies": {
         "axios": "^1.7.7",
         "chokidar": "^3.6.0",
-        "vscode-languageclient": "^4.1.3"
+        "lodash": "^4.17.21",
+        "vscode-languageclient": "^4.1.3",
+        "workerpool": "^9.2.0"
     },
     "devDependencies": {
+        "@types/lodash": "^4.17.10",
         "@types/mocha": "^2.2.42",
-        "@types/node": "^8.0.0",
+        "@types/node": "^22.7.5",
         "@types/vscode": "^1.23.0",
         "tslint": "^5.8.0",
         "typescript": "^4.0.0"

@@ -37,3 +37,14 @@
 - **Hover Highlighting**: Added highlighting in hover code documentation.
 - **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.
 - **Removed Script Download**: Despite the creation a version with marketplace panel due to the API rate limit, this feature will be removed for now.
+
+-------------------------------------------------------------
+
+## 1.5.7:
+- **Snippets**: Added snippets for directives, hudpoint, font, textcolor, and notifyData.
+- **Completions**: Included missing functions and keywords, along with trigger-based completions for `font.`, `point.`, `mod.`, `bind.`, `color.`, and `textColor.`.
+- **Hovers**: Improved the implementation of the hover provider.
+- **Syntax Highlight**: Added missing keywords, and the IW5 `text color lang` will now be highlighted.
+- **Rename Fixed**: Fixed function renaming, ensuring renaming a function updates across all files.
+- **Folding Fixed**: Resolved function folding issues.
+- **Minor Fixes**: Addressed several minor issues to enhance and fix certain features.

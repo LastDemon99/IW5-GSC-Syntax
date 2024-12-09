@@ -7,45 +7,14 @@ You can find this extension in the Visual Studio Code marketplace: [Visual Studi
 
 ### Documentation: [GSC Documentation](https://lastdemon99.github.io/IW5-Documentation/index_gsc.html)
 
-# Change Log
-
-## 1.5.2:
-- **Autocomplete**: Autocomplete support for functions, some structure fields, and include paths.
-- **Function Renaming**: Easily rename functions with F2.
-- **Go to Definition**: Quickly navigate to function declarations with ctrl + click.
-- **Script Download**: Option to download scripts from a GitHub url.
-
--------------------------------------------------------------
-
-## 1.5.3:
-- **Autocomplete**: Autocomplete support for variables within the function scope.
-- **Function Renaming**: Easily rename variables within the function scope.
-- **Go to Definition**: Quickly navigate to variable declarations within the function scope.
-- **Function Documentation**: Read and display docstrings from files to show arguments and descriptions of functions. `snippets: #docstring`
-
--------------------------------------------------------------
-
-## 1.5.4:
-- **Fix Readme Error**
-
--------------------------------------------------------------
-
-## 1.5.5:
-- **Hover Provider**: Added a hover provider, when hovering over a function, a window will display its documentation if available.
-- **Folding Region**: Added the functionality of folding regions to facilitate code organization.
-- **Go to Definition**: Now this functionality can be used on paths.
-- **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.
-
--------------------------------------------------------------
-
-## 1.5.6:
-- **Autocomplete**: Added autocompletions for waittils arguments, defines constants, and mod damages.
-- **File Renaming**: Renaming or moving files will now also auto rename includes.
-- **Expanded File Scope**: The extension now observes files in the entire `iw5/` workspace, not just `iw5/scripts`.
-- **Folding**: Added folding functionality to functions and multiline comments.
-- **Hover Highlighting**: Added highlighting in hover code documentation.
-- **Minor Fixes**: Several minor issues have been resolved to improve and fix certain features.
-- **Removed Script Download**: Despite the creation a version with marketplace panel due to the API rate limit, this feature will be removed for now.
+# Features
+- **Syntax Highlight**: includes, directives, keywords, functions, variables, iw5 color lang.
+- **Autocomplete**: includes, directives, keywords, functions, variables and completions triggers `font.`, `point.`, `mod.`, `bind.`, `color.`, and `textColor.`.
+- **Function Renaming**: files, directives, function, variables.
+- **Go to Definition**: files, directives, function, variables.
+- **Hover Provider**: docstring, function list, variables definition and position.
+- **Folding Provider**: comments multiline, functions, regions.
+- **Snippets**: docstring, region, init, events, callbacks, hudpoint, fonts, notifyData, etc.
 
 ## Sponsor
 <a href="https://www.paypal.com/paypalme/lastdemon99/"><img src="https://github.com/LastDemon99/LastDemon99/blob/main/Data/paypal_dark.svg" height="60"></a>

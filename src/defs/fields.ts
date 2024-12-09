@@ -1,8 +1,6 @@
-export var player = new Array<string>();
-export var self = new Array<string>();
-export var level = new Array<string>();
+import { CompletionItem, CompletionItemKind } from 'vscode';
 
-player = [
+const player_field_str: string[] = [
     "softLanding",
     "pers",
     "stats",
@@ -198,7 +196,7 @@ player = [
     'touchTriggers[entityNumber]',
     'timePlayed["total"]'];
 
-self = [
+const self_field_str: string[] = [
     "size",
     "softLanding",
     "pers",
@@ -1026,7 +1024,7 @@ self = [
     "proxIcon3_Level2",
     "proxIcon3_Level3"];
 
-level = [
+const level_field_str: string[] = [
     "init_animatedmodels_dump",
     "anim_prop_models",
     "init_animatedmodels",
@@ -1779,3 +1777,7 @@ level = [
     "ArmorVestMod",
     "ArmorVestDefMod",
     "riotShieldMod"];
+
+export const player_field_completions: CompletionItem[] = player_field_str.map(field => new CompletionItem(field, CompletionItemKind.Field));
+export const self_field_completions: CompletionItem[] = self_field_str.map(field => new CompletionItem(field, CompletionItemKind.Field));
+export const level_field_completions: CompletionItem[] = level_field_str.map(field => new CompletionItem(field, CompletionItemKind.Field));

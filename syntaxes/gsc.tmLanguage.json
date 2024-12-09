@@ -10,6 +10,9 @@
       "include": "#define"
     },
     {
+      "include": "#undef"
+    },
+    {
       "include": "#comment_line"
     },
     {
@@ -54,16 +57,13 @@
       ]
     },
     "define": {
-      "begin": "^\\s*(#define)\\s+((?<!\\w)[a-zA-Z_]\\w*(?!\\w))(\\b)",
+      "begin": "^\\s*(#define)\\s+((?<!\\w)[a-zA-Z_]\\w*(?!\\w))?",
       "beginCaptures": {
         "1": {
           "name": "keyword.control.gsc"
         },
         "2": {
           "name": "constant.language.gsc"
-        },
-        "3": {
-          "name": "punctuation.definition.gsc"
         }
       },
       "end": "(?<!\\\\)(?=\\n)",
@@ -84,6 +84,18 @@
         }
       ]
     },
+    "undef": {
+      "begin": "^\\s*(#undef)\\s+((?<!\\w)[a-zA-Z_]\\w*(?!\\w))",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.gsc"
+        },
+        "2": {
+          "name": "constant.language.gsc"
+        }
+      },
+      "end": "(?<!\\\\)(?=\\n)"
+    },
     "comment_line": {
       "name": "comment.gsc",
       "match": "//.*"
@@ -94,8 +106,12 @@
       "end": "\\*/"
     },
     "keyword": {
-      "name": "keyword.control.gsc",
-      "match": "\\b(if|else|for|foreach|while|return|switch|case|default|break|continue|wait|waittill|waittillframeend|endon|notify|thread)\\b"
+      "patterns": [
+        {
+          "name": "keyword.control.gsc",
+          "match": "\\b(in|if|else|for|foreach|while|return|switch|case|default|break|continue|wait|waittill|waittillframeend|endon|notify|thread)\\b"
+        }
+      ]
     },
     "numeric": {
       "name": "constant.numeric.gsc",

@@ -1,172 +1,145 @@
 import * as vscode from 'vscode';
-import * as utility from './utility';
+import * as gscParser from './gscParser';
+import { getAllIncludes } from './scriptsWatcher'
+import { isUndefined } from 'lodash';
 
-let allIncludes: string[] = [];
-
-export function addInclude(filePath: string) {
-    const include = utility.pathToInclude(filePath);
-    if (include) allIncludes.push(include);
-}
-
-export function removeInclude(filePath: string) {
-    const include = utility.pathToInclude(filePath, false);
-    if (include) allIncludes = allIncludes.filter(i => i !== include);
-}
+const PATH_PATTERN = /([a-zA-Z0-9_]+(?:\\[a-zA-Z0-9_]+)+)(?::|;|$)/g;
 
 export class RenameProvider implements vscode.RenameProvider {
     async provideRenameEdits(document: vscode.TextDocument, position: vscode.Position, newName: string, token: vscode.CancellationToken): Promise<vscode.WorkspaceEdit> {
-        const wordRange = document.getWordRangeAtPosition(position);
-        const word = document.getText(wordRange);
-        const workspaceEdit = new vscode.WorkspaceEdit();
-
-        if (!word || word === "") return workspaceEdit;
-
-        const text = utility.getDocumentText(document);
-        if (utility.isCommentAtPosition(text, document, position)) return workspaceEdit;
-
-        const line = utility.getDocumentLine(document, position);        
-        if (!utility.isFunctionAtPosition(line, position, word)) {
-            const functionScope = utility.tryGetFuncScopeRanges(text, position);
-            if (functionScope) renameVariables(text, functionScope, word, newName, document.uri);
-            return workspaceEdit;
+        const currentGscDocument = gscParser.getCurrentGscDocument();
+        if (!currentGscDocument || currentGscDocument.isCommentsAtPosition(position)) {
+            return new vscode.WorkspaceEdit();
         }
-        if (utility.isWordStatement(word)) return workspaceEdit;
 
-        const currentInclude = utility.pathToInclude(document.uri.fsPath);
+        const wordRange = document.getWordRangeAtPosition(position);
+        const word = document.getText(wordRange)?.toLowerCase();
 
-        let includeTarget: string | undefined = utility.tryGetFuncIncludeCall(word, text, document, position);
-        if (!includeTarget) {
-            const funcDeclaration = utility.tryGetFuncDefLocation(word, text, document);
-            if (funcDeclaration) includeTarget = currentInclude;
-            else {
-                const includes = utility.getIncludes(text);
-                for (const include of includes) {
-                    const includeDocument = await vscode.workspace.openTextDocument(utility.includeToUri(include));
-                    const declaration = utility.tryGetFuncDefLocation(word, includeDocument.getText(), includeDocument);
-                    if (declaration) includeTarget = include;
+        if (!word || !wordRange || gscParser.isInclude(document, wordRange, word)) {
+            return new vscode.WorkspaceEdit();
+        }
+
+        const edit = new vscode.WorkspaceEdit();
+        const text = document.getText();
+        let match;
+
+        if (!isUndefined(currentGscDocument.getVarToken(word, position))) {
+            const scopeRange = currentGscDocument.getScopeRange(position);
+            if (!scopeRange) return edit;
+            while ((match = gscParser.WORD_PATTERN.exec(text)) !== null) {
+                if (match[0].toLowerCase() !== word) continue;
+
+                const targetPosition = document.positionAt(match.index);
+                if (currentGscDocument.isCommentsAtPosition(targetPosition) || !scopeRange.contains(targetPosition)) continue;
+
+                const targetRange = new vscode.Range(targetPosition, targetPosition.translate(0, word.length));
+                if (scopeRange.start.isEqual(targetRange.start)) continue;
+
+                edit.replace(document.uri, targetRange, newName);
+            }
+            return edit;
+        }
+
+        const gscToken = currentGscDocument.gscTokens.get(word);
+        if (!gscToken) return new vscode.WorkspaceEdit();
+
+        if (gscToken.type === gscParser.tokenType.macro) {
+            while ((match = gscParser.WORD_PATTERN.exec(text)) !== null) {
+                if (match[0].toLowerCase() !== word) continue;
+
+                const position = document.positionAt(match.index);
+                if (currentGscDocument.isCommentsAtPosition(position)) continue;
+                
+                const wordRange = new vscode.Range(position, position.translate(0, word.length));
+                edit.replace(document.uri, wordRange, newName);
+            }
+            return edit;
+        }
+
+        const tryGetFunc = gscParser.tryGetFuncInclude(document, wordRange, word);
+        if (tryGetFunc) {
+            const includeCaptured = tryGetFunc.include === '' ? currentGscDocument.include : tryGetFunc.include;       
+            const usingIncludes: string[] = [includeCaptured];
+            const usingIncludesCall: string[] = [];
+
+            for (const gscDocument of gscParser.gscDocuments.values()) {
+                if (!gscDocument) continue;
+                if (!usingIncludes.includes(gscDocument.include) && gscDocument.includesList.includes(includeCaptured)) usingIncludes.push(gscDocument.include);
+                if (!usingIncludesCall.includes(gscDocument.include) && gscDocument.includesCallList.includes(includeCaptured)) usingIncludesCall.push(gscDocument.include);
+            }
+
+            // Using includes
+            for (const include of usingIncludes) {
+                const documentTarget = await vscode.workspace.openTextDocument(gscParser.includeToPath(include));
+                const textTarget = documentTarget.getText();
+
+                while ((match = gscParser.FUNC_PATTERN.exec(textTarget)) !== null) {
+                    if (match[1].toLowerCase() !== word) continue;
+
+                    const targetPosition = documentTarget.positionAt(match.index);
+                    if (gscParser.isCommentsAtPosition(textTarget, documentTarget, targetPosition)) continue;
+
+                    const targetRange = new vscode.Range(targetPosition, targetPosition.translate(0, word.length));
+                    edit.replace(documentTarget.uri, targetRange, newName);
+                }
+            }
+
+            // Using includes call
+            for (const include of usingIncludesCall) {
+                const documentTarget = await vscode.workspace.openTextDocument(gscParser.includeToPath(include));
+                const textTarget = documentTarget.getText();
+
+                while ((match = gscParser.FUNC_INCLUDE_CALL_PATTERN.exec(textTarget)) !== null) {
+                    if (match[2]?.toLowerCase() !== word) continue;
+
+                    const startOffset = match.index + match[0].indexOf(match[2]);
+                    const endOffset = startOffset + match[2].length;
+
+                    const targetPositionStart = documentTarget.positionAt(startOffset);
+                    const targetPositionEnd = documentTarget.positionAt(endOffset);
+                    
+                    if (gscParser.isCommentsAtPosition(textTarget, documentTarget, targetPositionStart)) continue;
+
+                    const targetRange = new vscode.Range(targetPositionStart, targetPositionEnd);
+                    edit.replace(documentTarget.uri, targetRange, newName);
                 }
             }
         }
-
-        if (!includeTarget) return workspaceEdit;
-
-        for (const include of allIncludes) {
-            const includeDocument = await vscode.workspace.openTextDocument(utility.includeToUri(include));
-            renameFuncsInDocument(includeDocument.getText(), includeDocument, includeTarget, word, newName, workspaceEdit);
-        }
-        
-        return workspaceEdit;
+        return edit;
     }
-}
-
-function renameFuncsInDocument(text: string, document: vscode.TextDocument, include: string, funcName: string, newName: string, workspaceEdit: vscode.WorkspaceEdit) {
-    const commentRanges = utility.getCommentLinesRange(text);
-
-    const funcPattern = new RegExp(`(?:(?:([a-zA-Z0-9_\\\\]*::)|::)?)\\b(${funcName})\\b(\\s*\\(.*\\))?`, 'gi');
-    const hasInclude = utility.getIncludes(text).includes(include) || utility.pathToInclude(document.uri.fsPath) === include;
-
-    for (let i = 0; i < document.lineCount; i++) {
-        const line = document.lineAt(i).text;
-        const lineStart = document.offsetAt(new vscode.Position(i, 0));
-        const lineEnd = lineStart + line.length;
-
-        if (commentRanges.some((range) => lineEnd > range.start && lineStart < range.end)) {
-            continue;
-        }
-
-        let match;
-        while ((match = funcPattern.exec(line)) !== null) {
-            const matchPrefix: string | null = match[1];
-            const matchWord = match[2];
-
-            if (matchWord === newName) {
-                continue;
-            }
-
-            if (!hasInclude && (!matchPrefix || matchPrefix === "::")) continue;
-            if ((matchPrefix && matchPrefix !== "::") && matchPrefix !== include + "::") continue;
-
-            const start = match.index + (matchPrefix ? matchPrefix.length : 0);
-            const end = start + matchWord.length;
-            const range = new vscode.Range(new vscode.Position(i, start), new vscode.Position(i, end));
-
-            workspaceEdit.replace(document.uri, range, newName);
-        }
-    }
-}
-
-function renameVariables(text: string, functionScope: utility.BasicRange, variableName: string, newName: string, uri: vscode.Uri): void {
-    const blockText = text.split('\n').slice(functionScope.start, functionScope.end + 1).join('\n');
-    const workspaceEdit = new vscode.WorkspaceEdit();
-
-    let match;
-    const argPattern = /^\s*\w+\s*\(([^)]*)\)/mi;
-    match = argPattern.exec(blockText);
-    if (match) {
-        const args = match[1].split(',').map(arg => arg.trim()).filter(arg => arg.length > 0);
-        if (args.includes(variableName)) {
-            const lineIndex = blockText.substring(0, match.index).split('\n').length - 1;
-            const colIndex = blockText.lastIndexOf(variableName, match.index);
-            if (colIndex !== -1) {
-                const range = new vscode.Range(
-                    new vscode.Position(functionScope.start + lineIndex, colIndex),
-                    new vscode.Position(functionScope.start + lineIndex, colIndex + variableName.length)
-                );
-                workspaceEdit.replace(uri, range, newName);
-            }
-        }
-    }
-
-    const variablePattern = new RegExp(`\\b${variableName}\\b`, 'gi');
-    while ((match = variablePattern.exec(blockText)) !== null) {
-        const variableIndex = match.index;
-        const lineIndex = blockText.substring(0, variableIndex).split('\n').length - 1;
-        const colIndex = variableIndex - blockText.lastIndexOf('\n', variableIndex) - 1;
-        const range = new vscode.Range(
-            new vscode.Position(functionScope.start + lineIndex, colIndex),
-            new vscode.Position(functionScope.start + lineIndex, colIndex + variableName.length)
-        );
-        workspaceEdit.replace(uri, range, newName);
-    }
-    vscode.workspace.applyEdit(workspaceEdit);
 }
 
 export async function renameInclude(oldPath: string, newPath: string) {
-    console.log("RENAME INIT");
+    console.log("IW5-GSC-Syntax: Rename process initiated");
     
-    const oldInclude = utility.pathToInclude(oldPath, false);    
-    if (!oldInclude) return;
+    const oldInclude = gscParser.pathToInclude(oldPath, false);
+    const newInclude = gscParser.pathToInclude(newPath, false);
 
-    const newInclude = utility.pathToInclude(newPath, false);
-    if (!newInclude) return;
-
-    if (newInclude.endsWith(utility.GSC_EXTENSION)) {
+    if (newPath.endsWith('.gsc')) {
         await updateIncludePaths(oldInclude, newInclude);
         return;
     }
 
     await updateIncludesForDirectory(oldInclude, newInclude);
+
+    console.log("IW5-GSC-Syntax: Rename process completed");
 }
 
 async function updateIncludePaths(oldInclude: string, newInclude: string) {
-    for (const include of allIncludes) {
+    for (const include of getAllIncludes()) {
         try {
-            const uri = utility.includeToUri(include);
+            const uri = vscode.Uri.file(gscParser.includeToPath(include));
             const document = await vscode.workspace.openTextDocument(uri);
             const text = document.getText();
             const edit = new vscode.WorkspaceEdit();
 
             let match;
-            const pathPattern = /([a-zA-Z0-9_]+(?:\\[a-zA-Z0-9_]+)+)(?::|;|$)/g;
-
-            while ((match = pathPattern.exec(text)) !== null) {
+            while ((match = PATH_PATTERN.exec(text)) !== null) {
                 const pathMatch = match[0].replace(';', '').replace(':', '').toLowerCase();
-                if (pathMatch !== oldInclude) continue;
-
+                if (pathMatch !== oldInclude.toLowerCase()) continue;
                 const matchStart = match.index;
-                const matchEnd = matchStart + pathMatch.length;
                 const startPos = document.positionAt(matchStart);
-                const endPos = document.positionAt(matchEnd);
+                const endPos = document.positionAt(matchStart + pathMatch.length);
                 edit.replace(uri, new vscode.Range(startPos, endPos), newInclude);
             }
 
@@ -181,25 +154,21 @@ async function updateIncludePaths(oldInclude: string, newInclude: string) {
 }
 
 async function updateIncludesForDirectory(oldInclude: string, newInclude: string) {
-    for (const include of allIncludes) {
+    for (const include of getAllIncludes()) {
         try {
-            const uri = utility.includeToUri(include)
+            const uri = vscode.Uri.file(gscParser.includeToPath(include));
             const document = await vscode.workspace.openTextDocument(uri);
             const text = document.getText();
             const edit = new vscode.WorkspaceEdit();
 
             let match;
-            const pathPattern = /([a-zA-Z0-9_]+(?:\\[a-zA-Z0-9_]+)+)(?::|;|$)/g;
-
-            while ((match = pathPattern.exec(text)) !== null) {
+            while ((match = PATH_PATTERN.exec(text)) !== null) {
                 const pathMatch = match[0].replace(';', '').replace(':', '').toLowerCase();
-                if (!pathMatch.startsWith(oldInclude)) continue;
-
+                if (!pathMatch.startsWith(oldInclude.toLowerCase())) continue;
                 const newPathMatch = pathMatch.replace(oldInclude, newInclude);
                 const matchStart = match.index;
-                const matchEnd = matchStart + pathMatch.length;
                 const startPos = document.positionAt(matchStart);
-                const endPos = document.positionAt(matchEnd);
+                const endPos = document.positionAt(matchStart + pathMatch.length);
                 edit.replace(uri, new vscode.Range(startPos, endPos), newPathMatch);
             }
 

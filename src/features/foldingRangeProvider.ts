@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { FUNCTION_PATTERN } from './utility';
 
 export class FoldingRangeProvider implements vscode.FoldingRangeProvider {
     provideFoldingRanges(document: vscode.TextDocument, context: vscode.FoldingContext, token: vscode.CancellationToken): vscode.ProviderResult<vscode.FoldingRange[]> {
@@ -19,27 +18,29 @@ export class FoldingRangeProvider implements vscode.FoldingRangeProvider {
             }
         }
 
-        // function fold ({ ... })
         const text = document.getText();
         let match;
-        while ((match = FUNCTION_PATTERN.exec(text)) !== null) {
-            let openBraces = 1;
-            let index = match.index + match[0].length;
-            const startLine = text.substring(0, match.index).split('\n').length - 1;
-            while (openBraces > 0 && index < text.length) {
-                if (text[index] === '{') openBraces++;
-                else if (text[index] === '}') openBraces--;
-                index++;
+
+        // function fold ({ ... })
+        const FUNC_PATTERN = /^(?!\b(?:if|for|foreach|while|switch)\b)(\w+)\s*\(([^)]*)\)\s*(\/\/.*?)?\s*(?=\{)/gm;
+        while ((match = FUNC_PATTERN.exec(text)) !== null) {
+            let braceCount = 1;
+            let lineIndex = match.index + match[0].length + 1;
+            const funcPosition = document.positionAt(match.index);
+            while (braceCount > 0 && lineIndex < text.length) {
+                const char = text[lineIndex];        
+                if (char === '{') braceCount++;
+                else if (char === '}') braceCount--;
+                lineIndex++;
             }
-            const endLine = text.substring(0, index).split('\n').length - 2;
-            foldingRanges.push(new vscode.FoldingRange(startLine, endLine));
+            foldingRanges.push(new vscode.FoldingRange(funcPosition.line, document.positionAt(lineIndex).line));
         }
 
         // multiline comment fold (/* ... */)
         const multilineCommentPattern = /\/\*[\s\S]*?\*\//g;
         while ((match = multilineCommentPattern.exec(text)) !== null) {
-            const startLine = text.substring(0, match.index).split('\n').length - 1;
-            const endLine = text.substring(0, match.index + match[0].length).split('\n').length - 1;
+            const startLine = document.positionAt(match.index).line;
+            const endLine = document.positionAt(match.index + match[0].length).line;
             if (endLine > startLine) {
                 foldingRanges.push(new vscode.FoldingRange(startLine, endLine));
             }
