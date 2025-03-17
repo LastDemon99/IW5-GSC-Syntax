@@ -1,16 +1,23 @@
 import { CompletionItem, CompletionItemKind } from 'vscode';
 
-export const defs: CompletionItem[] = [];
-
-export const KEYWORDS = [
-    "if", "else", "switch", "case", "while", "for", "foreach", "return", "break", "default", "include", "define", "undef", "continue", "true", "false", "undefined", "level", "self", "thread", "wait", "waittillframeend"
+export const DIRECTIVES: CompletionItem[] = [
+	new CompletionItem('include', CompletionItemKind.Keyword), 
+	new CompletionItem('define', CompletionItemKind.Keyword),
+	new CompletionItem('undef', CompletionItemKind.Keyword),
+	new CompletionItem('using_animtree', CompletionItemKind.Keyword)
 ];
 
-KEYWORDS.forEach(keyword => defs.push(new CompletionItem(keyword, CompletionItemKind.Keyword)));
+export const DEFS: CompletionItem[] = [];
 
-export const IW5_FUNCTIONS = [
-	"cmdexec",
-	"replacefunc",
+export const KEYWORDS = [
+	"if", "else", "switch", "case", "while", "for", "foreach", "return", "break", "default", "continue", "true", "false", "undefined", "level", "self", "thread", "wait", "waittillframeend"
+];
+
+KEYWORDS.forEach(keyword => DEFS.push(new CompletionItem(keyword, CompletionItemKind.Keyword)));
+
+const IW5_ENGINE_FUNCTIONS = [
+	"cmdExec",
+	"replaceFunc",
 	"isTestClient",
 	"isWeaponClipOnly",
 	"print3D",
@@ -97,7 +104,7 @@ export const IW5_FUNCTIONS = [
 	"disableWeapons",
 	"disableWeaponSwitch",
 	"distance",
-	"distance2d",
+	"distance2D",
 	"distanceSquared",
 	"doSpawn",
 	"dropItem",
@@ -536,7 +543,7 @@ export const IW5_FUNCTIONS = [
 	"visionSetThermalForPlayer",
 	"visionSyncWithPlayer",
 	"wait",
-	"waitTill",
+	"waittill",
 	"waitTillMatch",
 	"weaponAltWeaponName",
 	"weaponClass",
@@ -1095,4 +1102,6 @@ export const IW5_FUNCTIONS = [
 	"zonem_start_zone"
 ];
 
-IW5_FUNCTIONS.forEach(keyword => defs.push(new CompletionItem(keyword, CompletionItemKind.Function)));
+IW5_ENGINE_FUNCTIONS.forEach(keyword => DEFS.push(new CompletionItem(keyword, CompletionItemKind.Function)));
+
+export const ENGINE_FUNCTIONS = IW5_ENGINE_FUNCTIONS.map(str => str.toLowerCase());

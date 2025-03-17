@@ -44,7 +44,7 @@ const colorDecorations: { [key: string]: vscode.TextEditorDecorationType } = {
 };
 
 export function setColorDecoration(editor: vscode.TextEditor) {
-    const colorRegex = /(\^([0-9;:]))((?:(?!\^\d|^;$|^:)[^"]|"[^"]*")*)/g;
+    const colorRegex = /(\^[0-9;:])((?:(?!\^[0-9;:]).)*?)(?=(\^[0-9;:])|"|$)/g;
     const decorationsMap: { [key: string]: vscode.DecorationOptions[] } = {};
 
     Object.keys(colorDecorations).forEach(symbol => {
@@ -58,7 +58,7 @@ export function setColorDecoration(editor: vscode.TextEditor) {
 
         while ((match = colorRegex.exec(line.text)) !== null) {
             const symbol = match[1];
-            const text = match[3]?.replace(/(^"|"$)/g, '');
+            const text = match[2];
 
             if (text && colorDecorations[symbol]) {
                 const startPos = new vscode.Position(i, match.index);

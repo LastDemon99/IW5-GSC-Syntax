@@ -22,19 +22,28 @@ export class FoldingRangeProvider implements vscode.FoldingRangeProvider {
         let match;
 
         // function fold ({ ... })
-        const FUNC_PATTERN = /^(?!\b(?:if|for|foreach|while|switch)\b)(\w+)\s*\(([^)]*)\)\s*(\/\/.*?)?\s*(?=\{)/gm;
-        while ((match = FUNC_PATTERN.exec(text)) !== null) {
+        const PATTERN = /^\s*(\w+)\s*\(([^)]*)\)\s*(\/\/.*?)?\s*(?=\s*\{)/gm;
+        while ((match = PATTERN.exec(text)) !== null) {
+            // Calcula el índice exacto del keyword dentro del match
+            const keywordIndex = match.index + match[0].indexOf(match[1]);
+            const startPosition = document.positionAt(keywordIndex);
+        
+            // Busca la llave de apertura real, permitiendo espacios o saltos de línea
+            const openBraceIndex = text.indexOf('{', match.index + match[0].length);
             let braceCount = 1;
-            let lineIndex = match.index + match[0].length + 1;
-            const funcPosition = document.positionAt(match.index);
+            let lineIndex = openBraceIndex + 1;
+            
             while (braceCount > 0 && lineIndex < text.length) {
-                const char = text[lineIndex];        
+                const char = text[lineIndex];
                 if (char === '{') braceCount++;
                 else if (char === '}') braceCount--;
                 lineIndex++;
             }
-            foldingRanges.push(new vscode.FoldingRange(funcPosition.line, document.positionAt(lineIndex).line));
-        }
+            foldingRanges.push(new vscode.FoldingRange(
+                startPosition.line,
+                document.positionAt(lineIndex).line
+            ));
+        }              
 
         // multiline comment fold (/* ... */)
         const multilineCommentPattern = /\/\*[\s\S]*?\*\//g;

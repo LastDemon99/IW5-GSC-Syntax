@@ -5,11 +5,17 @@ import { RenameProvider } from './features/renameProvider';
 import { HoverProvider } from './features/hoverProvider';
 import { FoldingRangeProvider } from './features/foldingRangeProvider';
 import { ScriptsWatcher, onRenameFile } from './features/scriptsWatcher';
-import { setActiveInclude, documentToInclude } from './features/gscParser';
 import { ColorProvider, setColorDecoration } from './features/colorProvider';
+import { GSC_MP_FOLDER } from './utility';
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log("IW5-GSC-Syntax: Init");
+
+    const openRawFolder = vscode.commands.registerCommand('gsc.addRawFolder', async () => {
+        const workspaceFolders = vscode.workspace.workspaceFolders || [];
+        const alreadyAdded = workspaceFolders.some(folder => folder.uri.fsPath.toLowerCase() === GSC_MP_FOLDER);
+        if (!alreadyAdded) vscode.workspace.updateWorkspaceFolders(workspaceFolders.length, 0, { uri: vscode.Uri.file(GSC_MP_FOLDER) });
+    });
 
     const filesWatcher = new ScriptsWatcher(context);
 	filesWatcher.startWatching();
@@ -39,8 +45,8 @@ export async function activate(context: vscode.ExtensionContext) {
     const visibleEditors = vscode.window.visibleTextEditors;
     visibleEditors.forEach(editor => {
         if (editor.document.languageId === 'gsc') {
-            setActiveInclude(documentToInclude(editor.document));
             setColorDecoration(editor);
+            vscode.commands.executeCommand('gsc.addRawFolder');
         }
     });
 
@@ -54,8 +60,9 @@ export async function activate(context: vscode.ExtensionContext) {
     const onChangeEditor = vscode.window.onDidChangeActiveTextEditor((editor) => {
         if (editor && editor.document.languageId === 'gsc') setColorDecoration(editor);
     });
-    
+
     context.subscriptions.push(
+        openRawFolder,
         {dispose() { filesWatcher.stopWatching(); }},
         renameFiles,
         completionItemProvider,

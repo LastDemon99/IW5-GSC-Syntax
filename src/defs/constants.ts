@@ -55,7 +55,7 @@ export const color_map: { [key: string]: { rgb: string; hex: string } } = {
 Object.entries(color_map).forEach(([color, { rgb, hex }]) => {
     const item = new CompletionItem(color, CompletionItemKind.Constant);
     item.insertText = new SnippetString(rgb);
-    item.documentation = new MarkdownString(`![color](https://via.placeholder.com/15/${hex.slice(1)}/000000?text=+) \`${color}\`${rgb}\n\n`);
+    item.documentation = new MarkdownString(`![${hex}](https://singlecolorimage.com/get/${hex.slice(1)}/10x10) \`${color}\` ${rgb}\n\n`);
     colors.push(item);
 });
 
@@ -77,7 +77,7 @@ export const textColor_map: { [key: string]: { iw5_Symbol: string; hex: string }
 Object.entries(textColor_map).forEach(([color, { iw5_Symbol, hex }]) => {
     const item = new CompletionItem(color, CompletionItemKind.Constant);
     item.insertText = new SnippetString(iw5_Symbol);
-    item.documentation = new MarkdownString(`![color](https://via.placeholder.com/15/${hex.slice(1)}/000000?text=+) \`${color}\`${iw5_Symbol}\n\n`);
+    item.documentation = new MarkdownString(`![${hex}](https://singlecolorimage.com/get/${hex.slice(1)}/10x10) \`${color}\` ${iw5_Symbol}\n\n`);
     textColors.push(item);
 });
 

@@ -12,38 +12,6 @@
     "description": "Use to inlcude a function documentation"
   },
 
-  "include": {
-    "prefix": "#include",
-    "body": [
-      "#include"
-    ],
-    "description": "Use to inlcude a gsc path"
-  },
-
-  "define": {
-    "prefix": "#define",
-    "body": [
-      "#define"
-    ],
-    "description": "Use to define a macro"
-  },
-
-  "undef": {
-    "prefix": "#define",
-    "body": [
-      "#undef"
-    ],
-    "description": "Use to set undefined a macro"
-  },
-
-  "using_animtree": {
-    "prefix": "#using_animtree",
-    "body": [
-      "#using_animtree(\"\");"
-    ],
-    "description": "Use an animation tree in the script"
-  },
-
   "scriptInit": {
     "prefix": "init",
     "body": [
